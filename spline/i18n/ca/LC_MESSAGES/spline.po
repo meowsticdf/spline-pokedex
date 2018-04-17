@@ -1,0 +1,61 @@
+# Catalan translations for spline.
+# Copyright (C) 2010 ORGANIZATION
+# This file is distributed under the same license as the spline project.
+#
+# Translators:
+# Il_Tifossi <lluita_i_no_dorm@hotmail.com>, 2011.
+msgid ""
+msgstr ""
+"Project-Id-Version:  spline\n"
+"Report-Msgid-Bugs-To: http://bugs.veekun.com/projects/spline/issues\n"
+"POT-Creation-Date: 2010-10-01 15:04+0300\n"
+"PO-Revision-Date: 2012-01-12 23:08+0100\n"
+"Last-Translator: Il_Tifossi <lluita_i_no_dorm@hotmail.com>\n"
+"Language-Team: ca <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 0.9.4\n"
+
+msgid "url|error"
+msgstr ""
+
+msgid "url|css"
+msgstr ""
+
+msgid "url|cron"
+msgstr ""
+
+#. Py2Format
+#, python-format
+msgid "Rendered in %s seconds"
+msgstr "Renderitzat en %s segons"
+
+#. Py3Format
+#, fuzzy
+msgid "{queries} SQL query in {time:.02f} seconds"
+msgid_plural "{queries} SQL queries in {time:.02f} seconds"
+msgstr[0] "{queries} SQL {q} en {time:.02f} segons"
+msgstr[1] "{queries} SQL {q} en {time:.02f} segons"
+
+msgid "Powered by Spline"
+msgstr "Impulsat per Spline"
+
+msgid ""
+"Fugue icon set by <a href=\"http://www.pinvoke.com/\">Yusuke "
+"Kamiyamane</a>; country flags by <a "
+"href=\"http://www.famfamfam.com/lab/icons/flags/\">famfamfam</a>"
+msgstr ""
+"Set d'icones Fugue per <a href=\"http://www.pinvoke.com/\">Yusuke "
+"Kamiyamane</a>; banderes dels països per <a "
+"href=\"http://www.famfamfam.com/lab/icons/flags/\">famfamfam</a>"
+
+msgid "Untitled"
+msgstr "Sense títol"
+
+#. Py2Format
+#, python-format
+msgid "Error %s"
+msgstr "Error %s"
+

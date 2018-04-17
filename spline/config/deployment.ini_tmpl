@@ -1,0 +1,81 @@
+# spline - Pylons configuration
+# The %(here)s variable will be replaced with the parent directory of this file
+[DEFAULT]
+debug = true
+email_to = you@yourdomain.com
+smtp_server = localhost
+error_email_from = paste@localhost
+
+[server:main]
+use = egg:Paste#http
+host = 0.0.0.0
+port = 5000
+
+[app:main]
+use = egg:spline
+full_stack = true
+cache_dir = %(here)s/data
+beaker.session.key = spline
+beaker.session.secret = ${app_instance_secret}
+app_instance_uuid = ${app_instance_uuid}
+
+# If you'd like to fine-tune the individual locations of the cache data dirs
+# for the Cache data, or the Session saves, un-comment the desired settings
+# here:
+#beaker.cache.data_dir = %(here)s/data/cache
+#beaker.session.data_dir = %(here)s/data/sessions
+
+# SQLAlchemy database URL
+sqlalchemy.url = sqlite:///production.db
+sqlalchemy.echo = False
+
+# WARNING: *THE LINE BELOW MUST BE UNCOMMENTED ON A PRODUCTION ENVIRONMENT*
+# Debug mode will enable the interactive debugging tool, allowing ANYONE to
+# execute malicious code after an exception is raised.
+set debug = false
+
+### DEBUGGING -- probably want OFF in production
+# Set this to true to get a summary of all SQL use at the bottom of every page.
+#spline.sql_debugging = true
+
+### PERFORMANCE -- probably want ON in production, off in dev
+# Turn these checks off to avoid a bunch of stat()s per request
+mako.filesystem_checks = false
+
+
+#---- Spline plugin configuration
+
+# List of plugins to use, separated by spaces.  If you leave this commented
+# out, all plugins found on the system will be loaded.
+#spline.plugins = users forum pokedex
+
+# Title of the site
+spline.site_title = spline
+
+% for path in spline_plugin_config_files:
+<%include file="${path}"/>
+% endfor
+
+
+# Logging configuration
+[loggers]
+keys = root
+
+[handlers]
+keys = console
+
+[formatters]
+keys = generic
+
+[logger_root]
+level = INFO
+handlers = console
+
+[handler_console]
+class = StreamHandler
+args = (sys.stderr,)
+level = NOTSET
+formatter = generic
+
+[formatter_generic]
+format = %(asctime)s %(levelname)-5.5s [%(name)s] %(message)s
