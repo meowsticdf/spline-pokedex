@@ -51,8 +51,6 @@ setup(
     pokedex = splinext.pokedex:PokedexPlugin
     """,
 
-    namespace_packages = ['splinext'],
-
     message_extractors = {
         'spline': [
             ('**.py', 'spline-python', None),
