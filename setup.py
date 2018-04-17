@@ -45,9 +45,6 @@ setup(
     spline-mako = spline.babelplugin:extract_mako
 
     [spline.plugins]
-    users = splinext.users:UsersPlugin
-    forum = splinext.forum:ForumPlugin
-    frontpage = splinext.frontpage:FrontPagePlugin
     pokedex = splinext.pokedex:PokedexPlugin
     """,
 
