@@ -95,7 +95,7 @@ class TestPokemonSearchController(TestController):
 
         self.check_search(
             dict(name=u'MeOwTh'),
-            [u'Meowth'],
+            [u'Meowth', u'Alolan Meowth' ],
             'case is ignored',
             exact=True,
         )
@@ -409,14 +409,15 @@ class TestPokemonSearchController(TestController):
         )
         self.check_search(
             dict(type_operator=u'exact', type=[u'dragon', u'ground']),
-            [ u'Flygon', u'Gabite', u'Garchomp', u'Gible', u'Vibrava' ],
+            [ u'Flygon', u'Gabite', u'Garchomp', u'Gible', u'Vibrava',
+              u'Mega Garchomp', u'Zygarde', u'10% Zygarde', u'50% Zygarde', u'Complete Zygarde'],
             'exact type combo',
             exact=True,
         )
         self.check_search(
             dict(type_operator=u'only', type=[u'ice', u'steel']),
             [
-                u'Mawile', u'Registeel',                        # pure steel
+                u'Registeel',                                   # pure steel
                 u'Glaceon', u'Glalie', u'Regice', u'Snorunt',   # pure ice
             ],
             'only selected types',
@@ -541,39 +542,39 @@ class TestPokemonSearchController(TestController):
         )
 
         self.check_search(
-            dict(id=u'648+'),
-            [ u'Pirouette Meloetta', u'Aria Meloetta', u'Genesect' ],
+            dict(id=u'806+'),
+            [ u'Blacephalon', u'Zeraora' ],
             'range: n+',
             exact=True,
         )
         self.check_search(
-            dict(id=u'648-'),
-            [ u'Pirouette Meloetta', u'Aria Meloetta', u'Genesect' ],
+            dict(id=u'806-'),
+            [ u'Blacephalon', u'Zeraora' ],
             'range: n-',
             exact=True,
         )
         self.check_search(
-            dict(id=u'>=648'),
-            [ u'Pirouette Meloetta', u'Aria Meloetta', u'Genesect' ],
+            dict(id=u'>=806'),
+            [ u'Blacephalon', u'Zeraora' ],
             'range: >=n',
             exact=True,
         )
 
         self.check_search(
             dict(id=u'+3'),
-            [ u'Bulbasaur', u'Ivysaur', u'Venusaur' ],
+            [ u'Bulbasaur', u'Ivysaur', u'Venusaur', u'Mega Venusaur' ],
             'range: +m',
             exact=True,
         )
         self.check_search(
             dict(id=u'–3'),
-            [ u'Bulbasaur', u'Ivysaur', u'Venusaur' ],
+            [ u'Bulbasaur', u'Ivysaur', u'Venusaur', u'Mega Venusuar' ],
             'range: endash-m',
             exact=True,
         )
         self.check_search(
             dict(id=u'<4'),
-            [ u'Bulbasaur', u'Ivysaur', u'Venusaur' ],
+            [ u'Bulbasaur', u'Ivysaur', u'Venusaur', u'Mega Venusaur' ],
             'range: <m',
             exact=True,
         )
@@ -607,7 +608,9 @@ class TestPokemonSearchController(TestController):
         )
         self.check_search(
             dict(stat_special_attack=u'130-131'),
-            [ u'Espeon', u'Gengar', u'Glaceon', u'Heatran', u'Latios', u'Magnezone', u'Kyurem' ],
+            [ u'Espeon', u'Gengar', u'Glaceon', u'Heatran', u'Latios', u'Magnezone', u'Kyurem',
+              u'Mega Charizard X', u'Mega Slowbro', u'Mega Blaziken', u'Xerneas', u'Yveltal', u'Volcanion', u'Tapu Lele', u'Magearna', u'Original Magearna',
+            ],
             'special attack of 130',
             exact=True,
         )
@@ -616,7 +619,7 @@ class TestPokemonSearchController(TestController):
         """Check that searching by effort works correctly."""
         self.check_search(
             dict(effort_special_attack=u'2', effort_special_defense=u'1'),
-            [ u'Butterfree', u'Togekiss', u'Venusaur' ],
+            [ u'Butterfree', u'Togekiss', u'Venusaur', u'Mega Venusaur' ],
             'effort',
             exact=True,
         )
@@ -625,7 +628,7 @@ class TestPokemonSearchController(TestController):
         """Checks searching by initial hatch counter."""
         self.check_search(
             dict(hatch_counter=u'5'),
-            [ u'Gyarados', u'Magikarp' ],
+            [ u'Gyarados', u'Magikarp', u'Mega Gyarados' ],
             'hatch counter',
             exact=True,
         )
@@ -643,7 +646,7 @@ class TestPokemonSearchController(TestController):
         """Checks searching by capture rate."""
         self.check_search(
             dict(capture_rate=u'5'),
-            [ u'Groudon', u'Kyogre' ],
+            [], #[ u'Groudon', u'Kyogre' ],
             'capture rate',
             exact=True,
         )
@@ -655,6 +658,7 @@ class TestPokemonSearchController(TestController):
             [
                 u'Azelf', u'Blissey', u'Chansey', u'Clefable', u'Clefairy',
                 u'Cleffa', u'Happiny', u'Lopunny', u'Mesprit', u'Uxie',
+                u'Mega Lopunny',
             ],
             'base happiness',
             exact=True,
