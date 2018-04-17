@@ -46,9 +46,6 @@ setup(
 
     [nose.plugins]
     pylons = pylons.test:PylonsPlugin
-
-    [spline.plugins]
-    pokedex = splinext.pokedex:PokedexPlugin
     """,
 
     message_extractors = {

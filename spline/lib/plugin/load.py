@@ -23,13 +23,6 @@ def load_plugins(config, paths, extra_plugins={}):
     names.
     """
 
-    # Configuration might tell us to only load a certain number of plugins
-    # TODO don't load any if this isn't specified!  loading everything by
-    # default is dumb
-    config_plugins = None
-    if 'spline.plugins' in config['app_conf']:
-        config_plugins = config['app_conf']['spline.plugins'].split()
-
     plugins = {}          # plugin_name => plugin
     controllers = {}      # controller_name => controller
     template_tuples = []  # (directory, priority)
@@ -42,20 +35,8 @@ def load_plugins(config, paths, extra_plugins={}):
 
     plugins.update(extra_plugins)
 
-    for ep in iter_entry_points('spline.plugins'):
-        # Skip it if it's not in the config
-        if config_plugins is not None and ep.name not in config_plugins:
-            print "SKIPPING: ", ep.name
-            continue
-
-        plugin_class = ep.load()
-
-        if ep.name[0:7] == 'spline' or ep.name == 'local':
-            raise ValueError("'local' and all names starting with 'spline' are"
-                             " reserved.")
-
-        plugin = plugin_class(ep)
-        plugins[ep.name] = plugin
+    from splinext.pokedex import PokedexPlugin
+    plugins['pokedex'] = PokedexPlugin('splinext.pokedex')
 
     for plugin_name, plugin in plugins.items():
         # Get list of controllers

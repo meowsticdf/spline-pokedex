@@ -25,9 +25,12 @@ class Installer(PylonsInstaller):
             plugin_class = ep.load()
             plugin = plugin_class(ep)
 
-            config_path = plugin.config_template_path()
-            if config_path:
-                plugin_config_files.append(config_path)
+        from splinext.pokedex import PokedexPlugin
+        pokedex_plugin = PokedexPlugin('splinext.pokedex')
+
+        config_path = pokedex_plugin.config_template_path()
+        if config_path:
+            plugin_config_files.append(config_path)
 
         lookup = TemplateLookup(directories=['/'])
         tmpl = Template(content, lookup=lookup)

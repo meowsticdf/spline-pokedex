@@ -86,13 +86,8 @@ class PluginBase(object):
         return None
 
 
-    def __init__(self, entry_point):
-        self.entry_point = entry_point
-
-    @property
-    def module_name(self):
-        """This plugin's module name, e.g. 'splinext.pokedex'."""
-        return self.entry_point.module_name
+    def __init__(self, module_name):
+        self.module_name = module_name
 
     def config_template_path(self):
         """Returns a path to a Mako template for a new configuration file.
