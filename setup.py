@@ -44,6 +44,9 @@ setup(
     spline-python = spline.babelplugin:extract_python
     spline-mako = spline.babelplugin:extract_mako
 
+    [nose.plugins]
+    pylons = pylons.test:PylonsPlugin
+
     [spline.plugins]
     pokedex = splinext.pokedex:PokedexPlugin
     """,
