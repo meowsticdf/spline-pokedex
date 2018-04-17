@@ -11,7 +11,7 @@ setup(
         "SQLAlchemy>=0.6",
         "Mako>=0.3.4",
         "nose>=0.11",
-        "WTForms>=0.6",
+        "WTForms>=0.6,<2.0",
         'markdown',
         'lxml',
         'webhelpers>=1.2',
@@ -19,7 +19,7 @@ setup(
 
         # pokedex
         'pokedex',
-        'SQLAlchemy>=0.7.5',
+        'SQLAlchemy>=0.7.5,<1.2',
     ],
     setup_requires=["PasteScript"],
 
