@@ -14,7 +14,6 @@ setup(
         "WTForms>=0.6",
         'markdown',
         'lxml',
-        'python-openid',
         'webhelpers>=1.2',
         # 'Babel>=0.9.5',  # needed for translation work only, can do without
 
