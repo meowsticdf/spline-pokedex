@@ -11,6 +11,12 @@ class LegacyView(object):
 def main(global_config, **settings):
     config = Configurator(settings=settings)
     pylonsapp = make_app(global_config, **settings)
+
+    config.add_static_view('static/spline', 'spline:public')
+    config.add_static_view('static/pokedex', 'splinext.pokedex:public')
+    config.add_static_view('static/local', '../../veekun/public') # XXX
+    config.add_static_view('dex/media', '../../pokedex-media/') # XXX
+
     legacy_view = LegacyView(pylonsapp)
     config.add_view(context='pyramid.exceptions.NotFound', view=legacy_view)
     return config.make_wsgi_app()
