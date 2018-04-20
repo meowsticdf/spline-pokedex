@@ -8,20 +8,24 @@ setup(
     install_requires = [
         # spline
         "Pylons>=1.0.1",
-        "SQLAlchemy>=0.6",
+        "pyramid>=1.5",
+        "pyramid_beaker",
+        "pyramid_debugtoolbar>=0.15.1",
+        "pyramid_mako>=1.0.2",
+        "pyramid_tm",
         "Mako>=0.3.4",
         "nose>=0.11",
         "WTForms>=0.6,<2.0",
         'markdown',
         'lxml',
         'webhelpers>=1.2',
-        # 'Babel>=0.9.5',  # needed for translation work only, can do without
+        'waitress>=1.1.0',
+        'Babel>=0.9.5',  # needed for translation work only, can do without
 
         # pokedex
         'pokedex',
-        'SQLAlchemy>=0.7.5,<1.2',
+        'SQLAlchemy>=0.7.5,<1.2.0b1',
     ],
-    setup_requires=["PasteScript"],
 
     include_package_data = True,
     package_data={
@@ -32,10 +36,10 @@ setup(
     zip_safe = False,
     test_suite='nose.collector',
 
-    paster_plugins=['PasteScript', 'Pylons'],
     entry_points="""
     [paste.app_factory]
-    main = spline.config.middleware:make_app
+    #main = spline.config.middleware:make_app
+    main = spline:main
 
     [paste.app_install]
     main = spline.installer:Installer
