@@ -39,7 +39,7 @@ setup(
     entry_points="""
     [paste.app_factory]
     #main = spline.config.middleware:make_app
-    main = spline:main
+    main = spline.pyramidapp:main
 
     [paste.app_install]
     main = spline.installer:Installer
