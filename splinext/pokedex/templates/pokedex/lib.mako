@@ -1,4 +1,283 @@
-<%! from splinext.pokedex import i18n, db %>\
+<%def name="pokedex_img(src, **attr)"><%
+    # TODO: routing
+    return h.HTML.img(src='/dex/media/' + src, **attr)
+%></%def>
+
+<%def name="chrome_img(src, **attr)"><%
+    return h.HTML.img(src=h.static_uri('pokedex', 'images/' + src), **attr)
+%></%def>
+
+## XXX Should these be able to promote to db objects, rather than demoting to
+## strings and integers?  If so, how to do that without requiring db access
+## from here?
+<%def name="generation_icon(generation)"><%
+    """Returns a generation icon, given a generation number."""
+    # Convert generation to int if necessary
+    if not isinstance(generation, int):
+        generation = generation.id
+
+
+    return chrome_img('versions/generation-%s.png' % generation,
+            alt=_(u"Generation %d") % generation,
+            title=_(u"Generation %d") % generation)
+%></%def>
+
+<%def name="version_icons(*versions, **kwargs)"><%
+    """Returns some version icons, given a list of version names.
+
+    """
+    # python's argument_list syntax is kind of limited here
+    version_icons = u''
+    comma = chain([u''], repeat(u', '))
+    for version in versions:
+        # Convert version to string if necessary
+        if isinstance(version, basestring):
+            identifier = filename_from_name(version)
+            name = version
+        else:
+            identifier = version.identifier
+            name = version.name
+
+        version_icons += h.HTML.img(
+                src=h.static_uri('pokedex', 'images/versions/%s.png' % identifier),
+                alt=comma.next() + name,
+                title=name)
+
+    return version_icons
+%></%def>
+
+<%def name="version_group_icon(version_group)"><%
+    return version_icons(*version_group.versions)
+    # XXX this is for the combined pixely version group icons i made
+    names = ', '.join(version.name for version in version_group.versions)
+    return h.HTML.img(
+        src=h.static_uri('pokedex', 'images/versions/%s.png' % (
+            '-'.join(version.identifier for version in version_group.versions))),
+        alt=names,
+        title=names)
+%></%def>
+
+
+<%def name="pokemon_has_media(pokemon_form, prefix, ext, use_form=True)"><%
+    """Determine whether a file exists in the specified directory for the
+    specified Pokémon form.
+    """
+    # TODO share this somewhere
+    media_dir = config.get('spline-pokedex.media_directory', None)
+    if not media_dir:
+        warnings.warn(
+            "No media_directory found; "
+            "you may want to clone pokedex-media.git")
+        return False
+
+    if use_form:
+        kwargs = dict(form=pokemon_form)
+    else:
+        kwargs = dict()
+
+    return os.path.exists(os.path.join(media_dir,
+        pokemon_media_path(pokemon_form.species, prefix, ext, **kwargs)))
+%></%def>
+
+<%def name="pokemon_media_path(pokemon_species, prefix, ext, form=None)"><%
+    """Returns a path to a Pokémon media file.
+
+    form is not None if the form should be in the filename; it should be False
+    if the form should be ignored, e.g. for footprints.
+    """
+
+    if form:
+        form_identifier = form.form_identifier
+    else:
+        form_identifier = None
+
+    if form_identifier:
+        filename = '{id}-{form}.{ext}'
+    else:
+        filename = '{id}.{ext}'
+
+    filename = filename.format(
+        id=pokemon_species.id,
+        form=form_identifier,
+        ext=ext
+    )
+
+    return '/'.join(('pokemon', prefix, filename))
+%></%def>
+
+<%def name="species_image(pokemon_species, prefix='main-sprites/black-white', **attr)"><%
+    u"""Returns an <img> tag for a Pokémon species image."""
+
+    default_text = pokemon_species.name
+
+    if 'animated' in prefix:
+        ext = 'gif'
+    else:
+        ext = 'png'
+
+    attr.setdefault('alt', default_text)
+    attr.setdefault('title', default_text)
+
+    return pokedex_img(pokemon_media_path(pokemon_species, prefix, ext),
+                       **attr)
+%></%def>
+
+<%def name="pokemon_form_image(pokemon_form, prefix=None, **attr)"><%
+    """Returns an <img> tag for a Pokémon form image."""
+
+    if prefix is None:
+        prefix = 'main-sprites/ultra-sun-ultra-moon'
+        # FIXME what the hell is going on here
+        if not pokemon_has_media(pokemon_form, prefix, 'png'):
+            prefix = 'main-sprites/black-white'
+
+        # Deal with Spiky-eared Pichu and ??? Arceus
+        if pokemon_form.pokemon_form_generations:
+            last_gen = pokemon_form.pokemon_form_generations[-1].generation_id
+            if last_gen == 4:
+                prefix = 'main-sprites/heartgold-soulsilver'
+
+    default_text = pokemon_form.name
+
+    if 'animated' in prefix:
+        ext = 'gif'
+    elif 'dream-world' in prefix:
+        ext = 'svg'
+    else:
+        ext = 'png'
+
+    attr.setdefault('alt', default_text)
+    attr.setdefault('title', default_text)
+
+    return pokedex_img(pokemon_media_path(pokemon_form.species, prefix, ext, form=pokemon_form),
+                       **attr)
+%></%def>
+
+<%def name="pokemon_icon(pokemon, alt=True)"><%
+    if pokemon.is_default:
+        return h.literal('<span class="sprite-icon sprite-icon-%d"></span>' % pokemon.species.id)
+
+    alt_text = pokemon.name if alt else u''
+    if pokemon_has_media(pokemon.default_form, 'icons', 'png'):
+        return pokemon_form_image(pokemon.default_form, prefix='icons', alt=alt_text)
+
+    return pokedex_img('pokemon/icons/0.png', title=pokemon.species.name, alt=alt_text)
+%></%def>
+
+<%def name="pokemon_link(pokemon, content=None, **attr)"><%
+    """Returns a link to a Pokémon page.
+
+    `pokemon`
+        A Pokemon object.
+
+    `content`
+        Link text (or image, or whatever).
+    """
+
+    # Content defaults to the name of the Pokémon
+    if not content:
+        content = pokemon.name
+
+    url_kwargs = {}
+    if pokemon.default_form.form_identifier:
+        # Don't want a ?form=None, or a ?form=default
+        url_kwargs['form'] = pokemon.default_form.form_identifier
+
+    return h.HTML.a(
+        content,
+        href=url(controller='dex', action='pokemon',
+                       name=pokemon.species.name.lower(), **url_kwargs),
+        **attr
+        )
+%></%def>
+
+<%def name="form_flavor_link(form, content=None, **attr)"><%
+    """Returns a link to a pokemon form's flavor page.
+
+    `form`
+        A PokemonForm object.
+
+    `content`
+        Link text (or image, or whatever).
+    """
+    if not content:
+        content = form.name
+
+    url_kwargs = {}
+    if form.form_identifier:
+        # Don't want a ?form=None, or a ?form=default
+        url_kwargs['form'] = form.form_identifier
+
+    return h.HTML.a(
+        content,
+        href=url(controller='dex', action='pokemon_flavor',
+                       name=form.species.name.lower(), **url_kwargs),
+        **attr
+        )
+%></%def>
+
+<%def name="damage_class_icon(damage_class)"><%
+    return pokedex_img(
+        "damage-classes/%s.png" % damage_class.identifier,
+        alt=damage_class.name,
+        title=_("%s: %s", context="damage class: description") % (
+                damage_class.name.capitalize(),
+                damage_class.description,
+            )
+    )
+%></%def>
+
+
+<%def name="type_icon(type)"><%
+    if isinstance(type, basestring):
+        if type == '???':
+            identifier = 'unknown'
+        else:
+            identifier = type.lower()
+        name = type
+    else:
+        name = type.name
+        identifier = type.identifier
+    return pokedex_img('types/{1}/{0}.png'.format(identifier, c.game_language.identifier),
+            alt=name, title=name)
+%></%def>
+
+<%def name="type_link(type)"><%
+    return h.HTML.a(
+        type_icon(type),
+        href=url(controller='dex', action='types', name=type.identifier),
+    )
+%></%def>
+
+<%def name="item_filename(item)"><%
+    if item.pocket.identifier == u'machines':
+        machines = item.machines
+        prefix = u'hm' if machines[-1].is_hm else u'tm'
+        filename = prefix + u'-' + machines[-1].move.type.identifier
+    elif item.identifier.startswith(u'data-card-'):
+        filename = u'data-card'
+    else:
+        filename = item.identifier
+
+    return filename
+%></%def>
+
+<%def name="item_link(item, include_icon=True)"><%
+    """Returns a link to the requested item."""
+
+    item_name = item.name
+
+    if include_icon:
+        label = pokedex_img("items/%s.png" % item_filename(item),
+            alt=item_name, title=item_name) + ' ' + item_name
+    else:
+        label = item_name
+
+    return h.HTML.a(label,
+        href=url(controller='dex', action='items',
+                 pocket=item.pocket.identifier, name=item_name.lower()),
+    )
+%></%def>
 
 <%def name="pokemon_page_header(icon_form=None, subpages=True)">
 <div id="dex-header">
