@@ -121,6 +121,7 @@ class Flash(object):
 
         The return value is a list of ``Message`` objects.
         """
+        return []
         from pylons import session
         messages = session.pop(self.session_key, [])
         session.save()

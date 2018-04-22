@@ -76,7 +76,7 @@ class BaseTranslator(object):
         self.context = context
         if translations is None:
             if languages is None:
-                languages = get_lang()
+                languages = 'en'#get_lang()
             if languages is None:
                 self.translation = gettext.NullTranslations()
                 self.language = None

@@ -26,7 +26,8 @@ def static_uri(plugin_name, path, **url_kwargs):
     Returns a full URI to the given file, as owned by the named plugin.
     """
 
-    root_url = url('/', **url_kwargs)
+    #root_url = url('/', **url_kwargs)
+    root_url = "/"
     return "%sstatic/%s/%s" % (root_url, plugin_name, path)
 
 def sanitize_id(text):
