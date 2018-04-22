@@ -69,6 +69,9 @@ def add_renderer_globals_factory(config):
             ('spline', 'core'),
             ('pokedex', 'pokedex-suggestions'),
         ]
+        class Language:
+            identifier = 'en'
+        request.tmpl_context.game_language = Language()
 
         # start timer
         request.tmpl_context.timer = spline.lib.base.ResponseTimer()
@@ -179,6 +182,9 @@ def main(global_config, **settings):
     config.add_view(index_view, route_name="index")
     config.add_view(css_view, route_name="css")
 
+    # lookup
+    config.add_view(route_name='dex/lookup', view='splinext.pokedex.views.lookup:lookup', renderer='pokedex/lookup_results.mako')
+
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
     #config.add_view(context='pyramid.httpexceptions.HTTPNotFound', view=error_view)
@@ -229,5 +235,12 @@ def main(global_config, **settings):
         ]),
     ]
     settings['spline.plugins.links'].extend(links)
+
+    from .views import lookup
+    lookup.connect(settings)
+
+    # XXX
+    import splinext.pokedex.helpers
+    spline.lib.helpers.pokedex = splinext.pokedex.helpers
 
     return config.make_wsgi_app()

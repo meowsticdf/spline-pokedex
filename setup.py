@@ -25,6 +25,7 @@ setup(
         # pokedex
         'pokedex',
         'SQLAlchemy>=0.7.5,<1.2.0b1',
+        'zope.sqlalchemy',
     ],
 
     include_package_data = True,
