@@ -70,7 +70,7 @@ def resource_url(request, thingy, subpage=None, controller='dex'):
         action += '_' + subpage
 
     route = controller + "/" + action
-    return request.route_url(route, **args)
+    return request.route_path(route, **args)
 
 def make_thingy_url(thingy, subpage=None, controller='dex'):
     u"""Given a thingy (Pokémon, move, type, whatever), returns a URL to it.

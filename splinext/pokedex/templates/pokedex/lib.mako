@@ -1,6 +1,6 @@
 <%def name="pokedex_img(src, **attr)"><%
     # TODO: routing
-    return h.HTML.img(src='/dex/media/' + src, **attr)
+    return h.HTML.img(src=request.route_path('dex/media', subpath=src), **attr)
 %></%def>
 
 <%def name="chrome_img(src, **attr)"><%

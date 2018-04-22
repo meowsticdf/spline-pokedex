@@ -1,6 +1,7 @@
 # encoding: utf-8
 from pyramid.config import Configurator
 from pyramid.renderers import render, render_to_response
+import pyramid.static
 
 import spline.lib.helpers
 import spline.lib.base
@@ -125,6 +126,7 @@ def main(global_config, **settings):
     config.add_route('dex/lookup', '/dex/lookup')
     config.add_route('dex/suggest', '/dex/suggest')
     config.add_route('dex/parse_size', '/dex/parse_size')
+    config.add_route('dex/media', '/dex/media/*subpath')
 
     # These are more specific than the general pages below, so must be first
     config.add_route('dex_search/move_search', '/dex/moves/search')
@@ -176,7 +178,9 @@ def main(global_config, **settings):
     config.add_static_view('static/spline', 'spline:public')
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
     config.add_static_view('static/local', '../../../veekun/public') # XXX
-    config.add_static_view('dex/media', '../../../pokedex-media/') # XXX
+
+    media_root = settings['spline-pokedex.media_directory']
+    config.add_view(pyramid.static.static_view(media_root, use_subpath=True), route_name='dex/media')
 
     # index & css
     config.add_view(index_view, route_name="index")
