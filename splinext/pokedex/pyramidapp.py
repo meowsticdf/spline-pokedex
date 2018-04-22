@@ -70,7 +70,7 @@ def add_renderer_globals_factory(config):
 
 def main(global_config, **settings):
     local_templates = './templates'
-    settings['mako.directories'] = [local_templates, 'splinext.pokedex:templates', 'spline:templates']
+    settings['mako.directories'] = [local_templates, 'splinext.pokedex:templates']
 
     settings['spline.plugins'] = []
     settings['spline.plugins.controllers'] = {}
