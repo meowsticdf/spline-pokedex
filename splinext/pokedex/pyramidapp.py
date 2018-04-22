@@ -78,8 +78,7 @@ def add_renderer_globals_factory(config):
 
 
 def main(global_config, **settings):
-    local_templates = './templates'
-    settings['mako.directories'] = [local_templates, 'splinext.pokedex:templates']
+    settings['mako.directories'] = ['splinext.pokedex:templates']
 
     settings['spline.plugins'] = []
     settings['spline.plugins.controllers'] = {}
@@ -186,15 +185,46 @@ def main(global_config, **settings):
 
     ### links
 
-    def url(x): return x # XXX
+    TranslatablePluginLink = Link # XXX
+    _ = lambda x: x
     links = [
-        Link(u'veekun', url('/'), children=[
+        Link(u'veekun', '/', children=[
             Link(u'', None, children=[
-                Link(u'About + contact',  url('/about')),
-                Link(u'Chat',             url('/chat')),
-                Link(u'Credits',          url('/props')),
-                Link(u'Link or embed veekun', url('/link')),
-                Link(u'Pokédex history',  url('/dex/history')),
+                Link(u'About + contact',  '/about'),
+                Link(u'Chat',             '/chat'),
+                Link(u'Credits',          '/props'),
+                Link(u'Link or embed veekun', '/link'),
+                Link(u'Pokédex history',  '/dex/history'),
+            ]),
+        ]),
+        TranslatablePluginLink(_(u'Pokédex'), '/dex', children=[
+            TranslatablePluginLink(_(u'Core pages'), None, children=[
+                TranslatablePluginLink(_(u'Pokémon'), 'dex/pokemon_list', i18n_context='plural', children=[
+                    TranslatablePluginLink(_(u'Awesome search'), 'dex_search/pokemon_search'),
+                ]),
+                TranslatablePluginLink(_(u'Moves'), 'dex/moves_list', children=[
+                    TranslatablePluginLink(_(u'Awesome search'), 'dex_search/move_search'),
+                ]),
+                TranslatablePluginLink(_(u'Types'), 'dex/types_list'),
+                TranslatablePluginLink(_(u'Abilities'), 'dex/abilities_list'),
+                TranslatablePluginLink(_(u'Items'), 'dex/items_list'),
+                TranslatablePluginLink(_(u'Natures'), 'dex/natures_list'),
+                TranslatablePluginLink(_(u'Locations'), 'dex/locations_list'),
+            ]),
+            TranslatablePluginLink(_(u'Gadgets'), None, children=[
+                TranslatablePluginLink(_(u'Compare Pokémon'), 'dex_gadgets/compare_pokemon'),
+                TranslatablePluginLink(_(u'Pokéball performance'), 'dex_gadgets/capture_rate'),
+                TranslatablePluginLink(_(u'Stat calculator'), 'dex_gadgets/stat_calculator'),
+            ]),
+            TranslatablePluginLink(_(u'Conquest'), '/dex/conquest', children=[
+                TranslatablePluginLink(_(u'Pokémon'), 'dex_conquest/pokemon_list'),
+                TranslatablePluginLink(_(u'Warriors'), 'dex_conquest/warriors_list'),
+                TranslatablePluginLink(_(u'Abilties'), 'dex_conquest/abilities_list'),
+                TranslatablePluginLink(_(u'Moves'), 'dex_conquest/moves_list'),
+                TranslatablePluginLink(_(u'Warrior Skills'), 'dex_conquest/skills_list')
+            ]),
+            TranslatablePluginLink(_(u'Etc.'), None, children=[
+                TranslatablePluginLink(_(u'Downloads'), '/dex/downloads'),
             ]),
         ]),
     ]

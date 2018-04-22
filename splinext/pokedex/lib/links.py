@@ -2,15 +2,15 @@ from spline.i18n import NullTranslator
 class Link(object):
     """Represents a link in the header bar."""
 
-    def __init__(self, label, url=None, children=[], collapsed=False, translator_class=NullTranslator, i18n_context=None):
+    def __init__(self, label, route_name=None, children=[], collapsed=False, translator_class=NullTranslator, i18n_context=None):
         """Arguments:
 
         `label`
             Label for this link.
 
-        `url`
-            URL for this link.  If omitted, this link may serve as merely a
-            header instead.
+        `route_name`
+            Name of the route to link to.  If omitted, this link may serve as
+            merely a header instead.
 
         `children`
             An optional list of PluginLink objects.
@@ -27,7 +27,7 @@ class Link(object):
         """
 
         self.label = label
-        self._url = url
+        self.route_name = route_name
         self.children = children
         self.collapsed = collapsed
         self.translator_class = translator_class
@@ -38,7 +38,11 @@ class Link(object):
         for child in children:
             child.parent = self
 
-    @property
-    def url(self):
+    def url(self, request):
         # TODO: translation?
-        return self._url
+        if self.route_name:
+            if self.route_name.startswith('/'):
+                return self.route_name # XXX
+            else:
+                return request.route_path(self.route_name)
+        return '/unknown'
