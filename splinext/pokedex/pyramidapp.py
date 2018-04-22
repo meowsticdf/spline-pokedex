@@ -38,7 +38,7 @@ def add_renderer_globals_factory(config):
             if action == "css":
                 return "/css"
             if action and controller:
-                return request.url(controller+"/"+action, **kwargs)
+                return request.route_path(controller+"/"+action, **kwargs)
             return "/"
 
         def fake_translate(message, plural=None, n=None, context=None, comment=None):
@@ -62,6 +62,7 @@ def add_renderer_globals_factory(config):
             ('spline', 'lib/jquery.cookies-2.2.0.min'),
             ('spline', 'lib/jquery.ui-1.8.4.min'),
             ('spline', 'core'),
+            ('pokedex', 'pokedex-suggestions'),
         ]
 
         # start timer
@@ -81,14 +82,20 @@ def main(global_config, **settings):
         #'reset.mako',
         'layout.mako',
         'pokedex.mako',
-        #'pokedex-suggestions.css',
         'sprites.mako',
     ]
+
+    widgets = [
+            ('page_header', 'widgets/pokedex_lookup.mako'),
+            ('head_tag',    'widgets/pokedex_suggestion_css.mako'),
+    ]
+    for name, path in widgets:
+        x = settings['spline.plugins.widgets'].setdefault(name, {3:[]})
+        x[3].append(path)
 
     config = Configurator(settings=settings)
     config.include('pyramid_mako')
     config.include('pyramid_debugtoolbar')
-    config.add_mako_renderer(".css") # XXX delete
 
     add_renderer_globals = add_renderer_globals_factory(settings)
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
