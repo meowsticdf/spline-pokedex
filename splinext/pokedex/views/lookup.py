@@ -1,45 +1,5 @@
 # encoding: utf-8
 
-## DB stuff
-# TODO move this stuff to db.py
-# stolen from veekun-pokedex
-
-import sqlalchemy as sqla
-from sqlalchemy import orm
-from zope.sqlalchemy import ZopeTransactionExtension
-
-from pokedex.db import ENGLISH_ID
-import pokedex.lookup
-from pokedex.db.multilang import MultilangScopedSession, MultilangSession
-
-pokedex_session = MultilangScopedSession(
-    orm.sessionmaker(
-        class_=MultilangSession,
-        extension=ZopeTransactionExtension(),
-        default_language_id=ENGLISH_ID,
-    )
-)
-
-pokedex_lookup = None
-
-def connect(settings):
-    """Instantiates the `pokedex_session` and `pokedex_lookup` objects."""
-    # DB session for everyone to use.
-    engine = sqla.engine_from_config(settings, 'spline-pokedex.sqlalchemy.')
-    pokedex_session.configure(bind=engine)
-
-    # Lookup object
-    global pokedex_lookup
-    lookup_directory = settings['spline-pokedex.lookup_directory']
-    pokedex_lookup = pokedex.lookup.PokedexLookup(
-        # Keep our own whoosh index in the /data dir
-        directory=lookup_directory,
-        session=pokedex_session,
-    )
-    if not pokedex_lookup.index:
-        pokedex_lookup.rebuild_index()
-
-## Views
 import re
 
 import pyramid.httpexceptions as exc
@@ -47,7 +7,7 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from spline.lib.helpers import flash
-from .. import helpers
+from .. import db, helpers
 
 # Used by lookup disambig pages
 table_labels = {
@@ -64,6 +24,8 @@ table_labels = {
     t.ConquestWarrior: u'Conquest warrior',
     t.ConquestWarriorSkill: u'Conquest warrior skill',
 }
+
+redirect = exc.HTTPFound
 
 def lookup(request):
     """Find a page in the Pokédex given a name.
@@ -105,7 +67,7 @@ def lookup(request):
         valid_types = [u'pokemon_species', u'moves', u'abilities']
         name = re.sub('(?i) conquest$', '', name)
 
-    results = pokedex_lookup.lookup(name, valid_types=valid_types)
+    results = db.pokedex_lookup.lookup(name, valid_types=valid_types)
 
     if len(results) == 0:
         # Nothing found
@@ -118,11 +80,12 @@ def lookup(request):
         if not results[0].exact:
             # Wasn't an exact match, but we can only figure out one thing
             # the user might have meant, so redirect to it anyway
-            h.flash(u"""Nothing in the Pokédex is exactly called "{0}".  """
-                    u"""This is the only close match.""".format(name),
-                    icon='spell-check-error')
+            #h.flash(u"""Nothing in the Pokédex is exactly called "{0}".  """
+            #        u"""This is the only close match.""".format(name),
+            #        icon='spell-check-error')
+            pass # XXX
 
-        raise exc.HTTPFound(helpers.resource_url(request, results[0].object, subpage=c.subpage))
+        return redirect(helpers.resource_url(request, results[0].object, subpage=c.subpage))
 
     else:
         # Multiple matches.  Could be exact (e.g., Metronome) or a fuzzy

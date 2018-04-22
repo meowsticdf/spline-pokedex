@@ -6,6 +6,7 @@ import pyramid.static
 import spline.lib.helpers
 import spline.lib.base
 
+from . import db
 from .lib.links import Link
 
 def index_view(request):
@@ -240,8 +241,8 @@ def main(global_config, **settings):
     ]
     settings['spline.plugins.links'].extend(links)
 
-    from .views import lookup
-    lookup.connect(settings)
+    # Connect to ye olde database (and lookup index)
+    db.connect(settings)
 
     # XXX
     import splinext.pokedex.helpers
