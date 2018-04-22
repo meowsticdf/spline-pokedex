@@ -1,8 +1,11 @@
+# encoding: utf-8
 from pyramid.config import Configurator
 from pyramid.renderers import render, render_to_response
 
 import spline.lib.helpers
 import spline.lib.base
+
+from .lib.links import Link
 
 def index_view(request):
     return render_to_response('/index.mako', {}, request=request)
@@ -39,7 +42,9 @@ def add_renderer_globals_factory(config):
                 return "/css"
             if action and controller:
                 return request.route_path(controller+"/"+action, **kwargs)
-            return "/"
+            if controller and controller.startswith("/"):
+                return controller
+            return "/unknown"
 
         def fake_translate(message, plural=None, n=None, context=None, comment=None):
             return unicode(message)
@@ -69,6 +74,9 @@ def add_renderer_globals_factory(config):
         request.tmpl_context.timer = spline.lib.base.ResponseTimer()
     return add_renderer_globals
 
+## TODO: markdown extension
+
+
 def main(global_config, **settings):
     local_templates = './templates'
     settings['mako.directories'] = [local_templates, 'splinext.pokedex:templates']
@@ -77,9 +85,9 @@ def main(global_config, **settings):
     settings['spline.plugins.controllers'] = {}
     settings['spline.plugins.hooks'] = {}
     settings['spline.plugins.widgets'] = {}
-    settings['spline.plugins.links'] = {}
+    settings['spline.plugins.links'] = []
     settings['spline.plugins.stylesheets'] = [
-        #'reset.mako',
+        'reset.mako',
         'layout.mako',
         'pokedex.mako',
         'sprites.mako',
@@ -88,6 +96,10 @@ def main(global_config, **settings):
     widgets = [
             ('page_header', 'widgets/pokedex_lookup.mako'),
             ('head_tag',    'widgets/pokedex_suggestion_css.mako'),
+
+            #('before_content', 'widgets/before_content.mako'),
+            ('head_tag',    'widgets/head_tag.mako'),
+            ('page_header', 'widgets/page_header/logo.mako'),
     ]
     for name, path in widgets:
         x = settings['spline.plugins.widgets'].setdefault(name, {3:[]})
@@ -161,8 +173,8 @@ def main(global_config, **settings):
     # static resources
     config.add_static_view('static/spline', 'spline:public')
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
-    config.add_static_view('static/local', '../../veekun/public') # XXX
-    config.add_static_view('dex/media', '../../pokedex-media/') # XXX
+    config.add_static_view('static/local', '../../../veekun/public') # XXX
+    config.add_static_view('dex/media', '../../../pokedex-media/') # XXX
 
     # index & css
     config.add_view(index_view, route_name="index")
@@ -171,5 +183,21 @@ def main(global_config, **settings):
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
     #config.add_view(context='pyramid.httpexceptions.HTTPNotFound', view=error_view)
+
+    ### links
+
+    def url(x): return x # XXX
+    links = [
+        Link(u'veekun', url('/'), children=[
+            Link(u'', None, children=[
+                Link(u'About + contact',  url('/about')),
+                Link(u'Chat',             url('/chat')),
+                Link(u'Credits',          url('/props')),
+                Link(u'Link or embed veekun', url('/link')),
+                Link(u'Pokédex history',  url('/dex/history')),
+            ]),
+        ]),
+    ]
+    settings['spline.plugins.links'].extend(links)
 
     return config.make_wsgi_app()
