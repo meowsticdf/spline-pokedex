@@ -838,7 +838,7 @@ def apply_move_template(template, move):
 
 
 class DownloadSizer(object):
-    file_size_units = 'B KB MB GB TB'.split()
+    file_size_units = 'B KiB MiB GiB TiB'.split()
 
     def __init__(self):
         self.seen = set()
