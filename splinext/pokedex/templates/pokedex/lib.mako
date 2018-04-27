@@ -1,3 +1,6 @@
+<%! from itertools import groupby, chain, repeat %>
+<%! import os, warnings %>
+
 <%def name="pokedex_img(src, **attr)"><%
     # TODO: routing
     return h.HTML.img(src=request.route_path('dex/media', subpath=src), **attr)
@@ -32,7 +35,7 @@
     for version in versions:
         # Convert version to string if necessary
         if isinstance(version, basestring):
-            identifier = filename_from_name(version)
+            identifier = h.pokedex.filename_from_name(version)
             name = version
         else:
             identifier = version.identifier
@@ -283,15 +286,15 @@
 <div id="dex-header">
     <a href="${url.current(name=c.prev_species.name.lower(), form=None)}" id="dex-header-prev" class="dex-box-link">
         <img src="${h.static_uri('spline', 'icons/control-180.png')}" alt="«">
-        ${h.pokedex.pokemon_icon(c.prev_species.default_pokemon, alt="")}
+        ${pokemon_icon(c.prev_species.default_pokemon, alt="")}
         ${c.prev_species.id}: ${c.prev_species.name}
     </a>
     <a href="${url.current(name=c.next_species.name.lower(), form=None)}" id="dex-header-next" class="dex-box-link">
         ${c.next_species.id}: ${c.next_species.name}
-        ${h.pokedex.pokemon_icon(c.next_species.default_pokemon, alt="")}
+        ${pokemon_icon(c.next_species.default_pokemon, alt="")}
         <img src="${h.static_uri('spline', 'icons/control.png')}" alt="»">
     </a>
-    ${h.pokedex.pokemon_form_image(icon_form or c.pokemon.default_form, prefix='icons')}
+    ${pokemon_form_image(icon_form or c.pokemon.default_form, prefix='icons')}
     <br>${c.pokemon.species.id}: ${c.pokemon.species.name}
     % if subpages:
         <ul class="inline-menu">
@@ -341,7 +344,7 @@
   % if len(column) == len(column[0].generation.version_groups):
     ## If the entire gen has been collapsed into a single column, just show
     ## the gen icon instead of the messy stack of version icons
-    ${h.pokedex.generation_icon(column[0].generation)}
+    ${generation_icon(column[0].generation)}
   % else:
     <%
         if move_method:
@@ -358,7 +361,7 @@
     % if i != 0:
     <br>
     % endif
-    ${h.pokedex.version_group_icon(version_group)}
+    ${version_group_icon(version_group)}
     % endfor
   % endif
 </th>
@@ -376,9 +379,9 @@
     ## rather than ignoring all but the first
     % for version_group in column:
         % if version_group in version_group_data:
-        ${h.pokedex.version_group_icon(version_group)}
+        ${version_group_icon(version_group)}
         % elif version_group in c.move_tutor_version_groups:
-        <span class="no-tutor">${h.pokedex.version_group_icon(version_group)}</span>
+        <span class="no-tutor">${version_group_icon(version_group)}</span>
         % endif
     % endfor
     </td>
@@ -464,11 +467,11 @@
 </%def>
 
 <%def name="pokemon_table_row(pokemon)">
-<td class="icon">${h.pokedex.pokemon_icon(pokemon)}</td>
-<td>${h.pokedex.pokemon_link(pokemon)}</td>
+<td class="icon">${pokemon_icon(pokemon)}</td>
+<td>${pokemon_link(pokemon)}</td>
 <td class="type2">
     % for type in pokemon.types:
-    ${h.pokedex.type_link(type)}
+    ${type_link(type)}
     % endfor
 </td>
 <td class="ability">
@@ -483,7 +486,7 @@
     <em>${_pokemon_ability_link(pokemon.hidden_ability)}</em>
   % endif
 </td>
-<td>${h.pokedex.chrome_img('gender-rates/%d.png' % pokemon.species.gender_rate, alt=h.pokedex.gender_rate_label[pokemon.species.gender_rate])}</td>
+<td>${chrome_img('gender-rates/%d.png' % pokemon.species.gender_rate, alt=h.pokedex.gender_rate_label[pokemon.species.gender_rate])}</td>
 <td class="egg-group">
   % for i, egg_group in enumerate(pokemon.species.egg_groups):
     % if i > 0:
@@ -533,11 +536,11 @@
 <td><a href="${url(controller='dex', action='moves', name=move.name.lower())}">${move.name}</a></td>
 % if gen_instead_of_type:
 ## Done on type pages; we already know the type, so show the generation instead
-<td class="type">${h.pokedex.generation_icon(move.generation)}</td>
+<td class="type">${generation_icon(move.generation)}</td>
 % else:
-<td class="type">${h.pokedex.type_link(move.type)}</td>
+<td class="type">${type_link(move.type)}</td>
 % endif
-<td class="class">${h.pokedex.damage_class_icon(move.damage_class)}</td>
+<td class="class">${damage_class_icon(move.damage_class)}</td>
 <td>
     % if pp_override and pp_override != move.pp:
     <s>${move.pp}</s> <br> ${pp_override}
@@ -605,11 +608,11 @@ collapse_key = h.pokedex.collapse_flavor_text_key(literal=obdurate)
 species = pokemon_form.species
 
 # A handful of Pokémon have separate cries for each form; most don't
-if not h.pokedex.pokemon_has_media(pokemon_form, 'cries', 'ogg'):
+if not pokemon_has_media(pokemon_form, 'cries', 'ogg'):
     pokemon_form = None
 
 cry_url = url(controller='dex', action='media',
-    path=h.pokedex.pokemon_media_path(species, 'cries', 'ogg', pokemon_form))
+    path=pokemon_media_path(species, 'cries', 'ogg', pokemon_form))
 %>
 <audio src="${cry_url}" controls preload="auto" class="cry">
     <!-- Totally the best fallback -->
