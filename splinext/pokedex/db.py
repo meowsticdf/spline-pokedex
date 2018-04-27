@@ -14,16 +14,16 @@ import pokedex.lookup
 import sqlalchemy as sqla
 from sqlalchemy import orm
 from sqlalchemy.sql import func
-from zope.sqlalchemy import ZopeTransactionExtension
+import zope.sqlalchemy
 
 # stolen from veekun-pokedex
 pokedex_session = MultilangScopedSession(
     orm.sessionmaker(
         class_=MultilangSession,
-        extension=ZopeTransactionExtension(),
         default_language_id=ENGLISH_ID,
     )
 )
+zope.sqlalchemy.register(pokedex_session)
 
 pokedex_lookup = None
 
