@@ -71,9 +71,8 @@ def add_renderer_globals_factory(config):
             ('spline', 'core'),
             ('pokedex', 'pokedex-suggestions'),
         ]
-        class Language:
-            identifier = 'en'
-        request.tmpl_context.game_language = Language()
+        en = db.get_by_identifier_query(db.t.Language, u'en').first()
+        request.tmpl_context.game_language = en
 
         # start timer
         request.tmpl_context.timer = spline.lib.base.ResponseTimer()
