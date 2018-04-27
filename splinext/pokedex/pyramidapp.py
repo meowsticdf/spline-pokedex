@@ -109,6 +109,7 @@ def main(global_config, **settings):
         x[3].append(path)
 
     config = Configurator(settings=settings)
+    config.include('pyramid_tm')
     config.include('pyramid_mako')
     config.include('pyramid_debugtoolbar')
 
