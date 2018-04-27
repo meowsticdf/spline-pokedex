@@ -14,11 +14,11 @@
 </%def>
 
 <div id="dex-header">
-    <a href="${url.current(name=c.prev_ability.name.lower())}" id="dex-header-prev" class="dex-box-link">
+    <a href="${url(controller='dex', action='abilities', name=c.prev_ability.name.lower())}" id="dex-header-prev" class="dex-box-link">
         <img src="${h.static_uri('spline', 'icons/control-180.png')}" alt="«">
         ${c.prev_ability.name}
     </a>
-    <a href="${url.current(name=c.next_ability.name.lower())}" id="dex-header-next" class="dex-box-link">
+    <a href="${url(controller='dex', action='abilities', name=c.next_ability.name.lower())}" id="dex-header-next" class="dex-box-link">
         ${c.next_ability.name}
         <img src="${h.static_uri('spline', 'icons/control.png')}" alt="»">
     </a>
@@ -33,11 +33,11 @@
 </div>
 
 
-<%lib:cache_content>
+## <%lib:cache_content>
 ${h.h1(_('Essentials'))}
 <div class="dex-page-portrait">
     <p id="dex-page-name">${c.ability.name}</p>
-    <p>${h.pokedex.generation_icon(c.ability.generation)}</p>
+    <p>${dexlib.generation_icon(c.ability.generation)}</p>
 </div>
 
 <div class="dex-page-beside-portrait">
@@ -78,7 +78,7 @@ ${h.h2(_('Moves affected'), id=_('moves', context='anchor'))}
 ${h.h1(_('History'))}
 <dl>
     % for change in c.ability.changelog:
-    <dt>${_('Before %s') % h.pokedex.version_icons(*change.changed_in.versions) | n}</dt>
+    <dt>${_('Before %s') % dexlib.version_icons(*change.changed_in.versions) | n}</dt>
     <dd class="markdown">${change.effect}</dd>
     % endfor
 </dl>
@@ -128,9 +128,9 @@ ${h.h1(_('External Links'), id='links')}
 <ul class="classic-list">
     <li><a href="http://bulbapedia.bulbagarden.net/wiki/${c.ability.name.replace(' ', '_')}_%28ability%29">${_("Bulbapedia")}</a></li>
     % if c.ability.generation_id <= 4:
-    <li>${h.pokedex.generation_icon(4)} <a href="http://legendarypokemon.net/dp/abilities#${c.ability.name.lower().replace(' ', '+')}">${_(u"Legendary Pokémon")}</a></li>
+    <li>${dexlib.generation_icon(4)} <a href="http://legendarypokemon.net/dp/abilities#${c.ability.name.lower().replace(' ', '+')}">${_(u"Legendary Pokémon")}</a></li>
     % endif
     <li><a href="http://serebii.net/abilitydex/${c.ability.name.lower().replace(' ', '')}.shtml">${_("Serebii.net")}</a></li>
     <li><a href="http://smogon.com/dex/sm/abilities/${c.ability.name.lower().replace(' ', '_')}">${_("Smogon")}</a></li>
 </ul>
-</%lib:cache_content>
+## </%lib:cache_content>

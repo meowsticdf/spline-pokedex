@@ -188,6 +188,7 @@ def main(global_config, **settings):
 
     # lookup
     config.add_view(route_name='dex/lookup', view='splinext.pokedex.views.lookup:lookup', renderer='pokedex/lookup_results.mako')
+    config.add_view(route_name='dex/abilities', view='splinext.pokedex.views.abilities:ability_view', renderer='pokedex/ability.mako')
 
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
