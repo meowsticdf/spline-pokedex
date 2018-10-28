@@ -1,0 +1,21 @@
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+                       xmlns:moz="http://www.mozilla.org/2006/browser/search/">
+    <ShortName>veekun Pokédex</ShortName>
+    <Description>Search veekun's Pokédex.</Description>
+    <InputEncoding>UTF-8</InputEncoding>
+    <Image width="16" height="16" type="image/x-icon">https://veekun.com/static/local/favicon.png</Image>
+
+    <!-- Regular search -->
+    <Url type="text/html" method="GET"
+         template="https://veekun.com/dex/lookup?lookup={searchTerms};source=opensearch" />
+
+    <!-- Suggestions -->
+    <Url type="application/x-suggestions+json"
+         template="https://veekun.com/dex/suggest?prefix={searchTerms};source=opensearch" />
+
+    <!-- Auto-update -->
+    <Url type="application/opensearchdescription+xml" rel="self"
+         template="https://veekun.com/static/local/pokedex_opensearch.xml" />
+
+    <moz:SearchForm>https://veekun.com/dex</moz:SearchForm>
+</OpenSearchDescription>
