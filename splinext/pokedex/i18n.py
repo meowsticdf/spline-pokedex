@@ -1,8 +1,14 @@
 # encoding: utf8
 
-from spline.i18n import BaseTranslator, NullTranslator
+class NullTranslator(object):
+    """Looks like a Translator, quacks like a Translator, but doesn't actually
+    translate
+    """
+    def __init__(*stuff, **more_stuff):
+        pass
 
-# NullTranslator is re-exported
+    def __call__(self, message, *stuff, **more_stuff):
+        return handle_template(message)
 
 class Translator(BaseTranslator):
     package = 'splinext.pokedex'
