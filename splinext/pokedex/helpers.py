@@ -13,10 +13,10 @@ from operator import attrgetter
 import os.path
 import warnings
 
-from pylons import config, tmpl_context as c, url
+#from pylons import config, tmpl_context as c, url
 
 import pokedex.db.tables as t
-import spline.lib.helpers as h
+#import spline.lib.helpers as h
 from splinext.pokedex.i18n import NullTranslator
 
 # Re-exported
