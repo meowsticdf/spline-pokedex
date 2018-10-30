@@ -1,4 +1,6 @@
 # encoding: utf-8
+import os
+
 from pyramid.config import Configurator
 from pyramid.renderers import render, render_to_response
 import pyramid.static
@@ -80,7 +82,8 @@ def add_renderer_globals_factory(config):
 
 
 def main(global_config, **settings):
-    settings['mako.directories'] = ['splinext.pokedex:templates']
+    local_template_dir = os.path.join(os.path.dirname(global_config['__file__']), 'templates')
+    settings['mako.directories'] = [local_template_dir, 'splinext.pokedex:templates']
 
     settings['spline.plugins'] = []
     settings['spline.plugins.controllers'] = {}
