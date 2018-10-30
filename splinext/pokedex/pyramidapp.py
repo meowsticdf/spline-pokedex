@@ -6,6 +6,7 @@ from pyramid.renderers import render, render_to_response
 import pyramid.static
 
 from . import db
+from . import splinehelpers
 from . import helpers
 from .lib import Link, ResponseTimer
 
@@ -53,7 +54,7 @@ def add_renderer_globals_factory(config):
 
         renderer_globals = event
         renderer_globals["config"] = config
-        renderer_globals["h"] = helpers
+        renderer_globals["h"] = splinehelpers
         request = event.get("request") or threadlocal.get_current_request()
         if not request:
             return
@@ -247,6 +248,6 @@ def main(global_config, **settings):
     db.connect(settings)
 
     # XXX
-    helpers.pokedex = helpers
+    splinehelpers.pokedex = helpers
 
     return config.make_wsgi_app()

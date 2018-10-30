@@ -16,8 +16,8 @@ import warnings
 #from pylons import config, tmpl_context as c, url
 
 import pokedex.db.tables as t
-#import spline.lib.helpers as h
-from splinext.pokedex.i18n import NullTranslator
+from . import splinehelpers as h
+from .i18n import NullTranslator
 
 # Re-exported
 import pokedex.formulae as formulae
