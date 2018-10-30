@@ -45,8 +45,6 @@ setup(
     #pylons = pylons.test:PylonsPlugin
     """,
 
-    namespace_packages = ['splinext'],
-
     message_extractors = {'splinext': [
         ('**.py', 'spline-python', None),
         ('*/templates/**.mako', 'spline-mako', {'input_encoding': 'utf-8'}),
