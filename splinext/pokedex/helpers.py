@@ -23,6 +23,8 @@ from .i18n import NullTranslator
 import pokedex.formulae as formulae
 from pokedex.roomaji import romanize
 
+def url(*args, **kw): return '#bad-url'
+
 # We can't translate at import time, but _ will mark strings as translatable
 # Functions that need translation will take a "_" parameter, which defaults
 # to this:
