@@ -73,7 +73,7 @@ def add_renderer_globals_factory(config):
         request.tmpl_context.game_language = en
 
         # start timer
-        request.tmpl_context.timer = spline.lib.base.ResponseTimer()
+        request.tmpl_context.timer = ResponseTimer()
     return add_renderer_globals
 
 ## TODO: markdown extension
