@@ -27,8 +27,8 @@
         <%label=translate(link.label, context=link.i18n_context)%>
         % if not link.label:
         <!-- nothin -->
-        % elif link.url:
-        <a href="${link.url}">${label}</a>
+        % elif link.url(request):
+        <a href="${link.url(request)}">${label}</a>
         % else:
         <a>${label}</a>
         % endif

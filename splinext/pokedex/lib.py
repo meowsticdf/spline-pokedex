@@ -44,7 +44,8 @@ class Link(object):
                 return self.route_name # XXX
             else:
                 return request.route_path(self.route_name)
-        return '/unknown'
+        #return '/unknown'
+        return None
 
 
 class ResponseTimer(object):
