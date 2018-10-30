@@ -178,7 +178,7 @@ def main(global_config, **settings):
     ### views
 
     # static resources
-    config.add_static_view('static/spline', 'spline:public')
+    #config.add_static_view('static/spline', 'spline:public')
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
     config.add_static_view('static/local', '../../../veekun/public') # XXX
 
