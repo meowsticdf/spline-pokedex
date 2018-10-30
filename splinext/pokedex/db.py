@@ -7,28 +7,38 @@ import re
 
 import pokedex.db
 import pokedex.db.tables as t
+from pokedex.db import ENGLISH_ID
+from pokedex.db.multilang import MultilangScopedSession, MultilangSession
 import pokedex.lookup
+
+import sqlalchemy as sqla
+from sqlalchemy import orm
 from sqlalchemy.sql import func
+import zope.sqlalchemy
 
+# stolen from veekun-pokedex
+pokedex_session = MultilangScopedSession(
+    orm.sessionmaker(
+        class_=MultilangSession,
+        default_language_id=ENGLISH_ID,
+    )
+)
+zope.sqlalchemy.register(pokedex_session)
 
-pokedex_session = None
 pokedex_lookup = None
 
-def connect(config):
+def connect(settings):
     """Instantiates the `pokedex_session` and `pokedex_lookup` objects."""
+
     # DB session for everyone to use.
-    global pokedex_session
-    prefix = 'spline-pokedex.sqlalchemy.'
-    pokedex_session = pokedex.db.connect(
-        engine_args=config, engine_prefix=prefix,
-    )
+    engine = sqla.engine_from_config(settings, 'spline-pokedex.sqlalchemy.')
+    pokedex_session.configure(bind=engine)
 
     # Lookup object
     global pokedex_lookup
+    lookup_directory = settings['spline-pokedex.lookup_directory']
     pokedex_lookup = pokedex.lookup.PokedexLookup(
-        # Keep our own whoosh index in the /data dir
-        directory=os.path.join(config['pylons.cache_dir'],
-                              'pokedex-index'),
+        directory=lookup_directory,
         session=pokedex_session,
     )
     if not pokedex_lookup.index:
