@@ -86,7 +86,7 @@
     if prefix is None:
         prefix = 'main-sprites/ultra-sun-ultra-moon'
         # FIXME what the hell is going on here
-        if not h.pokemon_has_media(pokemon_form, prefix, 'png'):
+        if not h.pokedex.pokemon_has_media(pokemon_form, prefix, 'png'):
             prefix = 'main-sprites/black-white'
 
         # Deal with Spiky-eared Pichu and ??? Arceus
@@ -116,7 +116,7 @@
         return h.literal('<span class="sprite-icon sprite-icon-%d"></span>' % pokemon.species.id)
 
     alt_text = pokemon.name if alt else u''
-    if h.pokemon_has_media(pokemon.default_form, 'icons', 'png'):
+    if h.pokedex.pokemon_has_media(pokemon.default_form, 'icons', 'png'):
         return pokemon_form_image(pokemon.default_form, prefix='icons', alt=alt_text)
 
     return pokedex_img('pokemon/icons/0.png', title=pokemon.species.name, alt=alt_text)
