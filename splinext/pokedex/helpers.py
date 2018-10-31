@@ -11,7 +11,6 @@ import re
 from itertools import groupby, chain, repeat
 from operator import attrgetter
 import os.path
-import warnings
 
 #from pylons import config, tmpl_context as c, url
 
@@ -333,9 +332,6 @@ def pokemon_has_media(pokemon_form, prefix, ext, config, use_form=True):
     # TODO share this somewhere
     media_dir = config.get('spline-pokedex.media_directory', None)
     if not media_dir:
-        warnings.warn(
-            "No media_directory found; "
-            "you may want to clone pokedex-media.git")
         return False
 
     if use_form:

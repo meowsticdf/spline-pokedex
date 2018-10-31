@@ -1,5 +1,6 @@
 # encoding: utf-8
 import os
+import warnings
 
 from pyramid.config import Configurator
 from pyramid.renderers import render, render_to_response
@@ -184,8 +185,12 @@ def main(global_config, **settings):
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
     config.add_static_view('static/local', os.path.join(config_root, './public')) # XXX
 
-    media_root = settings['spline-pokedex.media_directory']
-    config.add_view(pyramid.static.static_view(media_root, use_subpath=True), route_name='dex/media')
+    media_root = settings('spline-pokedex.media_directory', None)
+    if media_root:
+        config.add_view(pyramid.static.static_view(media_root, use_subpath=True), route_name='dex/media')
+    else:
+        warnings.warn("No media_directory found; you may want to clone pokedex-media.git")
+
 
     # index & css
     config.add_view(index_view, route_name="index")
