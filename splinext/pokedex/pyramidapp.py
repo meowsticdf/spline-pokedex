@@ -55,6 +55,14 @@ def add_renderer_globals_factory(config):
                 return controller
             return "/unknown"
 
+        def fake_url_current(**kwargs):
+            path = {}
+            if 'name' in kwargs:
+                path['name'] = kwargs.pop('name')
+            path['_query'] = kwargs
+            return request.current_route_path(**path)
+
+
         def fake_translate(message, plural=None, n=None, context=None, comment=None):
             return unicode(message)
 
@@ -68,6 +76,7 @@ def add_renderer_globals_factory(config):
         renderer_globals["c"] = request.tmpl_context
         #renderer_globals["url"] = request.url_generator
         renderer_globals["url"] = fake_url
+        fake_url.current = fake_url_current
         renderer_globals["_"] = fake_translate
 
         request.tmpl_context.links = config['spline.plugins.links']
