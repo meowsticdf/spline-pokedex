@@ -284,7 +284,7 @@ def version_group_icon(version_group):
         title=names)
 
 
-def pokemon_has_media(pokemon_form, prefix, ext, use_form=True):
+def pokemon_has_media(pokemon_form, prefix, ext, config, use_form=True):
     """Determine whether a file exists in the specified directory for the
     specified Pokémon form.
     """
