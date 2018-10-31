@@ -214,6 +214,8 @@ def main(global_config, **settings):
     config.add_view(route_name='dex/lookup', view='splinext.pokedex.views.lookup:lookup', renderer='pokedex/lookup_results.mako')
     config.add_view(route_name='dex/abilities', view='splinext.pokedex.views.abilities:ability_view', renderer='pokedex/ability.mako')
     config.add_view(route_name='dex/abilities_list', view='splinext.pokedex.views.abilities:ability_list', renderer='pokedex/ability_list.mako')
+    config.add_view(route_name='dex/natures', view='splinext.pokedex.views.natures:nature_view', renderer='pokedex/nature.mako')
+    config.add_view(route_name='dex/natures_list', view='splinext.pokedex.views.natures:natures_list', renderer='pokedex/nature_list.mako')
 
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
