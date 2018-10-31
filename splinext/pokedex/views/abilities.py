@@ -8,8 +8,8 @@ import pyramid.httpexceptions as exc
 
 import pokedex.db.tables as t
 
-from .. import helpers
 from .. import db
+from .. import helpers
 
 def ability_view(request):
     name = request.matchdict.get('name')
