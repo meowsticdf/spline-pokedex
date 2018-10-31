@@ -48,3 +48,10 @@ def h2(title, id=None, **attrs):
     """Similar to `h1`, but for an <h2>!"""
     return h1(title, id=id, tag='h2', **attrs)
 
+def keysort(d, key):
+    """Returns an iterator over the items in `d`, sorted by the provided key
+    function (which only takes one argument: the dict key).
+    """
+    keys = list(d.keys())
+    keys.sort(key=key)
+    return ((key, d[key]) for key in keys)
