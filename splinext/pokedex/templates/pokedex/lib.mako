@@ -4,7 +4,7 @@
 #### Images and links
 
 <%def name="pokedex_img(src, **attr)"><%
-    return h.HTML.img(src=url(controller='dex', action='media', path=src), **attr)
+    return h.HTML.img(src=url(controller='dex', action='media', subpath=src), **attr)
 %></%def>
 
 <%def name="chrome_img(src, **attr)"><%
