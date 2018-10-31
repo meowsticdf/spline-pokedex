@@ -185,7 +185,7 @@ def main(global_config, **settings):
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
     config.add_static_view('static/local', os.path.join(config_root, './public')) # XXX
 
-    media_root = settings('spline-pokedex.media_directory', None)
+    media_root = settings.get('spline-pokedex.media_directory', None)
     if media_root:
         config.add_view(pyramid.static.static_view(media_root, use_subpath=True), route_name='dex/media')
     else:
