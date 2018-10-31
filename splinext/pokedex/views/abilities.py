@@ -8,6 +8,7 @@ import pyramid.httpexceptions as exc
 
 import pokedex.db.tables as t
 
+from .. import helpers
 from .. import db
 
 def ability_view(request):
@@ -23,14 +24,13 @@ def ability_view(request):
         raise exc.NotFound()
 
     ### Prev/next for header
-    # XXX pyramid
     c.prev_ability = c.ability
     c.next_ability = c.ability
-    #c.prev_ability, c.next_ability = self._prev_next(
-    #    table=t.Ability,
-    #    current=c.ability,
-    #    filters=[t.Ability.is_main_series],
-    #)
+    c.prev_ability, c.next_ability = helpers.prev_next(
+        table=t.Ability,
+        current=c.ability,
+        filters=[t.Ability.is_main_series],
+    )
 
 
     # Eagerload
