@@ -57,11 +57,11 @@ def add_renderer_globals_factory(config):
 
         def fake_url_current(**kwargs):
             path = {}
+            # XXX request.urlargs?
             if 'name' in kwargs:
                 path['name'] = kwargs.pop('name')
             path['_query'] = kwargs
             return request.current_route_path(**path)
-
 
         def fake_translate(message, plural=None, n=None, context=None, comment=None):
             return unicode(message)
