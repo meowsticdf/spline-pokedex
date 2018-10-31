@@ -449,6 +449,13 @@ def item_link(item, include_icon=True, _=_):
                  pocket=item.pocket.identifier, name=item_name.lower()),
     )
 
+def joiner(sep):
+    """Returns an iterator which yields sep every time except the first.
+
+    Useful for printing out a comma-separated list.
+    """
+    return chain([u''], repeat(u', '))
+
 
 ### Labels
 
