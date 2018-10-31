@@ -27,6 +27,11 @@
 </h3>
 % endif
 
+<% # XXX work around some issues with mako.strict_undefined. See #124.
+cond = None
+cv = None
+%>
+
 <table class="dex-encounters striped-rows">
     ## Spit out <col> tags.  Zip cleverness lets us compare the current version
     ## to the one before it
