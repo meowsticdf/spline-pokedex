@@ -30,6 +30,50 @@ def url(*args, **kw): return '#bad-url'
 # to this:
 _ = NullTranslator()
 
+def resource_url(request, thingy, subpage=None, controller='dex'):
+    u"""Given a thingy (Pokémon, move, type, whatever), returns a URL to it.
+    """
+    # Using the table name as an action directly looks kinda gross, but I can't
+    # think of anywhere I've ever broken this convention, and making a
+    # dictionary to get data I already have is just silly
+    args = {}
+
+    # Pokémon with forms need the form attached to the URL
+    if isinstance(thingy, t.PokemonForm):
+        action = 'pokemon'
+        args['form'] = thingy.form_identifier.lower()
+        args['name'] = thingy.pokemon.species.name.lower()
+
+        if not thingy.is_default:
+            subpage = 'flavor'
+    elif isinstance(thingy, t.PokemonSpecies):
+        action = 'pokemon'
+        args['name'] = thingy.name.lower()
+    else:
+        action = thingy.__tablename__
+        args['name'] = thingy.name.lower()
+
+
+    # Items are split up by pocket
+    if isinstance(thingy, t.Item):
+        args['pocket'] = thingy.pocket.identifier
+
+    if (thingy.__tablename__.startswith('conquest_')
+       or (isinstance(thingy, t.Ability) and not thingy.is_main_series)
+       or subpage == 'conquest'):
+        # Conquest stuff needs to go to the Conquest controller
+        if action == 'conquest_warrior_skills':
+            action = 'skills'
+        else:
+            action = action.replace('conquest_', '')
+
+        controller = 'dex_conquest'
+    elif subpage:
+        action += '_' + subpage
+
+    route = controller + "/" + action
+    return request.route_url(route, **args)
+
 def make_thingy_url(thingy, subpage=None, controller='dex'):
     u"""Given a thingy (Pokémon, move, type, whatever), returns a URL to it.
     """
