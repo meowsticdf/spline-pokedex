@@ -83,7 +83,8 @@ def add_renderer_globals_factory(config):
 
 
 def main(global_config, **settings):
-    local_template_dir = os.path.join(os.path.dirname(global_config['__file__']), 'templates')
+    config_root = os.path.dirname(global_config['__file__'])
+    local_template_dir = os.path.join(config_root, 'templates')
     settings['mako.directories'] = [local_template_dir, 'splinext.pokedex:templates']
 
     settings['spline.plugins'] = []
@@ -180,7 +181,7 @@ def main(global_config, **settings):
     # static resources
     #config.add_static_view('static/spline', 'spline:public')
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
-    config.add_static_view('static/local', '../../../veekun/public') # XXX
+    config.add_static_view('static/local', os.path.join(config_root, './public')) # XXX
 
     media_root = settings['spline-pokedex.media_directory']
     config.add_view(pyramid.static.static_view(media_root, use_subpath=True), route_name='dex/media')
