@@ -218,6 +218,7 @@ def main(global_config, **settings):
     config.add_view(route_name='dex/locations_list', view='splinext.pokedex.views.locations:location_list', renderer='pokedex/location_list.mako')
     config.add_view(route_name='dex/natures', view='splinext.pokedex.views.natures:nature_view', renderer='pokedex/nature.mako')
     config.add_view(route_name='dex/natures_list', view='splinext.pokedex.views.natures:natures_list', renderer='pokedex/nature_list.mako')
+    config.add_view(route_name='dex/pokemon', view='splinext.pokedex.views.pokemon:pokemon_view', renderer='pokedex/pokemon.mako')
     config.add_view(route_name='dex/types', view='splinext.pokedex.views.types:type_view', renderer='pokedex/type.mako')
     config.add_view(route_name='dex/types_list', view='splinext.pokedex.views.types:type_list', renderer='pokedex/type_list.mako')
 
