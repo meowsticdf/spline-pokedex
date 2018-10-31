@@ -1,7 +1,6 @@
 # encoding: utf-8
 
 from collections import defaultdict
-import re
 
 from sqlalchemy.orm import (joinedload, joinedload_all, subqueryload, subqueryload_all)
 from sqlalchemy.orm.exc import NoResultFound
