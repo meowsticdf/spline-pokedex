@@ -45,7 +45,12 @@ def add_renderer_globals_factory(config):
             if action == "css":
                 return "/css"
             if action and controller:
-                return request.route_path(controller+"/"+action, **kwargs)
+                path = {}
+                for key in 'name', 'pocket', 'subpath':
+                    if key in kwargs:
+                        path[key] = kwargs.pop(key)
+                path['_query'] = kwargs
+                return request.route_path(controller+"/"+action, **path)
             if controller and controller.startswith("/"):
                 return controller
             return "/unknown"
