@@ -11,6 +11,19 @@ import pokedex.db.tables as t
 from .. import db
 from .. import helpers
 
+def ability_list(request):
+    c = request.tmpl_context
+
+    c.abilities = db.pokedex_session.query(t.Ability) \
+        .join(t.Ability.names_local) \
+        .filter(t.Ability.is_main_series) \
+        .options(joinedload('prose.short_effect')) \
+        .order_by(t.Ability.generation_id.asc(),
+            t.Ability.names_table.name.asc()) \
+        .all()
+
+    return {}
+
 def ability_view(request):
     name = request.matchdict.get('name')
     c = request.tmpl_context
