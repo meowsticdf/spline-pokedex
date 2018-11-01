@@ -805,3 +805,6 @@ def pokemon_view(request):
     c.move_tutor_version_groups = _move_tutor_version_groups(c.moves)
 
     return {}
+
+def pokemon_list(request):
+    return {}
