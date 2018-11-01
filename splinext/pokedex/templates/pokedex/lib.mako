@@ -27,11 +27,7 @@
 
 <%def name="version_icons(*versions, **kwargs)"><%
     """Returns some version icons, given a list of version names.
-
-    Keyword arguments:
-    _: translator for i18n
     """
-    # python's argument_list syntax is kind of limited here
     version_icons = u''
     comma = h.pokedex.joiner(', ')
     for version in versions:
