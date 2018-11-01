@@ -244,13 +244,13 @@
     % if subpages:
         <ul class="inline-menu">
         <% form = c.pokemon.default_form.form_identifier if not c.pokemon.is_default else None %>\
-        % for action, label in (('pokemon', u'Pokédex'), \
-                                ('pokemon_flavor', u'Flavor'), \
-                                ('pokemon_locations', u'Locations')):
-            % if action == request.environ['pylons.routes_dict']['action']:
+        % for route, label in (('dex/pokemon', u'Pokédex'), \
+                                ('dex/pokemon_flavor', u'Flavor'), \
+                                ('dex/pokemon_locations', u'Locations')):
+            % if route == request.matched_route.name:
             <li>${label}</li>
             % else:
-            <li><a href="${url.current(action=action, form=form if action != 'pokemon_locations' else None)}">${label}</a></li>
+            <li><a href="${request.current_route_path(route, _query=dict(form=form if route != 'dex/pokemon_locations' else None))}">${label}</a></li>
             % endif
         % endfor
         % if c.pokemon.species.conquest_order is not None:
