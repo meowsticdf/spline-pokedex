@@ -17,6 +17,7 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers as pokedex_helpers
+from ..magnitude import parse_size
 from .locations import encounter_method_icons, encounter_condition_value_icons
 
 def bar_color(hue, pastelness):
@@ -234,7 +235,7 @@ def pokemon_view(request):
 
     # Some Javascript
     # XXX
-    #c.javascripts.append(('pokedex', 'pokemon'))
+    c.javascripts = [('pokedex', 'pokemon')]
 
     ### TODO: Let's cache this bitch
     #return self.cache_content(
@@ -824,7 +825,7 @@ def pokemon_flavor_view(request):
 
     # Some Javascript
     # XXX(pyramid)
-    #c.javascripts.append(('pokedex', 'pokemon'))
+    c.javascripts = [('pokedex', 'pokemon')]
 
     # XXX(pyramid) cache me
     #return self.cache_content(
@@ -996,6 +997,27 @@ def pokemon_locations_view(request):
             c.region_versions[region][0:0] = version_group.versions
 
     return {}
+
+
+def parse_size_view(request):
+    u"""Parses a height or weight and returns a bare number in Pokémon
+    units.
+
+    Query params are `size`, the string, and `mode`, either 'height' or
+    'weight'.
+    """
+
+    size = request.params.get('size', None)
+    mode = request.params.get('mode', None)
+
+    if not size or mode not in (u'height', u'weight'):
+        # Totally bogus!
+        return exc.HTTPBadRequest()
+
+    try:
+        return parse_size(size, mode)
+    except (IndexError, ValueError):
+        return exc.HTTPBadRequest()
 
 
 def pokemon_list(request):

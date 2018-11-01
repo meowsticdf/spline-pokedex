@@ -80,13 +80,15 @@ def add_renderer_globals_factory(config):
         renderer_globals["_"] = fake_translate
 
         request.tmpl_context.links = config['spline.plugins.links']
+        extra_javascripts = getattr(request.tmpl_context, 'javascripts', [])
         request.tmpl_context.javascripts = [
             ('spline', 'lib/jquery-1.7.1.min'),
             ('spline', 'lib/jquery.cookies-2.2.0.min'),
             ('spline', 'lib/jquery.ui-1.8.4.min'),
             ('spline', 'core'),
             ('pokedex', 'pokedex-suggestions'),
-        ]
+            ('pokedex', 'pokedex'), # XXX only on main pokedex pages
+        ] + extra_javascripts
         en = db.get_by_identifier_query(db.t.Language, u'en').first()
         request.tmpl_context.game_language = en
 
@@ -212,6 +214,11 @@ def main(global_config, **settings):
 
     # lookup
     config.add_view(route_name='dex/lookup', view='splinext.pokedex.views.lookup:lookup', renderer='pokedex/lookup_results.mako')
+
+    # json
+    config.add_view(route_name='dex/parse_size', view='splinext.pokedex.views.pokemon:parse_size_view', renderer='json')
+
+    # main dex pages
     config.add_view(route_name='dex/abilities', view='splinext.pokedex.views.abilities:ability_view', renderer='pokedex/ability.mako')
     config.add_view(route_name='dex/abilities_list', view='splinext.pokedex.views.abilities:ability_list', renderer='pokedex/ability_list.mako')
     config.add_view(route_name='dex/locations', view='splinext.pokedex.views.locations:location_view', renderer='pokedex/location.mako')
