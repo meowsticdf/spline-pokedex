@@ -557,7 +557,7 @@ if not h.pokedex.pokemon_has_media(pokemon_form, 'cries', 'ogg', config):
     pokemon_form = None
 
 cry_url = url(controller='dex', action='media',
-    path=h.pokedex.pokemon_media_path(species, 'cries', 'ogg', pokemon_form))
+    subpath=h.pokedex.pokemon_media_path(species, 'cries', 'ogg', pokemon_form))
 %>
 <audio src="${cry_url}" controls preload="auto" class="cry">
     <!-- Totally the best fallback -->
