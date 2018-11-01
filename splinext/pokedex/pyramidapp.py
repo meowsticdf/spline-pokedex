@@ -152,7 +152,7 @@ def main(global_config, **settings):
     config.add_route('dex_search/pokemon_search', '/dex/pokemon/search')
 
     config.add_route('dex/abilities', '/dex/abilities/{name}')
-    config.add_route('dex/item_pocket', '/dex/items/{pocket}')
+    config.add_route('dex/item_pockets', '/dex/items/{pocket}')
     config.add_route('dex/items', '/dex/items/{pocket}/{name}')
     config.add_route('dex/locations', '/dex/locations/{name}')
     config.add_route('dex/moves', '/dex/moves/{name}')
@@ -216,6 +216,9 @@ def main(global_config, **settings):
     config.add_view(route_name='dex/abilities_list', view='splinext.pokedex.views.abilities:ability_list', renderer='pokedex/ability_list.mako')
     config.add_view(route_name='dex/locations', view='splinext.pokedex.views.locations:location_view', renderer='pokedex/location.mako')
     config.add_view(route_name='dex/locations_list', view='splinext.pokedex.views.locations:location_list', renderer='pokedex/location_list.mako')
+    config.add_view(route_name='dex/items', view='splinext.pokedex.views.items:item_view', renderer='pokedex/item.mako')
+    config.add_view(route_name='dex/item_pockets', view='splinext.pokedex.views.items:pocket_view', renderer='pokedex/item_pockets.mako')
+    config.add_view(route_name='dex/items_list', view='splinext.pokedex.views.items:item_list', renderer='pokedex/item_list.mako')
     config.add_view(route_name='dex/moves', view='splinext.pokedex.views.moves:move_view', renderer='pokedex/move.mako')
     config.add_view(route_name='dex/moves_list', view='splinext.pokedex.views.moves:move_list', renderer='pokedex/move_list.mako')
     config.add_view(route_name='dex/natures', view='splinext.pokedex.views.natures:nature_view', renderer='pokedex/nature.mako')
