@@ -63,7 +63,7 @@ def nature_view(request):
     try:
         c.nature = db.get_by_name_query(t.Nature, name).one()
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     ### Prev/next for header
     c.prev_nature, c.next_nature = helpers.prev_next(

@@ -34,7 +34,7 @@ def ability_view(request):
             .filter(t.Ability.is_main_series)
             .one())
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     ### Prev/next for header
     c.prev_ability = c.ability

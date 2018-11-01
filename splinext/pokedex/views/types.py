@@ -29,7 +29,7 @@ def type_list(request):
                 .options(joinedload('target_efficacies')) \
                 .one()
         except NoResultFound:
-            raise exc.NotFound()
+            return exc.HTTPNotFound()
 
         c.secondary_efficacy = dict(
             (efficacy.damage_type, efficacy.damage_factor)
@@ -75,7 +75,7 @@ def type_view(request):
     try:
         c.type = db.get_by_name_query(t.Type, name).one()
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     ### Prev/next for header
     c.prev_type, c.next_type = helpers.prev_next(

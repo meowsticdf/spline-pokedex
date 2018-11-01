@@ -227,7 +227,7 @@ def pokemon_view(request):
         # Alright, execute
         c.pokemon = pokemon_q.one()
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     ### Previous and next for the header
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
@@ -815,7 +815,7 @@ def pokemon_flavor_view(request):
     try:
         c.form = db.pokemon_form_query(name, form=form).one()
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     c.pokemon = c.form.pokemon
 
@@ -883,7 +883,7 @@ def pokemon_locations_view(request):
     try:
         c.pokemon = db.pokemon_query(name).one()
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     ### Previous and next for the header
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)

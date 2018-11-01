@@ -37,7 +37,7 @@ def move_view(request):
     try:
         c.move = db.get_by_name_query(t.Move, name).one()
     except NoResultFound:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
     except MultipleResultsFound:
         # Bad hack to fix having duplicate moves with the same name
         # (z-moves exist as both physical and special)

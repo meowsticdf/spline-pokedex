@@ -91,7 +91,7 @@ def location_view(request):
     c.locations = db.get_by_name_query(t.Location, name).all()
 
     if not c.locations:
-        raise exc.NotFound()
+        return exc.HTTPNotFound()
 
     c.location_name = c.locations[0].name
 
