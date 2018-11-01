@@ -220,6 +220,7 @@ def main(global_config, **settings):
     config.add_view(route_name='dex/natures_list', view='splinext.pokedex.views.natures:natures_list', renderer='pokedex/nature_list.mako')
     config.add_view(route_name='dex/pokemon', view='splinext.pokedex.views.pokemon:pokemon_view', renderer='pokedex/pokemon.mako')
     config.add_view(route_name='dex/pokemon_list', view='splinext.pokedex.views.pokemon:pokemon_list', renderer='pokedex/pokemon_list.mako')
+    config.add_view(route_name='dex/pokemon_flavor', view='splinext.pokedex.views.pokemon:pokemon_flavor_view', renderer='pokedex/pokemon_flavor.mako')
     config.add_view(route_name='dex/types', view='splinext.pokedex.views.types:type_view', renderer='pokedex/type.mako')
     config.add_view(route_name='dex/types_list', view='splinext.pokedex.views.types:type_list', renderer='pokedex/type_list.mako')
 

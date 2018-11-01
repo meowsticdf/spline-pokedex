@@ -806,5 +806,72 @@ def pokemon_view(request):
 
     return {}
 
+
+def pokemon_flavor_view(request):
+    name = request.matchdict.get('name')
+    form = request.params.get('form', None)
+    c = request.tmpl_context
+
+    try:
+        c.form = db.pokemon_form_query(name, form=form).one()
+    except NoResultFound:
+        return self._not_found()
+
+    c.pokemon = c.form.pokemon
+
+    ### Previous and next for the header
+    c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
+
+    # Some Javascript
+    # XXX(pyramid)
+    #c.javascripts.append(('pokedex', 'pokemon'))
+
+    # XXX(pyramid) cache me
+    #return self.cache_content(
+    #    key=c.form.identifier,
+    #    template='/pokedex/pokemon_flavor.mako',
+    #    do_work=self._do_pokemon_flavor,
+    #)
+
+    c.sprites = {}
+
+    config = request.registry.settings
+    def sprite_exists(directory):
+        """Return whether or not a sprite exists for this Pokémon in the
+        specified directory, checking if need be.
+
+        Avoids calling resource_exists() multiple times per sprite.
+        """
+
+        if 'animated' in directory:
+            extension = 'gif'
+        elif 'dream-world' in directory:
+            extension = 'svg'
+        else:
+            extension = 'png'
+
+        # n.b. calling dict.setdefault always evaluates the default
+        if directory not in c.sprites:
+            c.sprites[directory] = pokedex_helpers.pokemon_has_media(
+                c.form, directory, extension, config)
+        return c.sprites[directory]
+    c.sprite_exists = sprite_exists
+
+    ### Sizing
+    c.trainer_height = pokedex_helpers.trainer_height
+    c.trainer_weight = pokedex_helpers.trainer_weight
+
+    heights = {'pokemon': c.pokemon.height, 'trainer': c.trainer_height}
+    c.heights = pokedex_helpers.scale_sizes(heights)
+
+    # Strictly speaking, weight takes three dimensions.  But the real
+    # measurement here is just "space taken up", and these are sprites, so
+    # the space they actually take up is two-dimensional.
+    weights = {'pokemon': c.pokemon.weight, 'trainer': c.trainer_weight}
+    c.weights = pokedex_helpers.scale_sizes(weights, dimensions=2)
+
+    return {}
+
+
 def pokemon_list(request):
     return {}
