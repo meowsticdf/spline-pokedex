@@ -44,19 +44,19 @@ ${h.h1(_('Essentials'))}
 
 <div class="dex-page-beside-portrait">
 <h2>${_(u"Abilities")}</h2>
-<%def name="_render_ability(ability, _=_)">
+<%def name="_render_ability(ability)">
     <dt><a href="${url(controller='dex', action='abilities', name=ability.name.lower())}">${ability.name}</a></dt>
     <dd class="markdown">${ability.short_effect}</dd>
 </%def>
 <dl class="pokemon-abilities">
     % for ability in c.pokemon.abilities:
-    ${_render_ability(ability, _=_)}
+    ${_render_ability(ability)}
     % endfor
 </dl>
 % if c.pokemon.hidden_ability:
 <h3>Hidden Ability</h3>
 <dl class="pokemon-abilities">
-    ${_render_ability(c.pokemon.hidden_ability, _=_)}
+    ${_render_ability(c.pokemon.hidden_ability)}
 </dl>
 % endif
 
