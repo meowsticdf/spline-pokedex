@@ -17,7 +17,7 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers as pokedex_helpers
-from .locations import encounter_method_icons
+from .locations import encounter_method_icons, encounter_condition_value_icons
 
 def bar_color(hue, pastelness):
     """Returns a color in the form #rrggbb that has the provided hue and
@@ -815,7 +815,7 @@ def pokemon_flavor_view(request):
     try:
         c.form = db.pokemon_form_query(name, form=form).one()
     except NoResultFound:
-        return self._not_found()
+        raise exc.NotFound()
 
     c.pokemon = c.form.pokemon
 
@@ -869,6 +869,131 @@ def pokemon_flavor_view(request):
     # the space they actually take up is two-dimensional.
     weights = {'pokemon': c.pokemon.weight, 'trainer': c.trainer_weight}
     c.weights = pokedex_helpers.scale_sizes(weights, dimensions=2)
+
+    return {}
+
+
+def pokemon_locations_view(request):
+    """Spits out a page listing detailed location information for this
+    Pokémon.
+    """
+    name = request.matchdict.get('name')
+    c = request.tmpl_context
+
+    try:
+        c.pokemon = db.pokemon_query(name).one()
+    except NoResultFound:
+        raise exc.NotFound()
+
+    ### Previous and next for the header
+    c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
+
+    # Cache it yo
+    # XXX(pyramid)
+    #return self.cache_content(
+    #    key=c.pokemon.identifier,
+    #    template='/pokedex/pokemon_locations.mako',
+    #    do_work=self._do_pokemon_locations,
+    #)
+
+    # For the most part, our data represents exactly what we're going to
+    # show.  For a given area in a given game, this Pokémon is guaranteed
+    # to appear some x% of the time no matter what the state of the world
+    # is, and various things like swarms or the radar may add on to this
+    # percentage.
+
+    # Encounters are grouped by region -- <h1>s.
+    # Then by method -- table sections.
+    # Then by area -- table rows.
+    # Then by version -- table columns.
+    # Finally, condition values associated with levels/rarity.
+    q = db.pokedex_session.query(t.Encounter) \
+        .options(
+            joinedload_all('condition_values'),
+            joinedload_all('version'),
+            joinedload_all('slot.method'),
+            joinedload_all('location_area.location'),
+        )\
+        .filter(t.Encounter.pokemon == c.pokemon)
+
+    # region => method => area => version => condition =>
+    #     condition_values => encounter_bits
+    grouped_encounters = defaultdict(
+        lambda: defaultdict(
+            lambda: defaultdict(
+                lambda: defaultdict(
+                    lambda: defaultdict(
+                        lambda: defaultdict(
+                            list
+                        )
+                    )
+                )
+            )
+        )
+    )
+
+    # Locations cluster by region, primarily to avoid having a lot of rows
+    # where one version group or the other is blank; that doesn't make for
+    # fun reading.  To put the correct version headers in each region
+    # table, we need to know what versions correspond to which regions.
+    # Normally, this can be done by examining region.version_groups.
+    # However, some regions (Kanto) appear in a ridiculous number of games.
+    # To avoid an ultra-wide table when not necessary, only *generations*
+    # that actually contain this Pokémon should appear.
+    # So if the Pokémon appears in Kanto in Crystal, show all of G/S/C.  If
+    # it doesn't appear in any of the three, show none of them.
+    # Last but not least, show generations in reverse order, so the more
+    # important (i.e., recent) versions are on the left.
+    # Got all that?
+    region_generations = defaultdict(set)
+
+    for encounter in q.all():
+        # Fetches the list of encounters that match this region, version,
+        # method, etc.
+        region = encounter.location_area.location.region
+
+        # n.b.: conditions and values must be tuples because lists aren't
+        # hashable.
+        encounter_bits = grouped_encounters \
+            [region] \
+            [encounter.slot.method] \
+            [encounter.location_area] \
+            [encounter.version] \
+            [ tuple(cv.condition for cv in encounter.condition_values) ] \
+            [ tuple(encounter.condition_values) ]
+
+        # Combine "level 3-4, 50%" and "level 3-4, 20%" into "level 3-4, 70%".
+        existing_encounter = filter(lambda enc: enc['min_level'] == encounter.min_level
+                                            and enc['max_level'] == encounter.max_level,
+                                    encounter_bits)
+        if existing_encounter:
+            existing_encounter[0]['rarity'] += encounter.slot.rarity
+        else:
+            encounter_bits.append({
+                'min_level': encounter.min_level,
+                'max_level': encounter.max_level,
+                'rarity': encounter.slot.rarity,
+            })
+
+        # Remember that this generation appears in this region
+        region_generations[region].add(encounter.version.version_group.generation)
+
+    c.grouped_encounters = grouped_encounters
+
+    # Pass some data/functions
+    c.encounter_method_icons = encounter_method_icons
+    c.encounter_condition_value_icons = encounter_condition_value_icons
+    c.level_range = level_range
+
+    # See above.  Versions for each region are those in that region that
+    # are part of a generation where this Pokémon appears -- in reverse
+    # generation order.
+    c.region_versions = defaultdict(list)
+    for region, generations in region_generations.items():
+        for version_group in region.version_groups:
+            if version_group.generation not in generations:
+                continue
+            c.region_versions[region][0:0] = version_group.versions
 
     return {}
 

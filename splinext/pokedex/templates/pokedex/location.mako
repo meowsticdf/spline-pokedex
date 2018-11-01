@@ -27,7 +27,7 @@
 </h3>
 % endif
 
-<% # XXX work around some issues with mako.strict_undefined. See #124.
+<% # XXX(pyramid) work around some issues with mako.strict_undefined. See #124.
 cond = None
 cv = None
 %>

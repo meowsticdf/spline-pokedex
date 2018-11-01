@@ -23,6 +23,11 @@ ${dexlib.pokemon_page_header()}
    in h.keysort(c.grouped_encounters, lambda k: k.generation.id):
 ${h.h1(region.name)}
 
+<% # XXX(pyramid) work around some issues with mako.strict_undefined. See #124.
+cond = None
+cv = None
+%>
+
 <table class="dex-encounters striped-rows">
     ## Spit out <col> tags.  Zip cleverness lets us compare the current version
     ## to the one before it
