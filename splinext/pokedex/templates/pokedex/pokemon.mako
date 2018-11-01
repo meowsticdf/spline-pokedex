@@ -432,7 +432,7 @@ ${h.h1(_('Flavor'))}
     <h2>${_("Sprites")}</h2>
     ${dexlib.pokemon_form_image(c.pokemon.default_form, prefix='main-sprites/ultra-sun-ultra-moon')}
     ${dexlib.pokemon_form_image(c.pokemon.default_form, prefix='main-sprites/ultra-sun-ultra-moon/shiny')}
-    % if h.pokedex.pokemon_has_media(c.pokemon.default_form, 'main-sprites/ultra-sun-ultra-moon/female', 'png'):
+    % if h.pokedex.pokemon_has_media(c.pokemon.default_form, 'main-sprites/ultra-sun-ultra-moon/female', 'png', config):
         ${dexlib.pokemon_form_image(c.pokemon.default_form, prefix='main-sprites/ultra-sun-ultra-moon/female')}
         ${dexlib.pokemon_form_image(c.pokemon.default_form, prefix='main-sprites/ultra-sun-ultra-moon/shiny/female')}
     % endif
