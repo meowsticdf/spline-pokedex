@@ -77,7 +77,7 @@ ${h.h1(_('Essentials'))}
     <h2>${_(u"Pokédex Numbers")}</h2>
     <dl>
         <dt>${_(u"Introduced in")}</dt>
-        <dd>${dexlib.generation_icon(c.pokemon.species.generation, _=_)}</dd>\
+        <dd>${dexlib.generation_icon(c.pokemon.species.generation)}</dd>\
 
         % for number in c.pokemon.species.dex_numbers:
         % if number.pokedex.is_main_series:
@@ -85,7 +85,7 @@ ${h.h1(_('Essentials'))}
         <dd>
             ${number.pokedex_number}
             % if number.pokedex.version_groups:
-            ${dexlib.version_icons(*[v for vg in number.pokedex.version_groups for v in vg.versions], _=_)}
+            ${dexlib.version_icons(*[v for vg in number.pokedex.version_groups for v in vg.versions])}
             % endif
         </dd>
 
@@ -202,9 +202,9 @@ ${h.h1(_('Essentials'))}
         % if i == 0:
         <td class="versions" rowspan="${len(item_records) or 1}">
             % if len(version_dict) == 1:
-            ${dexlib.generation_icon(generation, _=_)}
+            ${dexlib.generation_icon(generation)}
             % else:
-            ${dexlib.version_icons(*versions, _=_)}
+            ${dexlib.version_icons(*versions)}
             % endif
         </td>
         % else:
@@ -215,7 +215,7 @@ ${h.h1(_('Essentials'))}
         ## Print the item and rarity.  Might be nothing
         % if i < len(item_records):
         <td class="rarity">${item_records[i][1]}%</td>
-        <td class="item">${dexlib.item_link(item_records[i][0], _=_)}</td>
+        <td class="item">${dexlib.item_link(item_records[i][0])}</td>
         % else:
         <td class="rarity"></td>
         <td class="item">${_(u"nothing")}</td>
@@ -282,7 +282,7 @@ ${h.h1(_('Evolution'))}
         % endfor
         % if col['species'].is_baby and c.pokemon.species.evolution_chain.baby_trigger_item:
         <span class="dex-evolution-chain-method">
-            ${_(u"Either parent must hold ")} ${dexlib.item_link(c.pokemon.species.evolution_chain.baby_trigger_item, include_icon=False, _=_)}
+            ${_(u"Either parent must hold ")} ${dexlib.item_link(c.pokemon.species.evolution_chain.baby_trigger_item, include_icon=False)}
         </span>
         % endif
     </td>
@@ -531,7 +531,7 @@ ${h.h1(_('Locations'))}
 <dl class="dex-simple-encounters">
     ## Sort versions by order, which happens to be id
     % for version, method_etc in h.keysort(c.locations, lambda k: k.id):
-    <dt>${(version.name)} ${dexlib.version_icons(version, _=_)}</dt>
+    <dt>${(version.name)} ${dexlib.version_icons(version)}</dt>
     <dd>
         ## Sort method by name
         % for method, area_condition_encounters in h.keysort(method_etc, lambda k: k.id):
