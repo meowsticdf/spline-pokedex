@@ -250,7 +250,7 @@
             % if route == request.matched_route.name:
             <li>${label}</li>
             % else:
-            <li><a href="${request.current_route_path(route, _query=dict(form=form if route != 'dex/pokemon_locations' else None))}">${label}</a></li>
+            <li><a href="${request.current_route_path(_route_name=route, _query=dict(form=form) if route != 'dex/pokemon_locations' and form is not None else {})}">${label}</a></li>
             % endif
         % endfor
         % if c.pokemon.species.conquest_order is not None:
