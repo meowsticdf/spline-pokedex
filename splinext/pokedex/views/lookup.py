@@ -27,6 +27,15 @@ table_labels = {
 
 redirect = exc.HTTPFound
 
+def _egg_unlock_cheat(cheat):
+    """Easter egg that writes Pokédex data in the Pokémon font."""
+    cheat_key = "cheat_%s" % cheat
+    session[cheat_key] = not session.get(cheat_key, False)
+    session.save()
+    c.this_cheat_key = cheat_key
+    return render('/pokedex/cheat_unlocked.mako')
+
+
 def lookup(request):
     """Find a page in the Pokédex given a name.
 
@@ -47,7 +56,7 @@ def lookup(request):
     ### Special stuff that bypasses lookup
     if lookup == 'obdurate':
         # Pokémon flavor text in the D/P font
-        return self._egg_unlock_cheat('obdurate')
+        return _egg_unlock_cheat('obdurate')
 
 
     ### Regular lookup
