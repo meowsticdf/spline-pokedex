@@ -1,9 +1,10 @@
 # encoding: utf-8
+import functools
 import os
 import warnings
 
 from pyramid.config import Configurator
-from pyramid.renderers import render, render_to_response
+from pyramid.renderers import render, render_to_response, JSONP
 import pyramid.static
 
 from . import db
@@ -91,12 +92,20 @@ def add_renderer_globals_factory(config):
             ('pokedex', 'pokedex-suggestions'),
             ('pokedex', 'pokedex'), # XXX only on main pokedex pages
         ] + extra_javascripts
-        en = db.get_by_identifier_query(db.t.Language, u'en').first()
-        request.tmpl_context.game_language = en
 
         # start timer
         request.tmpl_context.timer = ResponseTimer()
     return add_renderer_globals
+
+def game_property_tween_factory(handler, registry):
+    """A tween which sets request.tmpl_context.game_language before views run"""
+    @functools.wraps(handler)
+    def tween(request):
+        # TODO: look up game language from a cookie or something
+        en = db.get_by_identifier_query(db.t.Language, u'en').first()
+        request.tmpl_context.game_language = en
+        return handler(request)
+    return tween
 
 ## TODO: markdown extension
 
@@ -135,8 +144,11 @@ def main(global_config, **settings):
     config.include('pyramid_mako')
     config.include('pyramid_debugtoolbar')
 
+    config.add_renderer('jsonp', JSONP(param_name='callback'))
+
     add_renderer_globals = add_renderer_globals_factory(settings)
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
+    config.add_tween("splinext.pokedex.pyramidapp.game_property_tween_factory")
 
     ### routes
     # index page
@@ -195,6 +207,8 @@ def main(global_config, **settings):
     config.add_route('dex_conquest/skills_list', '/dex/conquest/skills')
     config.add_route('dex_conquest/warriors_list', '/dex/conquest/warriors')
 
+    config.add_route('static/spline', '/static/spline/*subpath', static=True)
+
     ### views
 
     # static resources
@@ -216,6 +230,7 @@ def main(global_config, **settings):
 
     # lookup
     config.add_view(route_name='dex/lookup', view='splinext.pokedex.views.lookup:lookup', renderer='pokedex/lookup_results.mako')
+    config.add_view(route_name='dex/suggest', view='splinext.pokedex.views.lookup:suggest', renderer='jsonp')
 
     # json
     config.add_view(route_name='dex/parse_size', view='splinext.pokedex.views.pokemon:parse_size_view', renderer='json')

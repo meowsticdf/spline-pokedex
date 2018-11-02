@@ -7,7 +7,7 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 #from spline.lib.helpers import flash
-from .. import db, helpers
+from .. import db, helpers, splinehelpers
 
 # Used by lookup disambig pages
 table_labels = {
@@ -95,3 +95,87 @@ def lookup(request):
         c.results = results
         c.table_labels = table_labels
         return {}
+
+
+def suggest(request):
+    """Returns a JSON array of Pokédex lookup suggestions, compatible with
+    the OpenSearch spec.
+    """
+    c = request.tmpl_context
+
+    prefix = request.params.get('prefix', None)
+    if not prefix:
+        return '[]'
+
+    valid_types = request.params.getall('type')
+
+    suggestions = db.pokedex_lookup.prefix_lookup(
+        prefix,
+        valid_types=valid_types,
+    )
+
+    names = []     # actual terms that will appear in the list
+    metadata = []  # parallel array of metadata my suggest widget uses
+    for suggestion in suggestions:
+        row = suggestion.object
+        names.append(suggestion.name)
+        meta = dict(
+            type=row.__singlename__,
+            indexed_name=suggestion.indexed_name,
+        )
+
+        # Get an accompanying image.  Moves get their type; abilities get
+        # nothing; everything else gets the obvious corresponding icon
+        # XXX uh, move this into a helper?
+        image = None
+        if isinstance(row, t.PokemonSpecies):
+            image = u"pokemon/icons/{0}.png".format(row.id)
+        elif isinstance(row, t.PokemonForm):
+            if row.form_identifier:
+                image = u"pokemon/icons/{0}-{1}.png".format(row.pokemon.species_id, row.form_identifier)
+            else:
+                image = u"pokemon/icons/{0}.png".format(row.pokemon.species_id)
+        elif isinstance(row, t.Move):
+            image = u"types/{1}/{0}.png".format(row.type.name.lower(),
+                    c.game_language.identifier)
+        elif isinstance(row, t.Type):
+            image = u"types/{1}/{0}.png".format(row.name.lower(),
+                    c.game_language.identifier)
+        elif isinstance(row, t.Item):
+            image = u"items/{0}.png".format(
+                helpers.item_filename(row))
+
+        if image:
+            # n.b. route_url returns a fully qualified url
+            meta['image'] = request.route_url('dex/media', subpath=image)
+
+        # Give a country icon so JavaScript doesn't have to hardcore Spline
+        # paths.  Don't *think* we need to give the long language name...
+        meta['language'] = suggestion.iso3166
+        #meta['language_icon'] = splinehelpers.static_uri(
+        #    'spline',
+        #    'flags/{0}.png'.format(suggestion.iso3166),
+        #    qualified=True
+        #)
+        # note: fully qualified
+        meta['language_icon'] = request.route_url(
+            'static/spline',
+            subpath='flags/{0}.png'.format(suggestion.iso3166),
+        )
+
+        metadata.append(meta)
+
+    normalized_name = db.pokedex_lookup.normalize_name(prefix)
+    if ':' in normalized_name:
+        _, normalized_name = normalized_name.split(':', 1)
+
+    data = [
+        prefix,
+        names,
+        None,       # descriptions
+        None,       # query URLs
+        metadata,   # my metadata; outside the spec's range
+        normalized_name,  # the key we actually looked for
+    ]
+
+    return data
