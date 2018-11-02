@@ -13,6 +13,7 @@ import unicodedata
 
 # re-exported
 from webhelpers.html import escape, HTML, literal, url_escape
+from webhelpers.html.tags import form, end_form
 
 def static_uri(plugin_name, path, **url_kwargs):
     """Takes the name of a plugin and a path to a static file.
