@@ -254,6 +254,10 @@ def main(global_config, **settings):
     config.add_view(route_name='dex/types', view='splinext.pokedex.views.types:type_view', renderer='pokedex/type.mako')
     config.add_view(route_name='dex/types_list', view='splinext.pokedex.views.types:type_list', renderer='pokedex/type_list.mako')
 
+    # search
+    config.add_view(route_name='dex_search/pokemon_search', view='splinext.pokedex.views.search:pokemon_search', renderer='pokedex/search/pokemon.mako')
+    config.add_view(route_name='dex_search/move_search', view='splinext.pokedex.views.search:move_search', renderer='pokedex/search/move.mako')
+
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
     #config.add_view(context='pyramid.httpexceptions.HTTPNotFound', view=error_view)
