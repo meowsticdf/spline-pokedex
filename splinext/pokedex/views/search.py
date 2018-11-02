@@ -156,7 +156,7 @@ class PokemonSearchForm(BaseSearchForm):
     id = RangeTextField('National ID', inflator=int)
 
     # Core stuff
-    name = fields.TextField('Name', default=u'')
+    name = fields.StringField('Name', default=u'')
     ability = PokedexLookupField('Ability', valid_type='ability', allow_blank=True)
     held_item = PokedexLookupField('Held item', valid_type='item', allow_blank=True)
     growth_rate = QuerySelectField('Growth rate',
@@ -315,7 +315,7 @@ class PokemonSearchForm(BaseSearchForm):
     effort_total = RangeTextField('Total', inflator=int)
 
     # Flavor
-    genus = fields.TextField('Species', default=u'')
+    genus = fields.StringField('Species', default=u'')
     color = QuerySelectField('Color',
         query_factory=lambda: db.pokedex_session.query(t.PokemonColor),
         get_label=lambda _: _.name,
@@ -418,7 +418,7 @@ class PokemonSearchForm(BaseSearchForm):
         ],
         default=default_pokemon_table_columns,
     )
-    format = fields.TextField('Custom list format', default=u'$icon $name')
+    format = fields.StringField('Custom list format', default=u'$icon $name')
 
 class MoveSearchForm(BaseSearchForm):
     compound_field_names = ['stat_change']
@@ -426,7 +426,7 @@ class MoveSearchForm(BaseSearchForm):
     id = RangeTextField('ID', inflator=int)
 
     # Core stuff
-    name = fields.TextField('Name', default=u'')
+    name = fields.StringField('Name', default=u'')
     damage_class = QueryCheckboxSelectMultipleField(
         'Damage class',
         query_factory=lambda: db.pokedex_session.query(t.MoveDamageClass),
@@ -564,7 +564,7 @@ class MoveSearchForm(BaseSearchForm):
         ],
         default=default_move_table_columns,
     )
-    format = fields.TextField('Custom list format', default=u'$name')
+    format = fields.StringField('Custom list format', default=u'$name')
 
 
 def pokemon_search(request):
