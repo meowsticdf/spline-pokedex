@@ -60,6 +60,8 @@ def add_renderer_globals_factory(config):
             # XXX request.matchdict?
             if 'name' in kwargs:
                 path['name'] = kwargs.pop('name')
+            if 'action' in kwargs:
+                path['_route_name'] = 'dex/'+kwargs.pop('action')
             path['_query'] = dict((k,v) for k,v in kwargs.items() if v is not None)
             return request.current_route_path(**path)
 
