@@ -8,7 +8,6 @@ from wtforms import Form, fields
 from wtforms.ext.sqlalchemy.fields import QuerySelectField
 
 import pokedex.db.tables as t
-#from pylons import url
 import pyramid.httpexceptions as exc
 from sqlalchemy.orm import aliased, joinedload, joinedload_all
 from sqlalchemy.sql import func, and_, not_, or_
@@ -647,7 +646,7 @@ def pokemon_search(request):
     # If this is the first time the form was submitted, redirect to a URL
     # with only non-default values
     if c.form.is_valid and c.form.was_submitted and c.form.needs_shortening:
-        return redirect(url.current(**c.form.cleansed_data.mixed()))
+        return redirect(request.current_route_url(_query=c.form.cleansed_data.mixed()))
 
     if not c.form.was_submitted or not c.form.is_valid:
         # Either blank, or errortastic.  Skip the logic and just send the
@@ -1409,7 +1408,7 @@ def move_search(request):
     # If this is the first time the form was submitted, redirect to a URL
     # with only non-default values
     if c.form.is_valid and c.form.was_submitted and c.form.needs_shortening:
-        return redirect(url.current(**c.form.cleansed_data.mixed()))
+        return redirect(request.current_route_url(_query=c.form.cleansed_data.mixed()))
 
     if not c.form.was_submitted or not c.form.is_valid:
         # Either blank, or errortastic.  Skip the logic and just send the
