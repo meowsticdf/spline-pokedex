@@ -54,6 +54,47 @@ default_move_table_columns = [
     'effect',
 ]
 
+## Generation and version icon helpers
+# XXX These are copies of the helpers from dexlib. They don't belong here,
+# but the forms need to be able to generate icons without access to the request
+# context, so we fake it.
+
+def generation_icon(generation):
+    """Returns a generation icon, given a generation number."""
+    _ = lambda x: x
+
+    # Convert generation to int if necessary
+    if not isinstance(generation, int):
+        generation = generation.id
+
+    return h.HTML.img(
+        src=h.static_uri('pokedex', 'images/versions/generation-%s.png' % generation),
+        alt=_(u"Generation %d") % generation,
+        title=_(u"Generation %d") % generation,
+    )
+
+def version_icons(versions):
+    """Returns some version icons, given a list of version names. """
+    version_icons = u''
+    comma = pokedex_helpers.joiner(u', ')
+    for version in versions:
+        # Convert version to string if necessary
+        if isinstance(version, basestring):
+            identifier = filename_from_name(version)
+            name = version
+        else:
+            identifier = version.identifier
+            name = version.name
+
+        version_icons += h.HTML.img(
+                src=h.static_uri('pokedex', 'images/versions/%s.png' % identifier),
+                alt=comma.next() + name,
+                title=name)
+
+    return version_icons
+
+## Forms
+
 def ilike(column, string):
     string = string.lower()
 
@@ -79,7 +120,7 @@ def in_pokedex_label(pokedex):
     """[ IV ] Sinnoh"""
 
     return """{gen_icon} {name}""".format(
-        gen_icon=pokedex_helpers.generation_icon(pokedex.region.generation),
+        gen_icon=generation_icon(pokedex.region.generation),
         name=pokedex.name,
     )
 
@@ -253,7 +294,7 @@ class PokemonSearchForm(BaseSearchForm):
     introduced_in = QueryCheckboxSelectMultipleField(
         'Introduced in',
         query_factory=lambda: db.pokedex_session.query(t.Generation),
-        get_label=lambda _: pokedex_helpers.generation_icon(_),
+        get_label=lambda _: generation_icon(_),
         get_pk=lambda table: table.id,
         allow_blank=True,
     )
@@ -295,7 +336,7 @@ class PokemonSearchForm(BaseSearchForm):
         'Versions',
         query_factory=lambda: db.pokedex_session.query(t.VersionGroup) \
                                              .options(joinedload('versions')),
-        get_label=lambda row: pokedex_helpers.version_icons(*row.versions),
+        get_label=lambda row: version_icons(row.versions),
         get_pk=lambda table: table.id,
         allow_blank=True,
     )
@@ -500,7 +541,7 @@ class MoveSearchForm(BaseSearchForm):
         'Versions',
         query_factory=lambda: db.pokedex_session.query(t.VersionGroup) \
                                              .options(joinedload('versions')),
-        get_label=lambda row: pokedex_helpers.version_icons(*row.versions),
+        get_label=lambda row: version_icons(row.versions),
         get_pk=lambda table: table.id,
         allow_blank=True,
     )
