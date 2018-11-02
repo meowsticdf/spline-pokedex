@@ -204,6 +204,7 @@ def pokemon_view(request):
     name = request.matchdict.get('name')
     form = request.params.get('form', None)
     c = request.tmpl_context
+    c.javascripts = [] # XXX(pyramid)
 
     try:
         pokemon_q = db.pokemon_query(name, form)
@@ -234,8 +235,7 @@ def pokemon_view(request):
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
 
     # Some Javascript
-    # XXX
-    c.javascripts = [('pokedex', 'pokemon')]
+    c.javascripts.append(('pokedex', 'pokemon'))
 
     ### TODO: Let's cache this bitch
     #return self.cache_content(
@@ -812,6 +812,7 @@ def pokemon_flavor_view(request):
     name = request.matchdict.get('name')
     form = request.params.get('form', None)
     c = request.tmpl_context
+    c.javascripts = [] # XXX(pyramid)
 
     try:
         c.form = db.pokemon_form_query(name, form=form).one()
@@ -824,8 +825,7 @@ def pokemon_flavor_view(request):
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
 
     # Some Javascript
-    # XXX(pyramid)
-    c.javascripts = [('pokedex', 'pokemon')]
+    c.javascripts.append(('pokedex', 'pokemon'))
 
     # XXX(pyramid) cache me
     #return self.cache_content(
