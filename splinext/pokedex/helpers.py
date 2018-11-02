@@ -82,7 +82,8 @@ def resource_url(request, thingy, subpage=None, controller='dex'):
     # Pokémon with forms need the form attached to the URL
     if isinstance(thingy, t.PokemonForm):
         action = 'pokemon'
-        args['form'] = thingy.form_identifier.lower()
+        args.setdefault('_query', {})
+        args['_query']['form'] = thingy.form_identifier.lower()
         args['name'] = thingy.pokemon.species.name.lower()
 
         if not thingy.is_default:
