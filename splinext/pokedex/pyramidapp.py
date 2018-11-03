@@ -258,6 +258,12 @@ def main(global_config, **settings):
     config.add_view(route_name='dex_search/pokemon_search', view='splinext.pokedex.views.search:pokemon_search', renderer='pokedex/search/pokemon.mako')
     config.add_view(route_name='dex_search/move_search', view='splinext.pokedex.views.search:move_search', renderer='pokedex/search/moves.mako')
 
+    # gadgets
+    config.add_view(route_name='dex_gadgets/capture_rate', view='splinext.pokedex.views.gadgets:capture_rate', renderer='pokedex/gadgets/capture_rate.mako')
+    config.add_view(route_name='dex_gadgets/chain_breeding', view='splinext.pokedex.views.gadgets:chain_breeding', renderer='/pokedex/gadgets/chain_breeding.mako')
+    config.add_view(route_name='dex_gadgets/compare_pokemon', view='splinext.pokedex.views.gadgets:compare_pokemon', renderer='pokedex/gadgets/compare_pokemon.mako')
+    config.add_view(route_name='dex_gadgets/stat_calculator', view='splinext.pokedex.views.gadgets:stat_calculator', renderer='pokedex/gadgets/stat_calculator.mako')
+
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
     #config.add_view(context='pyramid.httpexceptions.HTTPNotFound', view=error_view)
