@@ -6,6 +6,9 @@ import warnings
 from pyramid.config import Configurator
 from pyramid.renderers import render, render_to_response, JSONP
 import pyramid.static
+from pyramid import threadlocal
+
+import pokedex.db.markdown
 
 from . import db
 from . import splinehelpers
@@ -103,8 +106,15 @@ def add_game_language_subscriber(event):
     en = db.get_by_identifier_query(db.t.Language, u'en').first()
     request.tmpl_context.game_language = en
 
-## TODO: markdown extension
-
+class SplineExtension(pokedex.db.markdown.PokedexLinkExtension):
+    """Extend markdown to turn [Eevee]{pokemon:eevee} into a link in effects
+    and descriptions. """
+    def object_url(self, category, obj):
+        # XXX(pyramid): it would be nice to not use threadlocal here
+        request = threadlocal.get_current_request()
+        if request:
+            return helpers.resource_url(request, obj)
+        return None
 
 def main(global_config, **settings):
     config_root = os.path.dirname(global_config['__file__'])
@@ -328,6 +338,9 @@ def main(global_config, **settings):
 
     # Connect to ye olde database (and lookup index)
     db.connect(settings)
+
+    # Extend the pokedex code's default markdown rendering
+    db.pokedex_session.configure(markdown_extension_class=SplineExtension)
 
     # XXX
     splinehelpers.pokedex = helpers
