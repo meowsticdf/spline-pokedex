@@ -18,6 +18,9 @@ from .lib import Link, ResponseTimer
 def index_view(request):
     return render_to_response('/index.mako', {}, request=request)
 
+def content_view(request):
+    return {}
+
 def css_view(request):
     """Returns all the CSS, concatenated."""
 
@@ -119,7 +122,13 @@ class SplineExtension(pokedex.db.markdown.PokedexLinkExtension):
 def main(global_config, **settings):
     config_root = os.path.dirname(global_config['__file__'])
     local_template_dir = os.path.join(config_root, 'templates')
-    settings['mako.directories'] = [local_template_dir, 'splinext.pokedex:templates']
+    local_content_dir = os.path.join(config_root, 'content')
+    settings['mako.directories'] = [
+        local_template_dir,
+        'splinext.pokedex:templates',
+        local_content_dir,
+        'splinext.pokedex:content',
+    ]
 
     settings['spline.plugins'] = []
     settings['spline.plugins.controllers'] = {}
@@ -151,6 +160,7 @@ def main(global_config, **settings):
     config.include('pyramid_debugtoolbar')
 
     config.add_renderer('jsonp', JSONP(param_name='callback'))
+    config.add_mako_renderer('.html', settings_prefix='mako.') # for content pages
 
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
     config.add_subscriber(add_game_language_subscriber, "pyramid.events.NewRequest")
@@ -284,6 +294,21 @@ def main(global_config, **settings):
     config.add_view(route_name='dex_conquest/pokemon_list', view='splinext.pokedex.views.conquest:pokemon_list', renderer='pokedex/conquest/pokemon_list.mako')
     config.add_view(route_name='dex_conquest/skills_list', view='splinext.pokedex.views.conquest:skill_list', renderer='pokedex/conquest/skill_list.mako')
     config.add_view(route_name='dex_conquest/warriors_list', view='splinext.pokedex.views.conquest:warrior_list', renderer='pokedex/conquest/warrior_list.mako')
+
+    # content pages
+    def add_content_page(path, template):
+        route_name = path
+        config.add_route(route_name, path)
+        config.add_view(content_view, route_name=route_name, renderer=template)
+
+    add_content_page("/dex", "dex.html")
+    add_content_page("/dex/conquest", "dex/conquest.html")
+    add_content_page("/dex/downloads", "dex/downloads.html")
+    add_content_page("/dex/history", "dex/history.html")
+    add_content_page("/about", "about.html")
+    add_content_page("/chat", "chat.html")
+    add_content_page("/props", "props.html")
+    add_content_page("/link", "link.html")
 
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
