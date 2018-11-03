@@ -885,13 +885,6 @@ def stat_calculator(request):
 
     # Possible shorten and redirect
     if c.form.needs_shortening:
-        # This is stupid, but update_params doesn't understand unicode
-        #kwargs = c.form.short_formdata
-        #for key, vals in kwargs.iteritems():
-        #    kwargs[key] = [unicode(val).encode('utf8') for val in vals]
-        #
-        #return redirect(h.update_params(url.current(), **kwargs))
-        # XXX does this replace query params?
         params = c.form.short_formdata
         return redirect(request.current_route_url(_query=params))
 
