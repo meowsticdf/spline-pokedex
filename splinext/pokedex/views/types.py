@@ -86,7 +86,7 @@ def type_view(request):
         language=c.game_language,
     )
 
-    ### XXX cache after this
+    ### XXX(pyramid) cache me
 
     # Eagerload a bit of type stuff
     db.pokedex_session.query(t.Type) \

@@ -54,7 +54,7 @@ default_move_table_columns = [
 ]
 
 ## Generation and version icon helpers
-# XXX These are copies of the helpers from dexlib. They don't belong here,
+# XXX(pyramid) These are copies of the helpers from dexlib. They don't belong here,
 # but the forms need to be able to generate icons without access to the request
 # context, so we fake it.
 
