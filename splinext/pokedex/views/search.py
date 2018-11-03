@@ -221,7 +221,6 @@ class PokemonSearchForm(BaseSearchForm):
         query_factory=lambda: db.pokedex_session.query(t.Type),
         get_label=lambda _: _.name,
         get_pk=lambda table: table.identifier,
-        allow_blank=True,
     )
 
     # Breeding
@@ -295,7 +294,6 @@ class PokemonSearchForm(BaseSearchForm):
         query_factory=lambda: db.pokedex_session.query(t.Generation),
         get_label=lambda _: generation_icon(_),
         get_pk=lambda table: table.id,
-        allow_blank=True,
     )
     in_pokedex = QueryCheckboxSelectMultipleField(
         u'In regional Pokédex',
@@ -304,7 +302,6 @@ class PokemonSearchForm(BaseSearchForm):
                                   .options(joinedload_all('region.generation')),
         get_label=in_pokedex_label,
         get_pk=lambda table: table.id,
-        allow_blank=True,
     )
 
     # Moves
@@ -329,7 +326,6 @@ class PokemonSearchForm(BaseSearchForm):
             .filter(t.PokemonMoveMethod.id <= 4),
         get_label=lambda row: row.name,
         get_pk=lambda table: table.identifier,
-        allow_blank=True,
     )
     move_version_group = QueryCheckboxSelectMultipleField(
         'Versions',
@@ -337,7 +333,6 @@ class PokemonSearchForm(BaseSearchForm):
                                              .options(joinedload('versions')),
         get_label=lambda row: version_icons(row.versions),
         get_pk=lambda table: table.id,
-        allow_blank=True,
     )
 
     # Numbers
@@ -472,14 +467,12 @@ class MoveSearchForm(BaseSearchForm):
         query_factory=lambda: db.pokedex_session.query(t.MoveDamageClass),
         get_label=lambda _: _.name.capitalize(),
         get_pk=lambda table: table.identifier,
-        allow_blank=True,
     )
     introduced_in = QueryCheckboxSelectMultipleField(
         'Generation',
         query_factory=lambda: db.pokedex_session.query(t.Generation),
         get_label=lambda _: _.name,
         get_pk=lambda table: table.id,
-        allow_blank=True,
     )
 
     target = QuerySelectField('Target',
@@ -498,7 +491,6 @@ class MoveSearchForm(BaseSearchForm):
                               .filter(t.Type.id != 10002),  # Shadow
         get_label=lambda _: _.name,
         get_pk=lambda table: table.identifier,
-        allow_blank=True,
     )
 
     shadow_moves = fields.BooleanField('Include Colosseum/XD Shadow moves')
@@ -509,7 +501,6 @@ class MoveSearchForm(BaseSearchForm):
             .options(joinedload(t.MoveMetaCategory.prose_local)),
         get_label=lambda _: _.description,
         get_pk=lambda _: _.identifier,
-        allow_blank=True,
     )
     ailment = QueryCheckboxSelectMultipleField(
         'Status ailment',
@@ -517,7 +508,6 @@ class MoveSearchForm(BaseSearchForm):
             .options(joinedload(t.MoveMetaAilment.names_local)),
         get_label=lambda _: _.name,
         get_pk=lambda _: _.identifier,
-        allow_blank=True,
     )
 
     # Pokémon
@@ -534,7 +524,6 @@ class MoveSearchForm(BaseSearchForm):
             .filter(t.PokemonMoveMethod.id <= 4),
         get_label=lambda row: row.name,
         get_pk=lambda table: table.identifier,
-        allow_blank=True,
     )
     pokemon_version_group = QueryCheckboxSelectMultipleField(
         'Versions',
@@ -542,7 +531,6 @@ class MoveSearchForm(BaseSearchForm):
                                              .options(joinedload('versions')),
         get_label=lambda row: version_icons(row.versions),
         get_pk=lambda table: table.id,
-        allow_blank=True,
     )
 
     # Numbers
