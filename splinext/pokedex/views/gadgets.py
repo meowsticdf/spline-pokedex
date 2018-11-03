@@ -509,14 +509,14 @@ def chain_breeding(request):
         candidates \
             .setdefault(pokemon_move.pokemon, []) \
             .append(pokemon_move)
-        for egg_group in pokemon_move.pokemon.egg_groups:
+        for egg_group in pokemon_move.pokemon.species.egg_groups:
             pokemon_by_egg_group[egg_group].add(pokemon_move.pokemon)
 
     # Breeding only really cares about egg group combinations, not the
     # individual Pokémon; for all intents and purposes, any (5, 9) Pokémon
     # can be replaced by any other.  So build the tree out of those, first.
     egg_group_candidates = set(
-        tuple(pokemon.egg_groups) for pokemon in candidates.keys()
+        tuple(pokemon.species.egg_groups) for pokemon in candidates.keys()
     )
 
     # The above are actually edges in a graph; (5, 9) indicates that
@@ -534,7 +534,7 @@ def chain_breeding(request):
             adjacent=[],
         )
     # Fill in the adjacent edges
-    for egg_group in target.egg_groups:
+    for egg_group in target.species.egg_groups:
         egg_graph['me']['adjacent'].append(egg_graph[egg_group])
         egg_graph[egg_group]['adjacent'].append(egg_graph['me'])
     for egg_groups in egg_group_candidates:
