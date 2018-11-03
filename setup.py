@@ -31,9 +31,9 @@ setup(
     test_suite='nose.collector',
 
     entry_points="""
-    [babel.extractors]
-    spline-python = spline.babelplugin:extract_python
-    spline-mako = spline.babelplugin:extract_mako
+    #[babel.extractors]
+    #spline-python = spline.babelplugin:extract_python
+    #spline-mako = spline.babelplugin:extract_mako
 
     #[nose.plugins]
     #pylons = pylons.test:PylonsPlugin
