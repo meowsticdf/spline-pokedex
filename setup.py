@@ -14,7 +14,6 @@ setup(
         "nose>=0.11",
         "WTForms>=1.0",
         "markdown",
-        "lxml",
         "webhelpers>=1.2",
         "waitress>=1.1.0",
         #"Babel>=0.9.5", # needed for translation work only, can do without
