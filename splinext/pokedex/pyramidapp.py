@@ -69,7 +69,7 @@ def add_renderer_globals(event):
         return unicode(message)
 
     renderer_globals = event
-    request = event.get("request") or threadlocal.get_current_request()
+    request = event.get("request") #or threadlocal.get_current_request()
     if not request:
         return
     config = request.registry.settings
