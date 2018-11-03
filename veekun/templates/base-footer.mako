@@ -1,3 +1,4 @@
+<%namespace name='dexlib' file='pokedex/lib.mako'/>
 <%def name="format_timedelta(delta, prec=1)">${ "{0:.{1}f}".format(1e3*delta.seconds + 1e-3*delta.microseconds, prec) }ms</%def>
 <%def name="plural(n, singular, plural)">${n} ${singular if n == 1 else plural}</%def>
 
