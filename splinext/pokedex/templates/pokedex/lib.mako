@@ -1,6 +1,3 @@
-<%! from splinext.pokedex import db %>\
-<%! import os, warnings %>\
-
 #### Images and links
 
 <%def name="pokedex_img(src, **attr)"><%
