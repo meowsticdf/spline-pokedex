@@ -28,7 +28,7 @@ def first(func, iterable):
             return elem
 
 def move_list(request):
-    return render('/pokedex/move_list.mako')
+    return {}
 
 def move_view(request):
     name = request.matchdict.get('name')
