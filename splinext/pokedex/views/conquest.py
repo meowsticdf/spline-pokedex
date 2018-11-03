@@ -54,11 +54,6 @@ def _prev_next_name(table, current, game_language, filters=[]):
     current: list of the current values
     filters: a list of filter expressions for the table
     """
-    # XXX(pyramid): somehow the game_language that we inject at the beginning
-    # of the request is from a different session or something so we have to
-    # fetch a new one here
-    game_language = db.pokedex_session.query(t.Language).get(game_language.id)
-
     # to use game_language.id here instead of game_language itself
     name_table = table.__mapper__.get_property('names').argument
     query = (db.pokedex_session.query(table)

@@ -97,15 +97,12 @@ def add_renderer_globals_factory(config):
         request.tmpl_context.timer = ResponseTimer()
     return add_renderer_globals
 
-def game_property_tween_factory(handler, registry):
-    """A tween which sets request.tmpl_context.game_language before views run"""
-    @functools.wraps(handler)
-    def tween(request):
-        # TODO: look up game language from a cookie or something
-        en = db.get_by_identifier_query(db.t.Language, u'en').first()
-        request.tmpl_context.game_language = en
-        return handler(request)
-    return tween
+def add_game_language_subscriber(event):
+    """A subscriber which sets request.tmpl_context.game_language before views run"""
+    request = event.request
+    # TODO: look up game language from a cookie or something
+    en = db.get_by_identifier_query(db.t.Language, u'en').first()
+    request.tmpl_context.game_language = en
 
 ## TODO: markdown extension
 
@@ -148,7 +145,7 @@ def main(global_config, **settings):
 
     add_renderer_globals = add_renderer_globals_factory(settings)
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
-    config.add_tween("splinext.pokedex.pyramidapp.game_property_tween_factory")
+    config.add_subscriber(add_game_language_subscriber, "pyramid.events.NewRequest")
 
     ### routes
     # index page
