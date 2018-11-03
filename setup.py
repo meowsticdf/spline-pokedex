@@ -15,7 +15,7 @@ setup(
         "WTForms>=1.0",
         "markdown",
         "webhelpers>=1.2",
-        "waitress>=1.1.0",
+        "waitress>=1.1.0", # development server
         #"Babel>=0.9.5", # needed for translation work only, can do without
 
         'pokedex',
