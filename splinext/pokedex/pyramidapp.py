@@ -264,6 +264,22 @@ def main(global_config, **settings):
     config.add_view(route_name='dex_gadgets/compare_pokemon', view='splinext.pokedex.views.gadgets:compare_pokemon', renderer='pokedex/gadgets/compare_pokemon.mako')
     config.add_view(route_name='dex_gadgets/stat_calculator', view='splinext.pokedex.views.gadgets:stat_calculator', renderer='pokedex/gadgets/stat_calculator.mako')
 
+    # conquest
+
+    config.add_view(route_name='dex_conquest/abilities', view='splinext.pokedex.views.conquest:ability_view', renderer='pokedex/conquest/ability.mako')
+    config.add_view(route_name='dex_conquest/kingdoms', view='splinext.pokedex.views.conquest:kingdom_view', renderer='pokedex/conquest/kingdom.mako')
+    config.add_view(route_name='dex_conquest/moves', view='splinext.pokedex.views.conquest:move_view', renderer='pokedex/conquest/move.mako')
+    config.add_view(route_name='dex_conquest/pokemon', view='splinext.pokedex.views.conquest:pokemon_view', renderer='pokedex/conquest/pokemon.mako')
+    config.add_view(route_name='dex_conquest/skills', view='splinext.pokedex.views.conquest:skill_view', renderer='pokedex/conquest/skill.mako')
+    config.add_view(route_name='dex_conquest/warriors', view='splinext.pokedex.views.conquest:warrior_view', renderer='pokedex/conquest/warrior.mako')
+
+    config.add_view(route_name='dex_conquest/abilities_list', view='splinext.pokedex.views.conquest:ability_list', renderer='pokedex/conquest/ability_list.mako')
+    config.add_view(route_name='dex_conquest/kingdoms_list', view='splinext.pokedex.views.conquest:kingdom_list', renderer='pokedex/conquest/kingdom_list.mako')
+    config.add_view(route_name='dex_conquest/moves_list', view='splinext.pokedex.views.conquest:move_list', renderer='pokedex/conquest/move_list.mako')
+    config.add_view(route_name='dex_conquest/pokemon_list', view='splinext.pokedex.views.conquest:pokemon_list', renderer='pokedex/conquest/pokemon_list.mako')
+    config.add_view(route_name='dex_conquest/skills_list', view='splinext.pokedex.views.conquest:skill_list', renderer='pokedex/conquest/skill_list.mako')
+    config.add_view(route_name='dex_conquest/warriors_list', view='splinext.pokedex.views.conquest:warrior_list', renderer='pokedex/conquest/warrior_list.mako')
+
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
     #config.add_view(context='pyramid.httpexceptions.HTTPNotFound', view=error_view)
