@@ -69,6 +69,7 @@ def nature_view(request):
     c.prev_nature, c.next_nature = helpers.prev_next(
         table=t.Nature,
         current=c.nature,
+        language=c.game_language,
     )
 
     # Find related natures.

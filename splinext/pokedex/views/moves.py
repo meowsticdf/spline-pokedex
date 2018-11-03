@@ -54,6 +54,7 @@ def move_view(request):
     c.prev_move, c.next_move = helpers.prev_next(
         table=t.Move,
         filters=[shadowness],
+        language=c.game_language,
         current=c.move,
     )
 

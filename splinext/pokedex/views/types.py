@@ -83,6 +83,7 @@ def type_view(request):
     c.prev_type, c.next_type = helpers.prev_next(
         table=t.Type,
         current=c.type,
+        language=c.game_language,
     )
 
     ### XXX cache after this

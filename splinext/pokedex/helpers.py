@@ -30,28 +30,26 @@ def url(*args, **kw): return '#bad-url'
 # to this:
 _ = NullTranslator()
 
-def prev_next(table, current, filters=[]):
+def prev_next(table, current, language, filters=[]):
     """Figure out the previous/next thing for the navigation bar
 
     table: the table to select from
     current: list of the current values
+    language: the t.Language to use for name order
     filters: a list of filter expressions for the table
     """
-
-    # XXX
-    game_language = db.get_by_identifier_query(db.t.Language, u'en').first()
 
     name_table = table.__mapper__.get_property('names').argument
     query = (db.pokedex_session.query(table)
             .join(name_table)
-            .filter(name_table.local_language == game_language)
+            .filter(name_table.local_language == language)
         )
 
     for filter in filters:
         query = query.filter(filter)
 
     name_col = name_table.name
-    name_current = current.name_map[game_language]
+    name_current = current.name_map[language]
 
     lt = name_col < name_current
     gt = name_col > name_current

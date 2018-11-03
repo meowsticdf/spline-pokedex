@@ -42,6 +42,7 @@ def ability_view(request):
     c.prev_ability, c.next_ability = helpers.prev_next(
         table=t.Ability,
         current=c.ability,
+        language=c.game_language,
         filters=[t.Ability.is_main_series],
     )
 
