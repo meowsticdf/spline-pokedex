@@ -747,6 +747,9 @@ class DownloadSizer(object):
         self.seen = set()
 
     def compute(self, path):
+        # XXX The exceptions raised below should be warnings instead.
+        # I assert that it is better to have a couple broken links than
+        # for the page to completely crash.
         if path in self.seen:
             # Two download links for the same thing on one page
             # Remove the "seen" stuff if this is ever legitimate
