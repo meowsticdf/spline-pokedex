@@ -21,6 +21,7 @@ setup(
         'pokedex',
         'SQLAlchemy>=0.7.5,<1.2.0b1',
         'zope.sqlalchemy',
+        #'psycopg2-binary', # for postgresql support
     ],
 
     include_package_data = True,
