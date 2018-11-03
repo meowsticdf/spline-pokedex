@@ -89,18 +89,21 @@ def add_renderer_globals(event):
     renderer_globals["_"] = fake_translate
 
     request.tmpl_context.links = config['spline.plugins.links']
-    extra_javascripts = getattr(request.tmpl_context, 'javascripts', [])
-    request.tmpl_context.javascripts = [
+
+    # start timer
+    request.tmpl_context.timer = ResponseTimer()
+
+def add_javascripts_subscriber(event):
+    """A subscriber which sets the request.tmpl_context.javascript variable"""
+    c = event.request.tmpl_context
+    c.javascripts = [
         ('spline', 'lib/jquery-1.7.1.min'),
         ('spline', 'lib/jquery.cookies-2.2.0.min'),
         ('spline', 'lib/jquery.ui-1.8.4.min'),
         ('spline', 'core'),
         ('pokedex', 'pokedex-suggestions'),
         ('pokedex', 'pokedex'), # XXX only on main pokedex pages
-    ] + extra_javascripts
-
-    # start timer
-    request.tmpl_context.timer = ResponseTimer()
+    ]
 
 def add_game_language_subscriber(event):
     """A subscriber which sets request.tmpl_context.game_language before views run"""
@@ -164,6 +167,7 @@ def main(global_config, **settings):
 
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
     config.add_subscriber(add_game_language_subscriber, "pyramid.events.NewRequest")
+    config.add_subscriber(add_javascripts_subscriber, "pyramid.events.NewRequest")
 
     ### routes
     # index page

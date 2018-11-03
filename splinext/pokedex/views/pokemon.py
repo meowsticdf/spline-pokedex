@@ -204,7 +204,6 @@ def pokemon_view(request):
     name = request.matchdict.get('name')
     form = request.params.get('form', None)
     c = request.tmpl_context
-    c.javascripts = [] # XXX(pyramid)
 
     try:
         pokemon_q = db.pokemon_query(name, form)
@@ -812,7 +811,6 @@ def pokemon_flavor_view(request):
     name = request.matchdict.get('name')
     form = request.params.get('form', None)
     c = request.tmpl_context
-    c.javascripts = [] # XXX(pyramid)
 
     try:
         c.form = db.pokemon_form_query(name, form=form).one()

@@ -228,7 +228,6 @@ def capture_rate(request):
     Pokémon and a set of battle conditions.
     """
     c = request.tmpl_context
-    c.javascripts = [] # XXX(pyramid)
 
     c.javascripts.append(('pokedex', 'pokedex-gadgets'))
     c.form = CaptureRateForm(request.params)
@@ -1103,7 +1102,6 @@ def whos_that_pokemon(request):
     et al.
     """
     c = request.tmpl_context
-    c.javascripts = [] # XXX(pyramid)
     c.javascripts.append(('pokedex', 'whos-that-pokemon'))
 
     return {} # render('/pokedex/gadgets/whos_that_pokemon.mako')
