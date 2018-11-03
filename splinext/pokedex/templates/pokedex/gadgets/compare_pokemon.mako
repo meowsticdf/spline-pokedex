@@ -35,7 +35,7 @@ ${h.form(url.current(), method='GET')}
 <table class="dex-compare-pokemon">
 <col class="labels">
 <thead>
-    % if c.did_anything and any(_ and _.suggestions for _ in c.found_pokemon):
+    % if c.did_anything and any(x and x.suggestions for x in c.found_pokemon):
     <tr class="dex-compare-suggestions">
         <th><!-- label column --></th>
         % for found_pokemon in c.found_pokemon:
