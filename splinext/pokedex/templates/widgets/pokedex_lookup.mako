@@ -1,5 +1,3 @@
-<%! from splinext.pokedex import i18n %>\
-
 <form id="pokedex-lookup" method="GET" action="${url(controller='dex', action='lookup')}">
 <p>
 <label>

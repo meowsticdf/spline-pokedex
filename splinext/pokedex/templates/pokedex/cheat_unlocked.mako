@@ -1,5 +1,4 @@
 <%inherit file="/base.mako"/>
-<%! from splinext.pokedex import i18n %>\
 <%!
     _ = unicode
     import random

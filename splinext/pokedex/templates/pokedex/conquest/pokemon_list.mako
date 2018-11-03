@@ -1,8 +1,6 @@
 <%inherit file="/base.mako"/>
 <%namespace name="conqlib" file="lib.mako"/>
 
-<%! from splinext.pokedex import i18n %>\
-
 <%def name="title()">Pokémon - Pokémon Conquest</%def>
 
 <%def name="title_in_page()">

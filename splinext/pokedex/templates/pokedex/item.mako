@@ -1,6 +1,5 @@
 <%inherit file="/base.mako"/>
 <%namespace name="dexlib" file="lib.mako"/>
-<%! from splinext.pokedex import i18n %>\
 
 <%def name="title()">${_("%s - Items") % c.item.name}</%def>
 

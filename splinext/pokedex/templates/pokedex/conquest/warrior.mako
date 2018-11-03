@@ -2,8 +2,6 @@
 <%namespace name="dexlib" file="/pokedex/lib.mako"/>
 <%namespace name="conqlib" file="lib.mako"/>
 
-<%! from splinext.pokedex import i18n %>
-
 <%def name="title()">\
 ${_(u'{name} - Warriors - Pokémon Conquest').format(name=c.warrior.name)}
 </%def>

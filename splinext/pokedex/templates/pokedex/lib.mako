@@ -1,4 +1,4 @@
-<%! from splinext.pokedex import i18n, db %>\
+<%! from splinext.pokedex import db %>\
 <%! import os, warnings %>\
 
 #### Images and links

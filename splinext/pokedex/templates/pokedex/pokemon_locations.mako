@@ -1,7 +1,6 @@
 <%inherit file="/base.mako"/>
 <%namespace name="lib" file="/lib.mako"/>
 <%namespace name="dexlib" file="lib.mako"/>
-<%! from splinext.pokedex import i18n %>\
 
 <%def name="title()">${_(u"{pkmn} locations - Pokémon #{id}").format(pkmn=c.pokemon.default_form.name, id=c.pokemon.species_id)}</%def>
 

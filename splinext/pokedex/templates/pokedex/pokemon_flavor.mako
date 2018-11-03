@@ -2,7 +2,6 @@
 <%namespace name="lib" file="/lib.mako"/>
 <%namespace name="dexlib" file="lib.mako"/>
 <%! import re %>\
-<%! from splinext.pokedex import i18n %>\
 
 <%def name="title()">\
 ${_(u"{name} flavor – Pokémon #{number}").format(name=c.form.name, number=c.form.pokemon.species_id)}\

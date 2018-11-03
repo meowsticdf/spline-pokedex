@@ -5,8 +5,6 @@
 <%!
    from itertools import groupby
    from operator import attrgetter
-
-   from splinext.pokedex import i18n
 %>\
 
 <%def name="title()">\

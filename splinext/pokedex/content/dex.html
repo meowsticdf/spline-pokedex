@@ -2,8 +2,6 @@
 <%def name="title()">Pokédex</%def>
 <%def name="title_in_page()">Pokédex Introduction</%def>
 
-<%! from splinext.pokedex import i18n %>\
-
 <form id="big-pokedex-lookup" method="GET" action="${url(controller='dex', action='lookup')}">
 <p>
     <input type="text" name="lookup" class="dex-lookup js-dex-suggest"/>

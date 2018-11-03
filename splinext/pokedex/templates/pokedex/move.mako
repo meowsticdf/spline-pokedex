@@ -1,7 +1,6 @@
 <%inherit file="/base.mako"/>
 <%namespace name="lib" file="/lib.mako"/>
 <%namespace name="dexlib" file="lib.mako"/>
-<%! from splinext.pokedex import i18n %>\
 <%! import pokedex.db.tables as t %>\
 
 <%def name="title()">${_("%s - Moves") % c.move.name}</%def>

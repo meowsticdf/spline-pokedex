@@ -1,7 +1,6 @@
 <%inherit file="/base.mako"/>
 <%namespace name="dexlib" file="/pokedex/lib.mako" />
 
-<%! from splinext.pokedex import i18n %>
 <%def name="title()">
 ${_(u'{name} - Kingdoms - Pokémon Conquest').format(name=c.kingdom.name)}
 </%def>

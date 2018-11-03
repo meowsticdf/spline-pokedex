@@ -4,8 +4,6 @@
 <%! from splinext.pokedex import db %>\
 <%! import re %>\
 
-<%! from splinext.pokedex import i18n %>\
-
 <%def name="title()">\
 ${_(u"{pokemon.name} – #{pokemon.species.id} - {pokemon.species.genus}").format(pokemon=c.pokemon)}
 </%def>
