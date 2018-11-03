@@ -256,7 +256,7 @@ def main(global_config, **settings):
 
     # search
     config.add_view(route_name='dex_search/pokemon_search', view='splinext.pokedex.views.search:pokemon_search', renderer='pokedex/search/pokemon.mako')
-    config.add_view(route_name='dex_search/move_search', view='splinext.pokedex.views.search:move_search', renderer='pokedex/search/move.mako')
+    config.add_view(route_name='dex_search/move_search', view='splinext.pokedex.views.search:move_search', renderer='pokedex/search/moves.mako')
 
     # error pages
     #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)

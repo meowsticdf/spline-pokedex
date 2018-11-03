@@ -1413,7 +1413,7 @@ def move_search(request):
     if not c.form.was_submitted or not c.form.is_valid:
         # Either blank, or errortastic.  Skip the logic and just send the
         # form back
-        return render('/pokedex/search/moves.mako')
+        return {}
 
 
     ### Do the searching!
