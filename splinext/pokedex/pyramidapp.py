@@ -36,66 +36,65 @@ def error_view(request):
     c.code = int(c.code)
     return render('error.mako', {}, request=request)
 
-def add_renderer_globals_factory(config):
-    def add_renderer_globals(event):
-        """A subscriber for ``pyramid.events.BeforeRender`` events.  I add
-        some :term:`renderer globals` with values that are familiar to Pylons
-        users.
-        """
-        def fake_url(controller=None, action=None, **kwargs):
-            if action == "css":
-                return "/css"
-            if action and controller:
-                path = {}
-                for key in 'name', 'pocket', 'subpath':
-                    if key in kwargs:
-                        path[key] = kwargs.pop(key)
-                path['_query'] = dict((k,v) for k,v in kwargs.items() if v is not None)
-                return request.route_path(controller+"/"+action, **path)
-            if controller and controller.startswith("/"):
-                return controller
-            return "/unknown"
-
-        def fake_url_current(**kwargs):
+def add_renderer_globals(event):
+    """A subscriber for ``pyramid.events.BeforeRender`` events.  I add
+    some :term:`renderer globals` with values that are familiar to Pylons
+    users.
+    """
+    def fake_url(controller=None, action=None, **kwargs):
+        if action == "css":
+            return "/css"
+        if action and controller:
             path = {}
-            # XXX request.matchdict?
-            if 'name' in kwargs:
-                path['name'] = kwargs.pop('name')
-            if 'action' in kwargs:
-                path['_route_name'] = 'dex/'+kwargs.pop('action')
+            for key in 'name', 'pocket', 'subpath':
+                if key in kwargs:
+                    path[key] = kwargs.pop(key)
             path['_query'] = dict((k,v) for k,v in kwargs.items() if v is not None)
-            return request.current_route_path(**path)
+            return request.route_path(controller+"/"+action, **path)
+        if controller and controller.startswith("/"):
+            return controller
+        return "/unknown"
 
-        def fake_translate(message, plural=None, n=None, context=None, comment=None):
-            return unicode(message)
+    def fake_url_current(**kwargs):
+        path = {}
+        # XXX request.matchdict?
+        if 'name' in kwargs:
+            path['name'] = kwargs.pop('name')
+        if 'action' in kwargs:
+            path['_route_name'] = 'dex/'+kwargs.pop('action')
+        path['_query'] = dict((k,v) for k,v in kwargs.items() if v is not None)
+        return request.current_route_path(**path)
 
-        renderer_globals = event
-        renderer_globals["config"] = config
-        renderer_globals["h"] = splinehelpers
-        request = event.get("request") or threadlocal.get_current_request()
-        if not request:
-            return
-        renderer_globals["r"] = request
-        renderer_globals["c"] = request.tmpl_context
-        #renderer_globals["url"] = request.url_generator
-        renderer_globals["url"] = fake_url
-        fake_url.current = fake_url_current
-        renderer_globals["_"] = fake_translate
+    def fake_translate(message, plural=None, n=None, context=None, comment=None):
+        return unicode(message)
 
-        request.tmpl_context.links = config['spline.plugins.links']
-        extra_javascripts = getattr(request.tmpl_context, 'javascripts', [])
-        request.tmpl_context.javascripts = [
-            ('spline', 'lib/jquery-1.7.1.min'),
-            ('spline', 'lib/jquery.cookies-2.2.0.min'),
-            ('spline', 'lib/jquery.ui-1.8.4.min'),
-            ('spline', 'core'),
-            ('pokedex', 'pokedex-suggestions'),
-            ('pokedex', 'pokedex'), # XXX only on main pokedex pages
-        ] + extra_javascripts
+    renderer_globals = event
+    request = event.get("request") or threadlocal.get_current_request()
+    if not request:
+        return
+    config = request.registry.settings
+    renderer_globals["config"] = config
+    renderer_globals["h"] = splinehelpers
+    renderer_globals["r"] = request
+    renderer_globals["c"] = request.tmpl_context
+    #renderer_globals["url"] = request.url_generator
+    renderer_globals["url"] = fake_url
+    fake_url.current = fake_url_current
+    renderer_globals["_"] = fake_translate
 
-        # start timer
-        request.tmpl_context.timer = ResponseTimer()
-    return add_renderer_globals
+    request.tmpl_context.links = config['spline.plugins.links']
+    extra_javascripts = getattr(request.tmpl_context, 'javascripts', [])
+    request.tmpl_context.javascripts = [
+        ('spline', 'lib/jquery-1.7.1.min'),
+        ('spline', 'lib/jquery.cookies-2.2.0.min'),
+        ('spline', 'lib/jquery.ui-1.8.4.min'),
+        ('spline', 'core'),
+        ('pokedex', 'pokedex-suggestions'),
+        ('pokedex', 'pokedex'), # XXX only on main pokedex pages
+    ] + extra_javascripts
+
+    # start timer
+    request.tmpl_context.timer = ResponseTimer()
 
 def add_game_language_subscriber(event):
     """A subscriber which sets request.tmpl_context.game_language before views run"""
@@ -143,7 +142,6 @@ def main(global_config, **settings):
 
     config.add_renderer('jsonp', JSONP(param_name='callback'))
 
-    add_renderer_globals = add_renderer_globals_factory(settings)
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
     config.add_subscriber(add_game_language_subscriber, "pyramid.events.NewRequest")
 
