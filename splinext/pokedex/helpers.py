@@ -12,8 +12,6 @@ from itertools import groupby, chain, repeat
 from operator import attrgetter
 import os.path
 
-#from pylons import config, tmpl_context as c, url
-
 import pokedex.db.tables as t
 from . import db
 from . import splinehelpers as h
@@ -22,8 +20,6 @@ from .i18n import NullTranslator
 # Re-exported
 import pokedex.formulae as formulae
 from pokedex.roomaji import romanize
-
-def url(*args, **kw): return '#bad-url'
 
 # We can't translate at import time, but _ will mark strings as translatable
 # Functions that need translation will take a "_" parameter, which defaults
@@ -113,51 +109,6 @@ def resource_url(request, thingy, subpage=None, controller='dex'):
 
     route = controller + "/" + action
     return request.route_url(route, **args)
-
-def make_thingy_url(thingy, subpage=None, controller='dex'):
-    u"""Given a thingy (Pokémon, move, type, whatever), returns a URL to it.
-    """
-    # Using the table name as an action directly looks kinda gross, but I can't
-    # think of anywhere I've ever broken this convention, and making a
-    # dictionary to get data I already have is just silly
-    args = {}
-
-    # Pokémon with forms need the form attached to the URL
-    if isinstance(thingy, t.PokemonForm):
-        action = 'pokemon'
-        args['form'] = thingy.form_identifier.lower()
-        args['name'] = thingy.pokemon.species.name.lower()
-
-        if not thingy.is_default:
-            subpage = 'flavor'
-    elif isinstance(thingy, t.PokemonSpecies):
-        action = 'pokemon'
-        args['name'] = thingy.name.lower()
-    else:
-        action = thingy.__tablename__
-        args['name'] = thingy.name.lower()
-
-
-    # Items are split up by pocket
-    if isinstance(thingy, t.Item):
-        args['pocket'] = thingy.pocket.identifier
-
-    if (thingy.__tablename__.startswith('conquest_')
-       or (isinstance(thingy, t.Ability) and not thingy.is_main_series)
-       or subpage == 'conquest'):
-        # Conquest stuff needs to go to the Conquest controller
-        if action == 'conquest_warrior_skills':
-            action = 'skills'
-        else:
-            action = action.replace('conquest_', '')
-
-        controller = 'dex_conquest'
-    elif subpage:
-        action += '_' + subpage
-
-    return url(controller=controller,
-               action=action,
-               **args)
 
 def render_flavor_text(flavor_text, literal=False):
     """Makes flavor text suitable for HTML presentation.
@@ -267,63 +218,6 @@ def filename_from_name(name):
     name = re.sub(u'[\'.()]', u'', name)
     return name
 
-def pokedex_img(src, **attr):
-    return h.HTML.img(src=url(controller='dex', action='media', path=src), **attr)
-
-def chrome_img(src, **attr):
-    return h.HTML.img(src=h.static_uri('pokedex', 'images/' + src), **attr)
-
-# XXX Should these be able to promote to db objects, rather than demoting to
-# strings and integers?  If so, how to do that without requiring db access
-# from here?
-def generation_icon(generation, _=_):
-    """Returns a generation icon, given a generation number."""
-    # Convert generation to int if necessary
-    if not isinstance(generation, int):
-        generation = generation.id
-
-
-    return chrome_img('versions/generation-%s.png' % generation,
-            alt=_(u"Generation %d") % generation,
-            title=_(u"Generation %d") % generation)
-
-def version_icons(*versions, **kwargs):
-    """Returns some version icons, given a list of version names.
-
-    Keyword arguments:
-    _: translator for i18n
-    """
-    # python's argument_list syntax is kind of limited here
-    _ = kwargs.get('_', globals()['_'])
-    version_icons = u''
-    comma = chain([u''], repeat(u', '))
-    for version in versions:
-        # Convert version to string if necessary
-        if isinstance(version, basestring):
-            identifier = filename_from_name(version)
-            name = version
-        else:
-            identifier = version.identifier
-            name = version.name
-
-        version_icons += h.HTML.img(
-                src=h.static_uri('pokedex', 'images/versions/%s.png' % identifier),
-                alt=comma.next() + name,
-                title=name)
-
-    return version_icons
-
-def version_group_icon(version_group):
-    return version_icons(*version_group.versions)
-    # XXX this is for the combined pixely version group icons i made
-    names = ', '.join(version.name for version in version_group.versions)
-    return h.HTML.img(
-        src=h.static_uri('pokedex', 'images/versions/%s.png' % (
-            '-'.join(version.identifier for version in version_group.versions))),
-        alt=names,
-        title=names)
-
-
 def pokemon_has_media(pokemon_form, prefix, ext, config, use_form=True):
     """Determine whether a file exists in the specified directory for the
     specified Pokémon form.
@@ -366,142 +260,6 @@ def pokemon_media_path(pokemon_species, prefix, ext, form=None):
 
     return '/'.join(('pokemon', prefix, filename))
 
-def species_image(pokemon_species, prefix='main-sprites/black-white', **attr):
-    u"""Returns an <img> tag for a Pokémon species image."""
-
-    default_text = pokemon_species.name
-
-    if 'animated' in prefix:
-        ext = 'gif'
-    else:
-        ext = 'png'
-
-    attr.setdefault('alt', default_text)
-    attr.setdefault('title', default_text)
-
-    return pokedex_img(pokemon_media_path(pokemon_species, prefix, ext),
-                       **attr)
-
-def pokemon_form_image(pokemon_form, prefix=None, **attr):
-    """Returns an <img> tag for a Pokémon form image."""
-
-    if prefix is None:
-        prefix = 'main-sprites/ultra-sun-ultra-moon'
-        # FIXME what the hell is going on here
-        if not pokemon_has_media(pokemon_form, prefix, 'png'):
-            prefix = 'main-sprites/black-white'
-
-        # Deal with Spiky-eared Pichu and ??? Arceus
-        if pokemon_form.pokemon_form_generations:
-            last_gen = pokemon_form.pokemon_form_generations[-1].generation_id
-            if last_gen == 4:
-                prefix = 'main-sprites/heartgold-soulsilver'
-
-    default_text = pokemon_form.name
-
-    if 'animated' in prefix:
-        ext = 'gif'
-    elif 'dream-world' in prefix:
-        ext = 'svg'
-    else:
-        ext = 'png'
-
-    attr.setdefault('alt', default_text)
-    attr.setdefault('title', default_text)
-
-    return pokedex_img(pokemon_media_path(pokemon_form.species, prefix, ext, form=pokemon_form),
-                       **attr)
-
-def pokemon_icon(pokemon, alt=True):
-    if pokemon.is_default:
-        return h.literal('<span class="sprite-icon sprite-icon-%d"></span>' % pokemon.species.id)
-
-    alt_text = pokemon.name if alt else u''
-    if pokemon_has_media(pokemon.default_form, 'icons', 'png'):
-        return pokemon_form_image(pokemon.default_form, prefix='icons', alt=alt_text)
-
-    return pokedex_img('pokemon/icons/0.png', title=pokemon.species.name, alt=alt_text)
-
-def pokemon_link(pokemon, content=None, **attr):
-    """Returns a link to a Pokémon page.
-
-    `pokemon`
-        A Pokemon object.
-
-    `content`
-        Link text (or image, or whatever).
-    """
-
-    # Content defaults to the name of the Pokémon
-    if not content:
-        content = pokemon.name
-
-    url_kwargs = {}
-    if pokemon.default_form.form_identifier:
-        # Don't want a ?form=None, or a ?form=default
-        url_kwargs['form'] = pokemon.default_form.form_identifier
-
-    return h.HTML.a(
-        content,
-        href=url(controller='dex', action='pokemon',
-                       name=pokemon.species.name.lower(), **url_kwargs),
-        **attr
-        )
-
-def form_flavor_link(form, content=None, **attr):
-    """Returns a link to a pokemon form's flavor page.
-
-    `form`
-        A PokemonForm object.
-
-    `content`
-        Link text (or image, or whatever).
-    """
-    if not content:
-        content = form.name
-
-    url_kwargs = {}
-    if form.form_identifier:
-        # Don't want a ?form=None, or a ?form=default
-        url_kwargs['form'] = form.form_identifier
-
-    return h.HTML.a(
-        content,
-        href=url(controller='dex', action='pokemon_flavor',
-                       name=form.species.name.lower(), **url_kwargs),
-        **attr
-        )
-
-def damage_class_icon(damage_class, _=_):
-    return pokedex_img(
-        "damage-classes/%s.png" % damage_class.identifier,
-        alt=damage_class.name,
-        title=_("%s: %s", context="damage class: description") % (
-                damage_class.name.capitalize(),
-                damage_class.description,
-            )
-    )
-
-
-def type_icon(type):
-    if isinstance(type, basestring):
-        if type == '???':
-            identifier = 'unknown'
-        else:
-            identifier = type.lower()
-        name = type
-    else:
-        name = type.name
-        identifier = type.identifier
-    return pokedex_img('types/{1}/{0}.png'.format(identifier, c.game_language.identifier),
-            alt=name, title=name)
-
-def type_link(type):
-    return h.HTML.a(
-        type_icon(type),
-        href=url(controller='dex', action='types', name=type.identifier),
-    )
-
 def item_filename(item):
     if item.pocket.identifier == u'machines':
         machines = item.machines
@@ -513,22 +271,6 @@ def item_filename(item):
         filename = item.identifier
 
     return filename
-
-def item_link(item, include_icon=True, _=_):
-    """Returns a link to the requested item."""
-
-    item_name = item.name
-
-    if include_icon:
-        label = pokedex_img("items/%s.png" % item_filename(item),
-            alt=item_name, title=item_name) + ' ' + item_name
-    else:
-        label = item_name
-
-    return h.HTML.a(label,
-        href=url(controller='dex', action='items',
-                 pocket=item.pocket.identifier, name=item_name.lower()),
-    )
 
 def joiner(sep):
     """Returns an iterator which yields sep every time except the first.
