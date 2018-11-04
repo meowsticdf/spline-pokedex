@@ -203,7 +203,7 @@ def collapse_versions(things, key):
     for collapsed_key, group in groupby(chain([a_thing], things), key):
         yield get_versions(group), collapsed_key
 
-### Images and links
+### Filenames
 
 # XXX only used by version_icons()
 def filename_from_name(name):
