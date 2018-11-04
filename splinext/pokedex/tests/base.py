@@ -64,7 +64,18 @@ class TestCase(unittest.TestCase):
     def tearDown(self):
         pyramid.testing.tearDown()
 
-SplineTest = TestCase
+class PlainTestCase(object):
+
+    @classmethod
+    def setUpClass(cls):
+        db.connect(settings)
+
+    def setUp(self):
+        self.config = pyramid.testing.setUp()
+
+    def tearDown(self):
+        pyramid.testing.tearDown()
+
 
 class TemplateContext(object):
     pass
