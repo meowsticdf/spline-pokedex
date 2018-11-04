@@ -1,12 +1,35 @@
 # encoding: utf8
-from spline.tests import TestController, url
+#from spline.tests import TestController, url
+from splinext.pokedex.views import gadgets
+from splinext.pokedex import db
+import pyramid.testing
+from webob.multidict import MultiDict
 
-class TestComparePokemonController(TestController):
+import unittest
+
+class TemplateContext(object):
+    pass
+
+#class TestComparePokemonController(TestController):
+class TestComparePokemon(unittest.TestCase):
+    def setUp(self):
+        self.config = pyramid.testing.setUp()
+        #XXX
+        db.connect({
+            'spline-pokedex.sqlalchemy.url': 'postgresql:///pokedex',
+            'spline-pokedex.lookup_directory': '~/veekun/pyramid_pokedex/veekun/data/pokedex-index',
+        })
+
+    def tearDown(self):
+        pyramid.testing.tearDown()
+
     def do_request(self, *pokemon):
         """Quick accessor to hit the compare gadget."""
-        return self.app.get(url(controller='dex_gadgets',
-                                action='compare_pokemon',
-                                pokemon=pokemon))
+        request = pyramid.testing.DummyRequest()
+        request.tmpl_context = TemplateContext()
+        request.params = MultiDict([('pokemon', p) for p in pokemon])
+        gadgets.compare_pokemon(request)
+        return request
 
     def test_pokemon_query_parsing(self):
         u"""Check that the query is correctly parsed.  Real Pokemon names
