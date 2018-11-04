@@ -1,33 +1,14 @@
 # encoding: utf8
-#from spline.tests import TestController, url
+
 from splinext.pokedex.views import gadgets
-from splinext.pokedex import db
-import pyramid.testing
-from webob.multidict import MultiDict
 
-import unittest
+from . import base
 
-class TemplateContext(object):
-    pass
-
-#class TestComparePokemonController(TestController):
-class TestComparePokemon(unittest.TestCase):
-    def setUp(self):
-        self.config = pyramid.testing.setUp()
-        #XXX
-        db.connect({
-            'spline-pokedex.sqlalchemy.url': 'postgresql:///pokedex',
-            'spline-pokedex.lookup_directory': '~/veekun/pyramid_pokedex/veekun/data/pokedex-index',
-        })
-
-    def tearDown(self):
-        pyramid.testing.tearDown()
+class TestComparePokemon(base.TestCase):
 
     def do_request(self, *pokemon):
         """Quick accessor to hit the compare gadget."""
-        request = pyramid.testing.DummyRequest()
-        request.tmpl_context = TemplateContext()
-        request.params = MultiDict([('pokemon', p) for p in pokemon])
+        request = base.request_factory(params=dict(pokemon=list(pokemon)))
         gadgets.compare_pokemon(request)
         return request
 
