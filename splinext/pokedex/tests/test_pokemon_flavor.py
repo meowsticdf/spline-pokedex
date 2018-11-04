@@ -1,5 +1,5 @@
 # encoding: utf8
-from spline.tests import TestController
+from . import base
 
-class TestPokemonFlavorController(TestController):
+class TestPokemonFlavorController(base.TestCase):
     pass
