@@ -100,6 +100,7 @@ class TestHeightParsing(TestSizeParsing):
     def test_pokemon(self):
         u"""Heights with critter names as units"""
 
+        # XXX needs to connect to the db
         self.assert_same('1 natu', '0.2 m')
         self.assert_same('1 meganatu', '200 km')
         self.assert_same('1 eevee', '11.8"')
