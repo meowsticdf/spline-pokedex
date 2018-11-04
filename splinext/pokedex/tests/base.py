@@ -1,11 +1,6 @@
-"""Pylons application test package
+"""Pyramid application test package
 
-This package assumes the Pylons environment is already loaded, such as
-when this script is imported from the `nosetests --with-pylons=test.ini`
-command.
-
-This module initializes the application via ``websetup`` (`paster
-setup-app`) and provides the base testing objects.
+This module provides the base testing objects.
 """
 
 # Shiv to make Unicode test docstrings print correctly; forces stderr to be
@@ -34,10 +29,7 @@ from webob.multidict import MultiDict
 from splinext.pokedex import db
 from splinext.pokedex import pyramidapp
 
-__all__ = ['TestController', 'SplineTest']
-
-# Invoke websetup with the current config file
-#SetupCommand('setup-app').run([pylons.test.pylonsapp.config['__file__']])
+__all__ = ['TestController', 'TestCase', 'PlainTestCase']
 
 INI_FILE = 'test.ini' # XXX make configurable
 settings = pyramid.paster.get_appsettings(INI_FILE, name='main')
