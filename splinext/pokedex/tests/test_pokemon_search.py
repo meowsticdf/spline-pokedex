@@ -1,15 +1,17 @@
 # encoding: utf8
-from spline.tests import TestController, url
 
-from splinext.pokedex.controllers.pokedex_search import PokemonSearchForm
+import splinext.pokedex.views.search
+from splinext.pokedex.views.search import PokemonSearchForm
 
-class TestPokemonSearchController(TestController):
+from . import base
+
+class TestPokemonSearchController(base.TestCase):
 
     def do_search(self, **criteria):
         u"""Small wrapper to run a Pokémon search for the given criteria."""
-        return self.app.get(url(controller='dex_search',
-                                action='pokemon_search',
-                                **criteria))
+        request = base.request_factory(params=criteria)
+        splinext.pokedex.views.search.pokemon_search(request)
+        return request
 
     def check_search(self, criteria, expected, message, exact=False):
         """Checks whether the given expected results (a list of names or (name,
