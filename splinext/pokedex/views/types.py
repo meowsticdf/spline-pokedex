@@ -2,6 +2,8 @@
 
 from __future__ import division
 
+from collections import defaultdict
+
 from sqlalchemy.orm import (contains_eager)
 from sqlalchemy.orm import (joinedload, joinedload_all, subqueryload, subqueryload_all)
 from sqlalchemy.orm.exc import NoResultFound
