@@ -3,6 +3,7 @@
 import re
 
 import pyramid.httpexceptions as exc
+from pyramid.renderers import render_to_response
 
 import pokedex.db.tables as t
 
@@ -27,13 +28,15 @@ table_labels = {
 
 redirect = exc.HTTPFound
 
-def _egg_unlock_cheat(cheat):
+def _egg_unlock_cheat(request, cheat):
     """Easter egg that writes Pokédex data in the Pokémon font."""
+    session = request.session
+    c = request.tmpl_context
     cheat_key = "cheat_%s" % cheat
     session[cheat_key] = not session.get(cheat_key, False)
     session.save()
     c.this_cheat_key = cheat_key
-    return render('/pokedex/cheat_unlocked.mako')
+    return render_to_response('/pokedex/cheat_unlocked.mako', {'session': session}, request=request)
 
 
 def lookup(request):
@@ -48,7 +51,7 @@ def lookup(request):
         # Nothing entered.  What?  Where did you come from?
         # There's nothing sensible to do here.  Let's use an obscure status
         # code, like 204 No Content.
-        abort(204)
+        return exc.HTTPNoContent()
 
     name = name.strip()
     lookup = name.lower()
@@ -56,7 +59,7 @@ def lookup(request):
     ### Special stuff that bypasses lookup
     if lookup == 'obdurate':
         # Pokémon flavor text in the D/P font
-        return _egg_unlock_cheat('obdurate')
+        return _egg_unlock_cheat(request, 'obdurate')
 
 
     ### Regular lookup

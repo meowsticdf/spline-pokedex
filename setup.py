@@ -6,7 +6,7 @@ setup(
 
     install_requires = [
         "pyramid>=1.5",
-        "pyramid_beaker",
+        "pyramid_beaker>=0.8",
         "pyramid_debugtoolbar>=0.15.1",
         "pyramid_mako>=1.0.2",
         "pyramid_tm",

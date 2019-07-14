@@ -160,6 +160,7 @@ def main(global_config, **settings):
     config = Configurator(settings=settings)
     config.include('pyramid_tm')
     config.include('pyramid_mako')
+    config.include('pyramid_beaker')
     config.include('pyramid_debugtoolbar')
 
     config.add_renderer('jsonp', JSONP(param_name='callback'))
