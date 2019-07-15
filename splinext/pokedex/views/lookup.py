@@ -164,16 +164,16 @@ def suggest(request):
         # Give a country icon so JavaScript doesn't have to hardcore Spline
         # paths.  Don't *think* we need to give the long language name...
         meta['language'] = suggestion.iso3166
-        #meta['language_icon'] = splinehelpers.static_uri(
-        #    'spline',
-        #    'flags/{0}.png'.format(suggestion.iso3166),
-        #    qualified=True
-        #)
-        # note: fully qualified
-        meta['language_icon'] = request.route_url(
-            'static/spline',
-            subpath='flags/{0}.png'.format(suggestion.iso3166),
+        meta['language_icon'] = splinehelpers.static_uri(
+            'spline',
+            'flags/{0}.png'.format(suggestion.iso3166),
+            qualified=True
         )
+        # note: fully qualified
+        #meta['language_icon'] = request.route_url(
+        #    'static/spline',
+        #    subpath='flags/{0}.png'.format(suggestion.iso3166),
+        #)
 
         metadata.append(meta)
 
