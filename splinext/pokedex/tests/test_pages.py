@@ -2,9 +2,17 @@
 
 import unittest
 
+import splinext.pokedex.views.abilities
+import splinext.pokedex.views.gadgets
+import splinext.pokedex.views.items
+import splinext.pokedex.views.lookup
+import splinext.pokedex.views.moves
+import splinext.pokedex.views.natures
 import splinext.pokedex.views.pokemon
+import splinext.pokedex.views.types
 
 from . import base
+from .. import db
 
 class TestPagesController(base.PlainTestCase):
 
@@ -26,11 +34,56 @@ class TestPagesController(base.PlainTestCase):
             'incorrect Pokemon selected: got %s, expected %s' % (result_name, expected_name)
 
     def hit_page(self, urlargs):
-        raise unittest.SkipTest("not yet updated") # XXX(pyramid)
 
-        urlargs.setdefault('controller', 'dex')
-        response = self.app.get(url(**urlargs))
+        urlargs = urlargs.copy()
+        urlargs.pop('controller', None)
+        action = urlargs.pop('action')
+        matchdict = {}
+        if 'name' in urlargs:
+            matchdict['name'] = urlargs.pop('name')
+        if 'pocket' in urlargs:
+            matchdict['pocket'] = urlargs.pop('pocket')
+        request = base.request_factory(matchdict=matchdict, params=urlargs)
+        request.tmpl_context.javascripts = []
+        en = db.get_by_identifier_query(db.t.Language, u'en').first()
+        request.tmpl_context.game_language = en
+        view = self.views.get(action, None)
+        if view is None:
+            self.fail("unknown action %s" % action)
+        response = view(request)
         return response
+
+    views = splinext.pokedex.views
+    views = {
+        'pokemon': views.pokemon.pokemon_view,
+        'pokemon_flavor': views.pokemon.pokemon_flavor_view,
+        'pokemon_locations': views.pokemon.pokemon_locations_view,
+        'pokemon_list': views.pokemon.pokemon_list,
+        'parse_size': views.pokemon.parse_size_view,
+
+        'abilities': views.abilities.ability_view,
+        'abilities_list': views.abilities.ability_list,
+        'item_pockets': views.items.pocket_view,
+        'items': views.items.item_view,
+        'items_list': views.items.item_list,
+        'locations': views.locations.location_view,
+        'locations_list': views.locations.location_list,
+        'moves': views.moves.move_view,
+        'moves_list': views.moves.move_list,
+        'natures': views.natures.nature_view,
+        'natures_list': views.natures.natures_list,
+        'types': views.types.type_view,
+        'types_list': views.types.type_list,
+
+        'lookup': views.lookup.lookup,
+        'suggest': views.lookup.suggest,
+
+        'capture_rate': views.gadgets.capture_rate,
+        'chain_breeding': views.gadgets.chain_breeding,
+        'compare_pokemon': views.gadgets.compare_pokemon,
+        'stat_calculator': views.gadgets.stat_calculator,
+        'whos_that_pokemon': views.gadgets.whos_that_pokemon,
+    }
 
     def test_selected_pokemon(self):
         for action in 'pokemon pokemon_flavor pokemon_locations'.split():
