@@ -45,17 +45,17 @@
 
 <%include file="/widgets.mako" args="widget='before_content'"/>
 
-## <% flash = h.flash.pop_messages() %>
-## % if flash:
-## <ul id="flash">
-##     % for message in flash:
-##     <li class="flash-${message.category}">
-##         <img src="${h.static_uri('spline', "icons/{0}.png".format(message.icon))}" alt="">
-##         ${message}
-##     </li>
-##     % endfor
-## </ul>
-## % endif
+<% flash_messages = flash.pop_messages() %>
+% if flash_messages:
+<ul id="flash">
+    % for message in flash_messages:
+    <li class="flash-${message.category}">
+        <img src="${h.static_uri('spline', "icons/{0}.png".format(message.icon))}" alt="">
+        ${message}
+    </li>
+    % endfor
+</ul>
+% endif
 
 ## I hate wrapper divs, but these allow for some very nice layout.
 ## #content is used for columns; +padding, -margin, overflow: hidden.

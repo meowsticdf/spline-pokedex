@@ -11,9 +11,9 @@ from pyramid import threadlocal
 import pokedex.db.markdown
 
 from . import db
+from . import lib
 from . import splinehelpers
 from . import helpers
-from .lib import Link, ResponseTimer
 
 def index_view(request):
     return render_to_response('/index.mako', {}, request=request)
@@ -87,11 +87,12 @@ def add_renderer_globals(event):
     renderer_globals["url"] = fake_url
     fake_url.current = fake_url_current
     renderer_globals["_"] = fake_translate
+    renderer_globals["flash"] = lib.Flash(request.session)
 
     request.tmpl_context.links = config['spline.plugins.links']
 
     # start timer
-    request.tmpl_context.timer = ResponseTimer()
+    request.tmpl_context.timer = lib.ResponseTimer()
 
 def add_javascripts_subscriber(event):
     """A subscriber which sets the request.tmpl_context.javascript variable"""
@@ -321,6 +322,7 @@ def main(global_config, **settings):
 
     ### links
 
+    Link = lib.Link
     TranslatablePluginLink = Link # XXX
     _ = lambda x: x
     links = [

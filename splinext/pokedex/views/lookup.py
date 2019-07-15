@@ -8,7 +8,7 @@ from pyramid.renderers import render_to_response
 import pokedex.db.tables as t
 
 #from spline.lib.helpers import flash
-from .. import db, helpers, splinehelpers
+from .. import db, lib, helpers, splinehelpers
 
 # Used by lookup disambig pages
 table_labels = {
@@ -45,6 +45,7 @@ def lookup(request):
     Also performs fuzzy search.
     """
     c = request.tmpl_context
+    flash = lib.Flash(request.session) # XXX(pyramid)
 
     name = request.params.get('lookup', None)
     if not name:
@@ -92,10 +93,9 @@ def lookup(request):
         if not results[0].exact:
             # Wasn't an exact match, but we can only figure out one thing
             # the user might have meant, so redirect to it anyway
-            #h.flash(u"""Nothing in the Pokédex is exactly called "{0}".  """
-            #        u"""This is the only close match.""".format(name),
-            #        icon='spell-check-error')
-            pass # XXX
+            flash(u"""Nothing in the Pokédex is exactly called "{0}".  """
+                  u"""This is the only close match.""".format(name),
+                  icon='spell-check-error')
 
         return redirect(helpers.resource_url(request, results[0].object, subpage=c.subpage))
 
