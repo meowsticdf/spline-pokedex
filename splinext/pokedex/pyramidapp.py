@@ -4,6 +4,7 @@ import os
 import warnings
 
 from pyramid.config import Configurator
+import pyramid.httpexceptions as exc
 from pyramid.renderers import render, render_to_response, JSONP
 import pyramid.static
 from pyramid import threadlocal
@@ -39,11 +40,14 @@ def css_view(request):
 
 def error_view(request):
     c = request.tmpl_context
-    response = request.response
-    c.message = request.GET.get('message', response and response.status)
-    c.code    = request.GET.get('code',    response and response.status_int)
-    c.code = int(c.code)
-    return render('error.mako', {}, request=request)
+    error = request.exception or request.context
+    if isinstance(error, exc.HTTPException):
+        c.code = error.code
+        c.message = "%d %s" % (error.code, error.title)
+    else:
+        c.code = 500
+        c.message = "500 Internal Server Error"
+    return render_to_response('error.mako', {}, request=request)
 
 def add_renderer_globals(event):
     """A subscriber for ``pyramid.events.BeforeRender`` events.  I add
@@ -340,8 +344,12 @@ def main(global_config, **settings):
     add_content_page("/link", "link.html")
 
     # error pages
-    #config.add_view(context='pyramid.httpexceptions.HTTPForbidden', view=error_view)
-    #config.add_view(context='pyramid.httpexceptions.HTTPNotFound', view=error_view)
+    # handle 400, 401, 403, 404, and 500
+    config.add_notfound_view(error_view) # 404
+    config.add_forbidden_view(error_view) # 403
+    config.add_exception_view(error_view, context='pyramid.httpexceptions.HTTPBadRequest') # 400
+    config.add_exception_view(error_view, context='pyramid.httpexceptions.HTTPUnauthorized') # 401
+    config.add_exception_view(error_view, context='pyramid.httpexceptions.HTTPInternalServerError') # 500
 
     ### links
 
