@@ -1,5 +1,4 @@
 # encoding: utf-8
-import functools
 import os
 import warnings
 
