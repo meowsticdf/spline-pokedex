@@ -13,6 +13,7 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
+from . import viewlib
 
 def type_list(request):
     c = request.tmpl_context
@@ -52,9 +53,9 @@ def type_list(request):
         400: +2,
         200: +1,
         100:  0,
-            50: -1,
-            25: -2,
-            0: -2,
+         50: -1,
+         25: -2,
+          0: -2,
     }
     if c.secondary_type:
         attacking_score_conversion[0] = -4
@@ -88,7 +89,17 @@ def type_view(request):
         language=c.game_language,
     )
 
-    ### XXX(pyramid) cache me
+    ### Cache
+    viewlib.cache_content(
+        request=request,
+        key=c.type.identifier,
+        do_work=_do_type,
+    )
+
+    return {}
+
+def _do_type(request, cache_key):
+    c = request.tmpl_context
 
     # Eagerload a bit of type stuff
     db.pokedex_session.query(t.Type) \
@@ -116,5 +127,3 @@ def type_view(request):
             joinedload('pokemon.stats'),
         ) \
         .one()
-
-    return {}

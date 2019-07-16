@@ -13,6 +13,7 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
+from . import viewlib
 
 # XXX(pyramid): move these to a shared module
 from .pokemon import _move_tutor_version_groups, _collapse_pokemon_move_columns, _pokemon_move_method_sort_key
@@ -59,11 +60,16 @@ def move_view(request):
     )
 
     # XXX(pyramid)
-    #return self.cache_content(
-    #    key=c.move.identifier,
-    #    template='/pokedex/move.mako',
-    #    do_work=self._do_moves,
-    #)
+    viewlib.cache_content(
+        request=request,
+        key=c.move.identifier,
+        do_work=_do_move,
+    )
+
+    return {}
+
+def _do_move(request, cache_key):
+    c = request.tmpl_context
 
     # Eagerload
     db.pokedex_session.query(t.Move) \
@@ -251,5 +257,3 @@ def move_view(request):
                 .subquery()
         )
     ).value(func.count(t.Pokemon.id))
-
-    return {}

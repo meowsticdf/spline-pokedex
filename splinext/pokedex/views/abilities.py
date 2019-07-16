@@ -10,6 +10,7 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
+from . import viewlib
 
 def ability_list(request):
     c = request.tmpl_context
@@ -46,6 +47,16 @@ def ability_view(request):
         filters=[t.Ability.is_main_series],
     )
 
+    viewlib.cache_content(
+        request=request,
+        key=c.ability.identifier,
+        do_work=_do_ability,
+    )
+
+    return {}
+
+def _do_ability(request, cache_key):
+    c = request.tmpl_context
 
     # Eagerload
     db.pokedex_session.query(t.Ability) \
@@ -103,5 +114,3 @@ def ability_view(request):
                 subqueryload('damage_class')
             ) \
             .all()
-
-    return {}

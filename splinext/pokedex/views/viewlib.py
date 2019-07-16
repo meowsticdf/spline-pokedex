@@ -1,10 +1,12 @@
 
 import zlib
+
+from beaker.util import func_namespace
 from mako.runtime import capture
 
 ### Caching
 
-def cache_content(request, key, do_work, template):
+def cache_content(request, key, do_work):
     """Argh!
 
     Okay, so.  Use this when you want to cache the BODY of a page but not
@@ -22,8 +24,8 @@ def cache_content(request, key, do_work, template):
         will only be called if the page hasn't yet been cached.  It'll be
         passed the key.
 
-    ``template``
-        Name of the template to use.
+        The name and module of this function will be used as part of the cache
+        key.
 
     Also, DO NOT FORGET TO wrap the cachable part of your template in a
     <%lib:cache_content> tag, or nothing will get cached!
@@ -39,8 +41,10 @@ def cache_content(request, key, do_work, template):
     # TODO(pyramid)
     #key = u"{0}/{1}".format(key, c.lang)
 
+    namespace = func_namespace(do_work)
     # Cache for...  ten hours?  Sure, whatever
-    content_cache = cache.get_cache('content_cache:' + template,
+    # TODO: use get_cache_region instead
+    content_cache = cache.get_cache('content_cache:' + namespace,
                                     expiretime=36000)
 
     # XXX This is dumb.  Caches don't actually respect the 'enabled'

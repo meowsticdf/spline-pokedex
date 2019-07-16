@@ -237,17 +237,10 @@ def pokemon_view(request):
     # Some Javascript
     c.javascripts.append(('pokedex', 'pokemon'))
 
-    ### TODO: Let's cache this bitch
-    #return self.cache_content(
-    #    key=c.pokemon.identifier,
-    #    template='/pokedex/pokemon.mako',
-    #    do_work=self._do_pokemon,
-    #)
-
+    ### Let's cache this bitch
     viewlib.cache_content(
         request=request,
         key=c.pokemon.identifier,
-        template='/pokedex/pokemon.mako',
         do_work=_do_pokemon,
     )
 
@@ -836,13 +829,16 @@ def pokemon_flavor_view(request):
     # Some Javascript
     c.javascripts.append(('pokedex', 'pokemon'))
 
-    # XXX(pyramid) cache me
-    #return self.cache_content(
-    #    key=c.form.identifier,
-    #    template='/pokedex/pokemon_flavor.mako',
-    #    do_work=self._do_pokemon_flavor,
-    #)
+    viewlib.cache_content(
+        request=request,
+        key=c.form.identifier,
+        do_work=_do_pokemon_flavor,
+    )
 
+    return {}
+
+def _do_pokemon_flavor(request, cache_key):
+    c = request.tmpl_context
     c.sprites = {}
 
     config = request.registry.settings
@@ -880,8 +876,6 @@ def pokemon_flavor_view(request):
     weights = {'pokemon': c.pokemon.weight, 'trainer': c.trainer_weight}
     c.weights = pokedex_helpers.scale_sizes(weights, dimensions=2)
 
-    return {}
-
 
 def pokemon_locations_view(request):
     """Spits out a page listing detailed location information for this
@@ -899,12 +893,16 @@ def pokemon_locations_view(request):
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
 
     # Cache it yo
-    # XXX(pyramid)
-    #return self.cache_content(
-    #    key=c.pokemon.identifier,
-    #    template='/pokedex/pokemon_locations.mako',
-    #    do_work=self._do_pokemon_locations,
-    #)
+    viewlib.cache_content(
+        request=request,
+        key=c.pokemon.identifier,
+        do_work=_do_pokemon_locations,
+    )
+
+    return {}
+
+def _do_pokemon_locations(request, cache_key):
+    c = request.tmpl_context
 
     # For the most part, our data represents exactly what we're going to
     # show.  For a given area in a given game, this Pokémon is guaranteed
@@ -1004,8 +1002,6 @@ def pokemon_locations_view(request):
             if version_group.generation not in generations:
                 continue
             c.region_versions[region][0:0] = version_group.versions
-
-    return {}
 
 
 def parse_size_view(request):
