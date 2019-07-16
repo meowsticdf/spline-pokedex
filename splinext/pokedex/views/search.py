@@ -16,7 +16,7 @@ from sqlalchemy.sql.operators import asc_op
 from .. import db
 from .. import helpers as pokedex_helpers
 from .. import splinehelpers as h
-from ..magnitude import parse_size
+from .. import magnitude
 
 from splinext.pokedex.forms import (
     DuplicateField, MultiCheckboxField, PokedexLookupField,
@@ -348,8 +348,8 @@ class PokemonSearchForm(BaseSearchForm):
     capture_rate = RangeTextField('Capture rate', inflator=int)
     base_happiness = RangeTextField('Base happiness', inflator=int)
 
-    height = RangeTextField('Height', inflator=lambda _: parse_size(_, 'height'))
-    weight = RangeTextField('Weight', inflator=lambda _: parse_size(_, 'weight'))
+    height = RangeTextField('Height', inflator=lambda _: magnitude.parse_size(_, 'height'))
+    weight = RangeTextField('Weight', inflator=lambda _: magnitude.parse_size(_, 'weight'))
 
     stat_total = RangeTextField('Total', inflator=int)
     effort_total = RangeTextField('Total', inflator=int)
