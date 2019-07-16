@@ -571,7 +571,7 @@ cry_url = url(controller='dex', action='media',
         % for language, foreign_name in h.keysort(getattr(object, name_attr + '_map'), lambda lang: lang.order):
         % if language != c.game_language and foreign_name:
         ## </dt> needs to come right after the flag or else there's space between it and the colon
-        <dt>${language.name}
+        <dt>${language.name or ''}
         <img src="${h.static_uri('spline', "flags/{0}.png".format(language.iso3166))}" alt=""></dt>
         % if language.identifier == 'ja-Hrkt':
         <dd>${foreign_name} (${h.pokedex.romanize(foreign_name)})</dd>
