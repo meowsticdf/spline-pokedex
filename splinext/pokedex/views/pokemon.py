@@ -17,9 +17,10 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers as pokedex_helpers
-from ..magnitude import parse_size
-from .locations import encounter_method_icons, encounter_condition_value_icons
+from .. import magnitude
 from . import viewlib
+
+from .locations import encounter_method_icons, encounter_condition_value_icons
 
 def bar_color(hue, pastelness):
     """Returns a color in the form #rrggbb that has the provided hue and
@@ -1020,7 +1021,7 @@ def parse_size_view(request):
         return exc.HTTPBadRequest()
 
     try:
-        return parse_size(size, mode)
+        return magnitude.parse_size(size, mode)
     except (IndexError, ValueError):
         return exc.HTTPBadRequest()
 
