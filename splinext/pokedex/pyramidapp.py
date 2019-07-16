@@ -6,6 +6,7 @@ import warnings
 from pyramid.config import Configurator
 import pyramid.httpexceptions as exc
 from pyramid.renderers import render, render_to_response, JSONP
+import pyramid.settings
 import pyramid.static
 from pyramid import threadlocal
 
@@ -350,6 +351,11 @@ def main(global_config, **settings):
     config.add_exception_view(error_view, context='pyramid.httpexceptions.HTTPBadRequest') # 400
     config.add_exception_view(error_view, context='pyramid.httpexceptions.HTTPUnauthorized') # 401
     config.add_exception_view(error_view, context='pyramid.httpexceptions.HTTPInternalServerError') # 500
+
+    # Install a generic error handler if the debugtoolbar is not enabled
+    # If it is enabled, we'd rather let it display a traceback
+    if not pyramid.settings.asbool(settings.get('debugtoolbar.enabled', True)):
+        config.add_exception_view(error_view, context=Exception) # catch-all
 
     ### links
 
