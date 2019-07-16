@@ -6,6 +6,7 @@ import warnings
 from pyramid.config import Configurator
 import pyramid.httpexceptions as exc
 from pyramid.renderers import render, render_to_response, JSONP
+from pyramid.response import Response
 import pyramid.settings
 import pyramid.static
 from pyramid import threadlocal
@@ -43,12 +44,12 @@ def error_view(request):
     c = request.tmpl_context
     error = request.exception or request.context
     if isinstance(error, exc.HTTPException):
-        c.code = error.code
-        c.message = "%d %s" % (error.code, error.title)
+        response = Response(status=error.code)
     else:
-        c.code = 500
-        c.message = "500 Internal Server Error"
-    return render_to_response('error.mako', {}, request=request)
+        response = Response(status=500)
+    c.code = response.status_code
+    c.message = response.status
+    return render_to_response('error.mako', {}, request=request, response=response)
 
 def add_renderer_globals(event):
     """A subscriber for ``pyramid.events.BeforeRender`` events.  I add
