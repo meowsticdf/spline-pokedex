@@ -8,6 +8,9 @@ from pyramid.renderers import render, render_to_response, JSONP
 import pyramid.static
 from pyramid import threadlocal
 
+import beaker.cache
+import beaker.util
+
 import pokedex.db.markdown
 
 from . import db
@@ -123,6 +126,23 @@ class SplineExtension(pokedex.db.markdown.PokedexLinkExtension):
             return helpers.resource_url(request, obj)
         return None
 
+class cache_tween_factory(object):
+    """Constructs a beaker.cache.CacheManager from the application settings
+    and stores it in the wsgi environment as request.environ['beaker.cache']"""
+
+    # It would be nice if pyramid_beaker did this for us but all it does
+    # is configure cache regions, which we don't use.
+
+    def __init__(self, handler, registry):
+        self.handler = handler
+        self.cache_settings = beaker.util.parse_cache_config_options(registry.settings)
+        self.cache_manager = beaker.cache.CacheManager(**self.cache_settings)
+
+    def __call__(self, request):
+        request.environ['beaker.cache'] = self.cache_manager
+        return self.handler(request)
+
+
 def main(global_config, **settings):
     config_root = os.path.dirname(global_config['__file__'])
     local_template_dir = os.path.join(config_root, 'templates')
@@ -170,6 +190,9 @@ def main(global_config, **settings):
     config.add_subscriber(add_renderer_globals, "pyramid.events.BeforeRender")
     config.add_subscriber(add_game_language_subscriber, "pyramid.events.NewRequest")
     config.add_subscriber(add_javascripts_subscriber, "pyramid.events.NewRequest")
+
+    ### caching
+    config.add_tween('splinext.pokedex.pyramidapp.cache_tween_factory')
 
     ### routes
     # index page

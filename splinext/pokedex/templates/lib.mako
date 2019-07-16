@@ -1,6 +1,6 @@
 <%def name="cache_content()"><%
-    ## TODO: actually cache something
-    caller.body()
+    # _cache_me is set by viewlib.cache_content
+    c._cache_me(context, caller)
 %></%def>
 
 <%def name="field(name, form=None, **render_args)">

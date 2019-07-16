@@ -19,6 +19,7 @@ from .. import db
 from .. import helpers as pokedex_helpers
 from ..magnitude import parse_size
 from .locations import encounter_method_icons, encounter_condition_value_icons
+from . import viewlib
 
 def bar_color(hue, pastelness):
     """Returns a color in the form #rrggbb that has the provided hue and
@@ -242,6 +243,18 @@ def pokemon_view(request):
     #    template='/pokedex/pokemon.mako',
     #    do_work=self._do_pokemon,
     #)
+
+    viewlib.cache_content(
+        request=request,
+        key=c.pokemon.identifier,
+        template='/pokedex/pokemon.mako',
+        do_work=_do_pokemon,
+    )
+
+    return {}
+
+def _do_pokemon(request, cache_key):
+    c = request.tmpl_context
 
     ### Type efficacy
     c.type_efficacies = defaultdict(lambda: 100)
@@ -803,8 +816,6 @@ def pokemon_view(request):
 
     # Grab list of all the version groups with tutor moves
     c.move_tutor_version_groups = _move_tutor_version_groups(c.moves)
-
-    return {}
 
 
 def pokemon_flavor_view(request):

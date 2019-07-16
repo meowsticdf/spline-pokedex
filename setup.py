@@ -10,6 +10,7 @@ setup(
         "pyramid_debugtoolbar>=0.15.1",
         "pyramid_mako>=1.0.2",
         "pyramid_tm",
+        "beaker>=1.10.0",
         "Mako>=0.3.4",
         "nose>=0.11",
         "WTForms>=1.0",
