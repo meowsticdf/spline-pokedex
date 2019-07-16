@@ -34,7 +34,6 @@ class TestPagesController(base.PlainTestCase):
             'incorrect Pokemon selected: got %s, expected %s' % (result_name, expected_name)
 
     def hit_page(self, urlargs):
-
         urlargs = urlargs.copy()
         urlargs.pop('controller', None)
         action = urlargs.pop('action')
@@ -51,6 +50,8 @@ class TestPagesController(base.PlainTestCase):
         if view is None:
             self.fail("unknown action %s" % action)
         response = view(request)
+        if hasattr(response, 'status_code'):
+            assert response.status_code in (200, 302)
         return response
 
     views = splinext.pokedex.views
