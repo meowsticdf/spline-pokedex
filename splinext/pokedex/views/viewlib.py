@@ -34,12 +34,23 @@ def cache_content(request, key, do_work):
     True.  If the page had to be generated, it will be set to False.  (If
     this function wasn't involved at all, it will be set to None.)
     """
-    cache = request.environ['beaker.cache']
+    cache = request.environ.get('beaker.cache', None)
     c = request.tmpl_context
 
     # Content needs to be cached per-language
     # TODO(pyramid)
     #key = u"{0}/{1}".format(key, c.lang)
+
+    # If the cache isn't configured for whatever reason (such as when we're
+    # running in a test environment), just skip it.
+    if cache is None:
+        # call do_work immediately so that it isn't skipped during testing
+        # (since tests don't call the renderer)
+        do_work(request, key)
+        def skip_cache(context, mako_def):
+            mako_def.body()
+        c._cache_me = skip_cache
+        return
 
     namespace = func_namespace(do_work)
     # Cache for...  ten hours?  Sure, whatever
