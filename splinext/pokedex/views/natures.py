@@ -7,12 +7,12 @@ from sqlalchemy.orm import contains_eager, aliased
 from sqlalchemy.orm import (joinedload, joinedload_all, subqueryload, subqueryload_all)
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.sql import (and_, or_)
-import pyramid.httpexceptions as exc
 
 import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
+from . import errors
 
 def natures_list(request):
     c = request.tmpl_context
@@ -63,7 +63,7 @@ def nature_view(request):
     try:
         c.nature = db.get_by_name_query(t.Nature, name).one()
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.Nature, name)
 
     ### Prev/next for header
     c.prev_nature, c.next_nature = helpers.prev_next(

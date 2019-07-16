@@ -17,6 +17,7 @@ import wtforms
 
 from .. import db
 from .. import splinehelpers as h
+from . import errors
 
 def bar_color(hue, pastelness):
     """Returns a color in the form #rrggbb that has the provided hue and
@@ -93,11 +94,11 @@ def ability_view(request):
         c.ability = db.get_by_name_query(t.Ability, name).one()
     except NoResultFound:
         # XXX make this do fuzzy search or whatever
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.Ability, name)
 
     # XXX The ability might exist, but not in Conquest
     if not c.ability.conquest_pokemon:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.Ability, name)
 
     c.prev_ability, c.next_ability = _prev_next_name(
         t.Ability, c.ability, c.game_language,
@@ -123,7 +124,7 @@ def kingdom_view(request):
     try:
         c.kingdom = db.get_by_name_query(t.ConquestKingdom, name).one()
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(t.ConquestKingdom, name)
 
     # We have pretty much nothing for kingdoms.  Yet.
     c.prev_kingdom, c.next_kingdom = _prev_next_id(
@@ -157,10 +158,10 @@ def move_view(request):
             )
             .one())
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.Move, name)
 
     if not c.move.conquest_pokemon:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.Move, name)
 
     ### Prev/next for header
     c.prev_move, c.next_move = _prev_next_name(
@@ -191,14 +192,14 @@ def pokemon_view(request):
     try:
         c.pokemon = db.pokemon_query(name, None).one()
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.PokemonSpecies, name)
 
     c.semiform_pokemon = c.pokemon
     c.pokemon = c.pokemon.species
 
     # This Pokémon might exist, but not appear in Conquest
     if c.pokemon.conquest_order is None:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.PokemonSpecies, name)
 
     ### Previous and next for the header
     c.prev_pokemon, c.next_pokemon = _prev_next_id(
@@ -459,7 +460,7 @@ def skill_view(request):
         c.skill = (db.get_by_name_query(t.ConquestWarriorSkill, name)
             .one())
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(t.ConquestWarriorSkill, name)
 
     ### Prev/next for header
     c.prev_skill, c.next_skill = _prev_next_name(
@@ -509,7 +510,7 @@ def warrior_view(request):
     try:
         c.warrior = db.get_by_name_query(t.ConquestWarrior, name).one()
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(t.ConquestWarrior, name)
 
     c.prev_warrior, c.next_warrior = _prev_next_id(
         c.warrior, t.ConquestWarrior, 'id')

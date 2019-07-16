@@ -10,6 +10,7 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
+from . import errors
 
 redirect = exc.HTTPFound
 
@@ -38,7 +39,7 @@ def pocket_view(request):
             item = db.get_by_name_query(t.Item, pocket).one()
             return redirect(helpers.resource_url(request, item))
         except NoResultFound:
-            return exc.HTTPNotFound()
+            raise exc.HTTPNotFound()
 
     # OK, got a valid pocket
 
@@ -62,7 +63,7 @@ def item_view(request):
     try:
         c.item = db.get_by_name_query(t.Item, name).one()
     except NoResultFound:
-        return exc.HTTPNotFound()
+        return errors.notfound(request, t.Item, name)
     except MultipleResultsFound:
         # Bad hack to fix having duplicate items with the same name (e.g.
         # bicycles, z-crystals)

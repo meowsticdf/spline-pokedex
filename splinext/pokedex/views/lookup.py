@@ -85,7 +85,7 @@ def lookup(request):
     if len(results) == 0:
         # Nothing found
         # XXX real error page
-        return exc.HTTPNotFound()
+        raise exc.HTTPNotFound()
 
     elif len(results) == 1:
         # Only one possibility!  Hooray!
