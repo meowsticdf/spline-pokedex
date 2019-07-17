@@ -34,6 +34,9 @@ class TestPagesController(base.PlainTestCase):
             'incorrect Pokemon selected: got %s, expected %s' % (result_name, expected_name)
 
     def hit_page(self, urlargs):
+        # TODO(pyramid): replace this with a functional test
+        # which actually renders the pages and everything
+        # https://docs.pylonsproject.org/projects/pyramid/en/latest/narr/testing.html#creating-functional-tests
         urlargs = urlargs.copy()
         urlargs.pop('controller', None)
         action = urlargs.pop('action')
