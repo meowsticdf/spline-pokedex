@@ -4,12 +4,12 @@ import re
 
 from sqlalchemy.orm import (joinedload, joinedload_all, subqueryload, subqueryload_all)
 from sqlalchemy.orm.exc import NoResultFound
+import pyramid.httpexceptions as exc
 
 import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
-from . import errors
 from . import viewlib
 
 def ability_list(request):
@@ -35,7 +35,7 @@ def ability_view(request):
             .filter(t.Ability.is_main_series)
             .one())
     except NoResultFound:
-        return errors.notfound(request, t.Ability, name)
+        raise exc.HTTPNotFound
 
     ### Prev/next for header
     c.prev_ability = c.ability

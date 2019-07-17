@@ -18,7 +18,6 @@ import pokedex.db.tables as t
 from .. import db
 from .. import helpers as pokedex_helpers
 from .. import magnitude
-from . import errors
 from . import viewlib
 
 from .locations import encounter_method_icons, encounter_condition_value_icons
@@ -231,7 +230,7 @@ def pokemon_view(request):
         # Alright, execute
         c.pokemon = pokemon_q.one()
     except NoResultFound:
-        return errors.notfound(request, t.Pokemon, name)
+        raise exc.HTTPNotFound()
 
     ### Previous and next for the header
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
@@ -821,7 +820,7 @@ def pokemon_flavor_view(request):
     try:
         c.form = db.pokemon_form_query(name, form=form).one()
     except NoResultFound:
-        return errors.notfound(request, t.Pokemon, name)
+        raise exc.HTTPNotFound()
 
     c.pokemon = c.form.pokemon
 
@@ -889,7 +888,7 @@ def pokemon_locations_view(request):
     try:
         c.pokemon = db.pokemon_query(name).one()
     except NoResultFound:
-        return errors.notfound(request, t.Pokemon, name)
+        raise exc.HTTPNotFound()
 
     ### Previous and next for the header
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)

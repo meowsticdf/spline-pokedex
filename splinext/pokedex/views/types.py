@@ -13,7 +13,6 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
-from . import errors
 from . import viewlib
 
 def type_list(request):
@@ -81,7 +80,7 @@ def type_view(request):
     try:
         c.type = db.get_by_name_query(t.Type, name).one()
     except NoResultFound:
-        return errors.notfound(request, t.Type, name)
+        raise exc.HTTPNotFound()
 
     ### Prev/next for header
     c.prev_type, c.next_type = helpers.prev_next(

@@ -7,12 +7,12 @@ from collections import defaultdict, namedtuple
 from sqlalchemy.sql import func
 from sqlalchemy.orm import (joinedload, joinedload_all, subqueryload, subqueryload_all)
 from sqlalchemy.orm.exc import NoResultFound, MultipleResultsFound
+import pyramid.httpexceptions as exc
 
 import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
-from . import errors
 from . import viewlib
 
 # XXX(pyramid): move these to a shared module
@@ -38,7 +38,7 @@ def move_view(request):
     try:
         c.move = db.get_by_name_query(t.Move, name).one()
     except NoResultFound:
-        return errors.notfound(request, t.Move, name)
+        raise exc.HTTPNotFound()
     except MultipleResultsFound:
         # Bad hack to fix having duplicate moves with the same name
         # (z-moves exist as both physical and special)

@@ -10,7 +10,6 @@ import pokedex.db.tables as t
 
 from .. import db
 from .. import helpers
-from . import errors
 
 redirect = exc.HTTPFound
 
@@ -63,7 +62,7 @@ def item_view(request):
     try:
         c.item = db.get_by_name_query(t.Item, name).one()
     except NoResultFound:
-        return errors.notfound(request, t.Item, name)
+        raise exc.HTTPNotFound()
     except MultipleResultsFound:
         # Bad hack to fix having duplicate items with the same name (e.g.
         # bicycles, z-crystals)

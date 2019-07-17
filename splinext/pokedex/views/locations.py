@@ -4,11 +4,11 @@ from collections import defaultdict
 
 from sqlalchemy.orm import (joinedload, joinedload_all, subqueryload, subqueryload_all)
 from sqlalchemy.orm.exc import NoResultFound
+import pyramid.httpexceptions as exc
 
 import pokedex.db.tables as t
 
 from .. import db
-from . import errors
 
 # Dict of method identifier => icon path
 encounter_method_icons = {
@@ -91,7 +91,7 @@ def location_view(request):
     c.locations = db.get_by_name_query(t.Location, name).all()
 
     if not c.locations:
-        return errors.notfound(request, t.Location, name)
+        raise exc.HTTPNotFound()
 
     c.location_name = c.locations[0].name
 
