@@ -256,7 +256,7 @@ def main(global_config, **settings):
     config.add_route('dex_conquest/skills_list', '/dex/conquest/skills')
     config.add_route('dex_conquest/warriors_list', '/dex/conquest/warriors')
 
-    config.add_route('static/spline', '/static/spline/*subpath', static=True)
+    config.add_route('static', '/static/*subpath', static=True)
 
     ### views
 
