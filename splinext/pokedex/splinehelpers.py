@@ -20,8 +20,17 @@ def static_uri(plugin_name, path, **url_kwargs):
 
     Returns a full URI to the given file, as owned by the named plugin.
     """
+    # XXX(pyramid): the implementation should actually be
+    #
+    #     return request.route_path('static', subpath=plugin_name+"/"+path)
+    #
+    # but we don't have access to the request here. so we fake it by just
+    # hardcoding the base url. static_uri is used all over the place and
+    # it's too much trouble to fix it right now.
 
-    root_url = '/' # url('/', **url_kwargs)
+    root_url = '/'
+    if url_kwargs.get('qualified', False):
+        root_url = 'https://veekun.com/'
     return "%sstatic/%s/%s" % (root_url, plugin_name, path)
 
 def sanitize_id(text):
