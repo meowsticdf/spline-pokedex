@@ -277,7 +277,7 @@ def joiner(sep):
 
     Useful for printing out a comma-separated list.
     """
-    return chain([u''], repeat(u', '))
+    return chain([u''], repeat(sep))
 
 
 ### Labels
