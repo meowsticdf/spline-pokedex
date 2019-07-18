@@ -13,12 +13,10 @@ port = 5000
 
 [app:main]
 use = egg:spline-pokedex
-full_stack = true
-cache_dir = %(here)s/data/cache
+
 beaker.cache.enabled = false
 beaker.session.key = spline
 beaker.session.secret = your secret here
-app_instance_uuid = please generate a new uuid
 
 # If you'd like to fine-tune the individual locations of the cache data dirs
 # for the Cache data, or the Session saves, un-comment the desired settings
@@ -53,10 +51,6 @@ spline.plugins = pokedex
 
 # Title of the site
 spline.site_title = spline
-
-#-- Users plugin
-# id of the root user, who can automatically do anything
-#spline-users.root_user_id = 0
 
 #-- Pokédex plugin
 # SQLAlchemy URL to the Pokédex database
