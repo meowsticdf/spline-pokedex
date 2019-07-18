@@ -41,6 +41,10 @@ def cache_content(request, key, do_work):
     # TODO(pyramid)
     #key = u"{0}/{1}".format(key, c.lang)
 
+    key += u';' + c.game_language.identifier
+    if request.session.get('cheat_obdurate', False):
+        key += u';obdurate'
+
     # If the cache isn't configured for whatever reason (such as when we're
     # running in a test environment), just skip it.
     if cache is None:
