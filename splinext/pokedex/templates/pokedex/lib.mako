@@ -56,6 +56,13 @@
 %></%def>
 
 
+<%def name="pokemon_has_media(pokemon_form, prefix, ext, use_form=True)"><%
+    """Determine whether a file exists in the specified directory for the specified Pokémon form.
+    Convenience wrapper around splinext.pokedex.helpers.pokemon_has_media which implicitly passes the app config.
+    """
+    return h.pokedex.pokemon_has_media(pokemon_form, prefix, ext, config, use_form=use_form)
+%></%def>
+
 <%def name="species_image(pokemon_species, prefix='main-sprites/black-white', **attr)"><%
     u"""Returns an <img> tag for a Pokémon species image."""
 
@@ -79,7 +86,7 @@
     if prefix is None:
         prefix = 'main-sprites/ultra-sun-ultra-moon'
         # FIXME what the hell is going on here
-        if not h.pokedex.pokemon_has_media(pokemon_form, prefix, 'png', config):
+        if not pokemon_has_media(pokemon_form, prefix, 'png'):
             prefix = 'main-sprites/black-white'
 
         # Deal with Spiky-eared Pichu and ??? Arceus
@@ -109,7 +116,7 @@
         return h.literal('<span class="sprite-icon sprite-icon-%d"></span>' % pokemon.species.id)
 
     alt_text = pokemon.name if alt else u''
-    if h.pokedex.pokemon_has_media(pokemon.default_form, 'icons', 'png', config):
+    if pokemon_has_media(pokemon.default_form, 'icons', 'png'):
         return pokemon_form_image(pokemon.default_form, prefix='icons', alt=alt_text)
 
     return pokedex_img('pokemon/icons/0.png', title=pokemon.species.name, alt=alt_text)
@@ -546,7 +553,7 @@ collapse_key = h.pokedex.collapse_flavor_text_key(literal=obdurate)
 species = pokemon_form.species
 
 # A handful of Pokémon have separate cries for each form; most don't
-if not h.pokedex.pokemon_has_media(pokemon_form, 'cries', 'ogg', config):
+if not pokemon_has_media(pokemon_form, 'cries', 'ogg'):
     pokemon_form = None
 
 cry_url = url(controller='dex', action='media',
