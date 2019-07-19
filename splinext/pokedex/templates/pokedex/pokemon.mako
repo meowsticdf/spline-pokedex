@@ -100,7 +100,7 @@ ${h.h1(_('Essentials'))}
         <dd>
             ${dexlib.chrome_img('gender-rates/%d.png' % c.pokemon.species.gender_rate, alt='')}
             ${_(h.pokedex.gender_rate_label[c.pokemon.species.gender_rate])}
-            ${dexlib.subtle_search(action='pokemon_search', gender_rate=c.pokemon.species.gender_rate, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', gender_rate=c.pokemon.species.gender_rate)}
         </dd>
 
         <dt>${_(u"Egg groups")}</dt>
@@ -111,14 +111,14 @@ ${h.h1(_('Essentials'))}
                 % endfor
             </ul>
             % if len(c.pokemon.species.egg_groups) > 1:
-            ${dexlib.subtle_search(action='pokemon_search', egg_group=[group.id for group in c.pokemon.species.egg_groups], _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', egg_group=[group.id for group in c.pokemon.species.egg_groups])}
             % endif
         </dd>
 
         <dt>${_(u"Hatch counter")}</dt>
         <dd>
             ${c.pokemon.species.hatch_counter}
-            ${dexlib.subtle_search(action='pokemon_search', hatch_counter=c.pokemon.species.hatch_counter, sort='evolution-chain', _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', hatch_counter=c.pokemon.species.hatch_counter, sort='evolution-chain')}
         </dd>
 
         <dt>${_(u"Steps to hatch")}</dt>
@@ -160,7 +160,7 @@ ${h.h1(_('Essentials'))}
         <dt>${_(u"Base EXP")}</dt>
         <dd>
             <span id="dex-pokemon-exp-base">${c.pokemon.base_experience}</span>
-            ${dexlib.subtle_search(action='pokemon_search', base_experience=c.pokemon.base_experience, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', base_experience=c.pokemon.base_experience)}
         </dd>
         <dt>${_(u"Effort points")}</dt>
         <dd>
@@ -175,17 +175,17 @@ ${h.h1(_('Essentials'))}
         <dt>${_(u"Capture rate")}</dt>
         <dd>
             ${c.pokemon.species.capture_rate}
-            ${dexlib.subtle_search(action='pokemon_search', capture_rate=c.pokemon.species.capture_rate, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', capture_rate=c.pokemon.species.capture_rate)}
         </dd>
         <dt>${_(u"Base happiness")}</dt>
         <dd>
             ${c.pokemon.species.base_happiness}
-            ${dexlib.subtle_search(action='pokemon_search', base_happiness=c.pokemon.species.base_happiness, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', base_happiness=c.pokemon.species.base_happiness)}
         </dd>
         <dt>${_(u"Growth rate")}</dt>
         <dd>
             ${c.pokemon.species.growth_rate.name}
-            ${dexlib.subtle_search(action='pokemon_search', growth_rate=c.pokemon.species.growth_rate.max_experience, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', growth_rate=c.pokemon.species.growth_rate.max_experience)}
         </dd>
     </dl>
 
@@ -443,14 +443,14 @@ ${h.h1(_('Flavor'))}
         <dt>${_("Species")}</dt>
         <dd>
             ${c.pokemon.species.genus}
-            ${dexlib.subtle_search(action='pokemon_search', genus=c.pokemon.species.genus, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', genus=c.pokemon.species.genus)}
         </dd>
 
         <dt>${_("Color")}</dt>
         <dd>
             <span class="dex-color-${c.pokemon.species.color.identifier}"></span>
             ${c.pokemon.species.color.name}
-            ${dexlib.subtle_search(action='pokemon_search', color=c.pokemon.species.color.identifier, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', color=c.pokemon.species.color.identifier)}
         </dd>
 
         <dt>${_("Cry")}</dt>
@@ -463,7 +463,7 @@ ${h.h1(_('Flavor'))}
         <dd>
             ${dexlib.pokedex_img('habitats/%s.png' % c.pokemon.species.habitat.identifier)}
             ${c.pokemon.species.habitat.name}
-            ${dexlib.subtle_search(action='pokemon_search', habitat=c.pokemon.species.habitat.identifier, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', habitat=c.pokemon.species.habitat.identifier)}
         </dd>
         % endif
 
@@ -476,7 +476,7 @@ ${h.h1(_('Flavor'))}
         <dd>
             ${dexlib.pokedex_img('shapes/%s.png' % c.pokemon.species.shape.identifier, alt='', title=c.pokemon.species.shape.name)}
             ${c.pokemon.species.shape.awesome_name}
-            ${dexlib.subtle_search(action='pokemon_search', shape=c.pokemon.species.shape.identifier, _=_)}
+            ${dexlib.subtle_search(action='pokemon_search', shape=c.pokemon.species.shape.identifier)}
         </dd>
     </dl>
 </div>
