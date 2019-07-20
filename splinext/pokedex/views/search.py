@@ -59,36 +59,22 @@ default_move_table_columns = [
 # context, so we fake it.
 
 def generation_icon(generation):
-    """Returns a generation icon, given a generation number."""
-    _ = lambda x: x
-
-    # Convert generation to int if necessary
-    if not isinstance(generation, int):
-        generation = generation.id
-
+    """Returns a generation icon, given a generation object."""
     return h.HTML.img(
-        src=h.static_uri('pokedex', 'images/versions/generation-%s.png' % generation),
-        alt=_(u"Generation %d") % generation,
-        title=_(u"Generation %d") % generation,
+        src=h.static_uri('pokedex', 'images/versions/generation-%s.png' % generation.id),
+        alt=generation.name,
+        title=generation.name,
     )
 
 def version_icons(versions):
-    """Returns some version icons, given a list of version names. """
+    """Returns some version icons, given a list of version objects. """
     version_icons = u''
     comma = pokedex_helpers.joiner(u', ')
     for version in versions:
-        # Convert version to string if necessary
-        if isinstance(version, basestring):
-            identifier = filename_from_name(version)
-            name = version
-        else:
-            identifier = version.identifier
-            name = version.name
-
         version_icons += h.HTML.img(
-                src=h.static_uri('pokedex', 'images/versions/%s.png' % identifier),
-                alt=comma.next() + name,
-                title=name)
+                src=h.static_uri('pokedex', 'images/versions/%s.png' % version.identifier),
+                alt=comma.next() + version.name,
+                title=version.name)
 
     return version_icons
 
