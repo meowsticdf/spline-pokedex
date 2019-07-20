@@ -38,8 +38,6 @@ def ability_view(request):
         raise exc.HTTPNotFound
 
     ### Prev/next for header
-    c.prev_ability = c.ability
-    c.next_ability = c.ability
     c.prev_ability, c.next_ability = helpers.prev_next(
         table=t.Ability,
         current=c.ability,
