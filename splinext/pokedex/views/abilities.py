@@ -81,11 +81,11 @@ def _do_ability(request, cache_key):
     c.method_labels = {
         'Normal': u'May be found normally on Pokémon.',
         'Hidden': u'Found on Pokémon from the Dream World and Dream Radar, '
-                    u'as well as a few Pokémon from specific in-game encounters.',
+                  u'as well as a few Pokémon from specific in-game encounters.',
     }
 
     hidden_pokemon = [pokemon for pokemon in c.ability.hidden_pokemon if
-                        pokemon not in c.ability.pokemon]
+                      pokemon not in c.ability.pokemon]
 
     c.pokemon = []
     if c.ability.pokemon:

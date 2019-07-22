@@ -590,8 +590,8 @@ def pokemon_search(request):
     # Add stat-based fields dynamically
     c.stat_fields = []
     for stat in db.pokedex_session.query(t.Stat) \
-                                .filter(~t.Stat.is_battle_only) \
-                                .order_by(t.Stat.id):
+                               .filter(~t.Stat.is_battle_only) \
+                               .order_by(t.Stat.id):
         field_name = stat.identifier.replace(u'-', u'_')
 
         stat_field = RangeTextField(stat.name, inflator=int)
@@ -801,7 +801,7 @@ def pokemon_search(request):
     # Try to limit our joins without duplicating too much code
     # Stage and position generally need to know parents:
     if c.form.evolution_stage.data or c.form.evolution_position.data or \
-        c.form.evolution_special.data:
+       c.form.evolution_special.data:
         # NOTE: This makes the assumption that evolution chains are never
         # more than three Pokémon long.  So far, this is pretty safe, as in
         # 10+ years no Pokémon has ever been able to evolve more than
@@ -1130,7 +1130,7 @@ def pokemon_search(request):
         species_ids = set()  # For result count
         evolution_chain_ids = set()
         for id, chain_id, species_id in query.values(me.id,
-            my_species.evolution_chain_id, my_species.id):
+          my_species.evolution_chain_id, my_species.id):
             evolution_chain_ids.add(chain_id)
             species_ids.add(species_id)
             pokemon_ids[id] = None
@@ -1200,7 +1200,7 @@ def pokemon_search(request):
             query = query \
                 .outerjoin((pokemon_type_alias,
                     and_(pokemon_type_alias.pokemon_id == me.id,
-                            pokemon_type_alias.slot == type_slot))) \
+                         pokemon_type_alias.slot == type_slot))) \
                 .outerjoin((type_alias,
                     pokemon_type_alias.type_id == type_alias.id))
 

@@ -287,8 +287,8 @@ def _do_pokemon(request, cache_key):
         egg_group_ids = [group.id for group in c.pokemon.species.egg_groups]
         q = db.pokedex_session.query(t.PokemonSpecies)
         q = q.join(t.PokemonEggGroup) \
-                .outerjoin((parent_a, t.PokemonSpecies.parent_species)) \
-                .outerjoin((grandparent_a, parent_a.parent_species))
+             .outerjoin((parent_a, t.PokemonSpecies.parent_species)) \
+             .outerjoin((grandparent_a, parent_a.parent_species))
         # This is a "base form" iff either:
         where = or_(
             # This is the root form (no parent)
@@ -298,7 +298,7 @@ def _do_pokemon(request, cache_key):
             # Or this can breed and evolves from something that
             # can't
             and_(parent_a.egg_groups.any(id=15),
-                    grandparent_a.id == None),
+                 grandparent_a.id == None),
         )
         # Can only breed with pokémon we share an egg group with
         where &= t.PokemonEggGroup.egg_group_id.in_(egg_group_ids)
@@ -312,7 +312,7 @@ def _do_pokemon(request, cache_key):
         where |= t.PokemonEggGroup.egg_group_id == 13
         q = q.filter(where)
         q = q.options(joinedload('default_form')) \
-                .order_by(t.PokemonSpecies.id)
+             .order_by(t.PokemonSpecies.id)
         c.compatible_families = q.all()
 
     ### Wild held items
@@ -470,7 +470,7 @@ def _do_pokemon(request, cache_key):
     ### Stats
     # This takes a lot of queries  :(
     c.stats = {}  # stat_name => { border, background, percentile }
-                    #              (also 'value' for total)
+                  #              (also 'value' for total)
     stat_total = 0
     total_stat_rows = db.pokedex_session.query(t.PokemonStat) \
                                         .filter_by(stat=c.pokemon.stats[0].stat) \
@@ -481,11 +481,11 @@ def _do_pokemon(request, cache_key):
         stat_info = c.stats[pokemon_stat.stat.name] = {}
         stat_total += pokemon_stat.base_stat
         q = db.pokedex_session.query(t.PokemonStat) \
-                            .filter_by(stat=pokemon_stat.stat)
+                              .filter_by(stat=pokemon_stat.stat)
         less = q.filter(t.PokemonStat.base_stat < pokemon_stat.base_stat) \
                 .count()
         equal = q.filter(t.PokemonStat.base_stat == pokemon_stat.base_stat) \
-                    .count()
+                 .count()
         percentile = (less + equal * 0.5) / total_stat_rows
         stat_info['percentile'] = percentile
 
@@ -521,7 +521,7 @@ def _do_pokemon(request, cache_key):
 
     # Show all forms' stats for the base form, or else just this form's
     forms = [form for form in c.pokemon.forms or [c.pokemon.unique_form]
-                if form.pokeathlon_stats]
+             if form.pokeathlon_stats]
 
     if not forms:
         # No stats
@@ -532,11 +532,11 @@ def _do_pokemon(request, cache_key):
     elif c.pokemon.id == 201:
         # Use Unown A's stats for all the letters and !'s stats for ! and ?
         c.pokeathlon_stats = [('A-Z', forms[0].pokeathlon_stats),
-                                ('! and ?', forms[26].pokeathlon_stats)]
+                              ('! and ?', forms[26].pokeathlon_stats)]
     else:
         # Different stats for every form
         c.pokeathlon_stats = [(form.form_name or 'Normal Form',
-                                form.pokeathlon_stats) for form in forms]
+                               form.pokeathlon_stats) for form in forms]
 
     ### Sizing
     c.trainer_height = pokedex_helpers.trainer_height
@@ -572,11 +572,11 @@ def _do_pokemon(request, cache_key):
         )
     for encounter in q:
         condition_values = [cv for cv in encounter.condition_values
-                                if not cv.is_default]
+                               if not cv.is_default]
         c.locations[encounter.version] \
-                    [encounter.slot.method] \
-                    [encounter.location_area] \
-                    [tuple(condition_values)].combine_with(encounter)
+                   [encounter.slot.method] \
+                   [encounter.location_area] \
+                   [tuple(condition_values)].combine_with(encounter)
 
     # Strip each version+location down to just the condition values that
     # are the most common per method
@@ -637,7 +637,7 @@ def _do_pokemon(request, cache_key):
         # ... in a generation where this Pokémon actually exists...
         q = q.join(t.VersionGroup, t.PokemonMove.version_group)
         q = q.filter(t.VersionGroup.generation_id >=
-                        c.pokemon.default_form.version_group.generation_id)
+                     c.pokemon.default_form.version_group.generation_id)
 
         # That AREN'T learnable by this Pokémon.  This NOT EXISTS strips
         # out moves that are also learned by a "higher-ordered" Pokémon.
@@ -663,25 +663,25 @@ def _do_pokemon(request, cache_key):
     # possible.  Levels go in level order, and machines go in TM number
     # order
     q = q.options(
-                contains_eager(t.PokemonMove.machine),
-                contains_eager(t.PokemonMove.method),
-                # n.b: contains_eager interacts badly with joinedload with
-                # innerjoin=True.  Disable the inner joining explicitly.
-                # See: http://www.sqlalchemy.org/trac/ticket/2120
-                joinedload(
-                    t.PokemonMove.machine, t.Machine.version_group,
-                    innerjoin=False),
-                joinedload_all('move.damage_class'),
-                joinedload_all(t.PokemonMove.move,
-                    t.Move.move_effect,
-                    t.MoveEffect.prose_local),
-                joinedload_all('move.type'),
-                joinedload_all('version_group'),
-            ) \
+             contains_eager(t.PokemonMove.machine),
+             contains_eager(t.PokemonMove.method),
+             # n.b: contains_eager interacts badly with joinedload with
+             # innerjoin=True.  Disable the inner joining explicitly.
+             # See: http://www.sqlalchemy.org/trac/ticket/2120
+             joinedload(
+                 t.PokemonMove.machine, t.Machine.version_group,
+                 innerjoin=False),
+             joinedload_all('move.damage_class'),
+             joinedload_all(t.PokemonMove.move,
+                 t.Move.move_effect,
+                 t.MoveEffect.prose_local),
+             joinedload_all('move.type'),
+             joinedload_all('version_group'),
+         ) \
         .order_by(t.PokemonMove.level.asc(),
-                    t.Machine.machine_number.asc(),
-                    t.PokemonMove.order.asc(),
-                    t.PokemonMove.version_group_id.asc()) \
+                  t.Machine.machine_number.asc(),
+                  t.PokemonMove.order.asc(),
+                  t.PokemonMove.version_group_id.asc()) \
         .all()
     # TODO this nonsense is to allow methods that don't actually exist,
     # such as for parent's egg moves.  should go away once move tables get
@@ -724,8 +724,8 @@ def _do_pokemon(request, cache_key):
         upper_bound = None
         if method.identifier in (u'level-up', u'machine'):
             vg_data['sort'] = (pokemon_move.level,
-                                vg_data.get('machine', None),
-                                pokemon_move.order)
+                               vg_data.get('machine', None),
+                               pokemon_move.order)
             vg_data['level'] = pokemon_move.level
 
             # Find the next-lowest and next-highest rows.  Our row must fit
@@ -763,7 +763,7 @@ def _do_pokemon(request, cache_key):
             # range but run across another row with a level for X, that row
             # cannot be moved up, so it's not usable
             if valid_row and set(valid_row[1].keys()).intersection(
-                                    set(version_group_data.keys())):
+                                 set(version_group_data.keys())):
                 valid_row = None
 
             if move == pokemon_move.move \

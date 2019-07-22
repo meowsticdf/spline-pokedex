@@ -294,7 +294,7 @@ def capture_rate(request):
         if c.form.level.data and c.form.your_level.data:
             # -1 because equality counts as bucket zero
             relative_level = (c.form.your_level.data - 1) \
-                            // c.form.level.data
+                           // c.form.level.data
 
         # Heavy Ball partitions by 102.4 kg.  Weights are stored as...
         # hectograms.  So.
@@ -379,7 +379,7 @@ def capture_rate(request):
 
         # Gen III
         is_nettable = any(_.identifier in ('bug', 'water')
-                            for _ in c.pokemon.types)
+                          for _ in c.pokemon.types)
 
         c.results[u'Premier Ball'] = only(normal_chance)
         c.results[u'Repeat Ball'] = [
@@ -526,7 +526,7 @@ def chain_breeding(request):
     egg_graph = dict()
     # Create an isolated node for every group
     all_egg_groups = set(egg_group for pair in egg_group_candidates
-                                    for egg_group in pair)
+                                   for egg_group in pair)
     all_egg_groups.add('me')  # special sentinel value for the target
     for egg_group in all_egg_groups:
         egg_graph[egg_group] = dict(
@@ -678,7 +678,7 @@ def compare_pokemon(request):
 
         # Construct a tuple and slap that bitch in there
         c.found_pokemon[i] = FoundPokemon(pokemon, form,
-                                            suggestions, raw_pokemon)
+                                          suggestions, raw_pokemon)
 
     # There are a lot of links to similar incarnations of this page.
     # Provide a closure for constructing the links easily
@@ -764,7 +764,7 @@ def compare_pokemon(request):
                 calc = lambda n: 1.0
             else:
                 calc = lambda n: 1.0 * (n - min_number) \
-                                        / (max_number - min_number)
+                                     / (max_number - min_number)
 
             for pokemon in unique_pokemon:
                 c.relatives[label][pokemon] \
@@ -841,12 +841,12 @@ def stat_calculator(request):
                     .filter(t.Stat.is_battle_only == False))
 
     c.stats = (stat_query
-                .order_by(t.Stat.id)
-                .all())
+               .order_by(t.Stat.id)
+               .all())
 
     hidden_power_stats = (stat_query
-                            .order_by(t.Stat.game_index)
-                            .all())
+                          .order_by(t.Stat.game_index)
+                          .all())
 
     # Make sure there are the same number of level, stat, and effort
     # fields.  Add an extra one, for adding more data

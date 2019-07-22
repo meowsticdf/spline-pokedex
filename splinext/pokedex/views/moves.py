@@ -150,7 +150,7 @@ def _do_move(request, cache_key):
         for version_group, machine_number in vg_numbers.items():
             c.machines[generation].append(
                 VersionMachine(version_group=version_group,
-                                machine_number=machine_number,
+                               machine_number=machine_number,
                 )
             )
     for generation, vg_numbers in c.machines.items():

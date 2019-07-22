@@ -38,8 +38,8 @@ def _prev_next_id(thing, table, column_name):
     thing_id = getattr(thing, column_name)
 
     max_id = (db.pokedex_session.query(table)
-                .filter(column != None)
-                .count())
+              .filter(column != None)
+              .count())
     prev_thing = db.pokedex_session.query(table).filter(
         column == (thing_id - 1 - 1) % max_id + 1).one()
     next_thing = db.pokedex_session.query(table).filter(
@@ -343,11 +343,11 @@ def pokemon_view(request):
             stat_total += pokemon_stat.base_stat
 
         q = db.pokedex_session.query(t.ConquestPokemonStat) \
-                            .filter_by(stat=pokemon_stat.stat)
+                              .filter_by(stat=pokemon_stat.stat)
         less = q.filter(t.ConquestPokemonStat.base_stat <
                         pokemon_stat.base_stat).count()
         equal = q.filter(t.ConquestPokemonStat.base_stat ==
-                            pokemon_stat.base_stat).count()
+                         pokemon_stat.base_stat).count()
         percentile = (less + equal * 0.5) / total_stat_rows
         stat_info['percentile'] = percentile
 
@@ -413,7 +413,7 @@ def pokemon_view(request):
     # XXX Eventually we want to figure out all impossible evolutions, and
     #     show them, but sort them to the bottom and grey them out.
     if (c.pokemon.conquest_evolution is not None and
-        c.pokemon.conquest_evolution.warrior_gender_id is not None):
+      c.pokemon.conquest_evolution.warrior_gender_id is not None):
         worthy_warriors = worthy_warriors.filter(
             t.ConquestWarrior.gender_id ==
                 c.pokemon.conquest_evolution.warrior_gender_id)
@@ -479,7 +479,7 @@ def skill_list(request):
     # assume any skill known only by warlords is unique, which happens to
     # work.
     warriors_and_ranks = sqla.orm.join(t.ConquestWarrior,
-                                        t.ConquestWarriorRank)
+                                       t.ConquestWarriorRank)
 
     generic_clause = (sqla.sql.exists(warriors_and_ranks.select())
         .where(sqla.and_(
@@ -535,7 +535,7 @@ def warrior_view(request):
     stat_q = (db.pokedex_session.query(stats.warrior_stat_id, stats.base_stat)
         .join(all_stats, stats.warrior_stat_id == all_stats.warrior_stat_id)
         .group_by(stats.warrior_rank_id, stats.warrior_stat_id,
-                    stats.base_stat)
+                  stats.base_stat)
         .order_by(stats.warrior_stat_id)
         .add_columns(
             sqla.func.sum(sqla.cast(stats.base_stat > all_stats.base_stat,
