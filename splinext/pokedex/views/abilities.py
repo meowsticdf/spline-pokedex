@@ -9,7 +9,6 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from .. import helpers
 from . import viewlib
 
 def ability_list(request):
@@ -38,7 +37,7 @@ def ability_view(request):
         raise exc.HTTPNotFound
 
     ### Prev/next for header
-    c.prev_ability, c.next_ability = helpers.prev_next(
+    c.prev_ability, c.next_ability = db.prev_next(
         table=t.Ability,
         current=c.ability,
         language=c.game_language,

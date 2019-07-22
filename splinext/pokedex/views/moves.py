@@ -12,7 +12,6 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from .. import helpers
 from . import viewlib
 
 # XXX(pyramid): move these to a shared module
@@ -52,7 +51,7 @@ def move_view(request):
     else:
         shadowness = t.Move.type_id != 10002
 
-    c.prev_move, c.next_move = helpers.prev_next(
+    c.prev_move, c.next_move = db.prev_next(
         table=t.Move,
         filters=[shadowness],
         language=c.game_language,

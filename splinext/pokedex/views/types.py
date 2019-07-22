@@ -12,7 +12,6 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from .. import helpers
 from . import viewlib
 
 def type_list(request):
@@ -83,7 +82,7 @@ def type_view(request):
         raise exc.HTTPNotFound()
 
     ### Prev/next for header
-    c.prev_type, c.next_type = helpers.prev_next(
+    c.prev_type, c.next_type = db.prev_next(
         table=t.Type,
         current=c.type,
         language=c.game_language,

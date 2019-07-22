@@ -12,7 +12,6 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from .. import helpers
 
 def natures_list(request):
     c = request.tmpl_context
@@ -66,7 +65,7 @@ def nature_view(request):
         raise exc.HTTPNotFound()
 
     ### Prev/next for header
-    c.prev_nature, c.next_nature = helpers.prev_next(
+    c.prev_nature, c.next_nature = db.prev_next(
         table=t.Nature,
         current=c.nature,
         language=c.game_language,
