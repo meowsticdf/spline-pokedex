@@ -16,7 +16,6 @@ from sqlalchemy import orm
 from sqlalchemy.sql import func
 import zope.sqlalchemy
 
-# stolen from veekun-pokedex
 pokedex_session = MultilangScopedSession(
     orm.sessionmaker(
         class_=MultilangSession,
