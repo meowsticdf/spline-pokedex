@@ -85,7 +85,7 @@ class PokedexBaseController(BaseController):
         except NoResultFound:
             c.language = c.game_language
 
-        db.pokedex_session.default_language_id = c.game_language.id
+        splinext.pokedex.db.pokedex_session.default_language_id = c.game_language.id
 
     def __call__(self, *args, **params):
         """Run the controller, making sure to discard the Pokédex session when
@@ -96,7 +96,7 @@ class PokedexBaseController(BaseController):
         try:
             return super(PokedexBaseController, self).__call__(*args, **params)
         finally:
-            db.pokedex_session.remove()
+            splinext.pokedex.db.pokedex_session.remove()
 
 
 ### Extend markdown to turn [Eevee]{pokemon:eevee} into a link in effects and
@@ -133,6 +133,7 @@ class PokedexPlugin(PluginBase):
         h.pokedex = pokedex_helpers
 
     def controllers(self):
+        import splinext.pokedex.controllers as controllers
         import splinext.pokedex.controllers.pokedex
         import splinext.pokedex.controllers.pokedex_api
         import splinext.pokedex.controllers.pokedex_search
