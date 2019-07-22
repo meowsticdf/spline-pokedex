@@ -12,7 +12,7 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from . import viewlib
+from . import caching
 
 # XXX(pyramid): move these to a shared module
 from .pokemon import _move_tutor_version_groups, _collapse_pokemon_move_columns, _pokemon_move_method_sort_key
@@ -58,8 +58,7 @@ def move_view(request):
         current=c.move,
     )
 
-    # XXX(pyramid)
-    viewlib.cache_content(
+    caching.cache_content(
         request=request,
         key=c.move.identifier,
         do_work=_do_move,

@@ -18,7 +18,7 @@ import pokedex.db.tables as t
 from .. import db
 from .. import helpers as pokedex_helpers
 from .. import magnitude
-from . import viewlib
+from . import caching
 
 from .locations import encounter_method_icons, encounter_condition_value_icons
 
@@ -239,7 +239,7 @@ def pokemon_view(request):
     c.javascripts.append(('pokedex', 'pokemon'))
 
     ### Let's cache this bitch
-    viewlib.cache_content(
+    caching.cache_content(
         request=request,
         key=c.pokemon.identifier,
         do_work=_do_pokemon,
@@ -830,7 +830,7 @@ def pokemon_flavor_view(request):
     # Some Javascript
     c.javascripts.append(('pokedex', 'pokemon'))
 
-    viewlib.cache_content(
+    caching.cache_content(
         request=request,
         key=c.form.identifier,
         do_work=_do_pokemon_flavor,
@@ -894,7 +894,7 @@ def pokemon_locations_view(request):
     c.prev_species, c.next_species = _prev_next_species(c.pokemon.species)
 
     # Cache it yo
-    viewlib.cache_content(
+    caching.cache_content(
         request=request,
         key=c.pokemon.identifier,
         do_work=_do_pokemon_locations,

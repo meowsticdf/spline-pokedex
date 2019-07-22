@@ -12,7 +12,7 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from . import viewlib
+from . import caching
 
 def type_list(request):
     c = request.tmpl_context
@@ -89,7 +89,7 @@ def type_view(request):
     )
 
     ### Cache
-    viewlib.cache_content(
+    caching.cache_content(
         request=request,
         key=c.type.identifier,
         do_work=_do_type,

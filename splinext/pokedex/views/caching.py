@@ -1,10 +1,9 @@
+"""Some utilities for caching pages."""
 
 import zlib
 
 from beaker.util import func_namespace
 from mako.runtime import capture
-
-### Caching
 
 def cache_content(request, key, do_work):
     """Argh!

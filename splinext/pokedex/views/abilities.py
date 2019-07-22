@@ -9,7 +9,7 @@ import pyramid.httpexceptions as exc
 import pokedex.db.tables as t
 
 from .. import db
-from . import viewlib
+from . import caching
 
 def ability_list(request):
     c = request.tmpl_context
@@ -44,7 +44,7 @@ def ability_view(request):
         filters=[t.Ability.is_main_series],
     )
 
-    viewlib.cache_content(
+    caching.cache_content(
         request=request,
         key=c.ability.identifier,
         do_work=_do_ability,

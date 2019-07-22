@@ -1,5 +1,5 @@
 <%def name="cache_content()"><%
-    # _cache_me is set by viewlib.cache_content
+    # _cache_me is set by views.caching.cache_content
     c._cache_me(context, caller)
 %></%def>
 
