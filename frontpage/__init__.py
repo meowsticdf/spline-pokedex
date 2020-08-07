@@ -1,20 +1,12 @@
-from collections import defaultdict, namedtuple
-from pkg_resources import resource_filename
+from collections import defaultdict
 import re
-import subprocess
 
-from pylons import config
+from .sources import FeedSource, GitSource
 
-from spline.lib import helpers
-from spline.lib.plugin import PluginBase, PluginLink, Priority
-from spline.lib.plugin.load import run_hooks
-
-import splinext.frontpage.controllers.frontpage
-from splinext.frontpage.sources import FeedSource, GitSource
-
-def add_routes_hook(map, *args, **kwargs):
-    """Hook to inject some of our behavior into the routes configuration."""
-    map.connect('/', controller='frontpage', action='index')
+source_types = {
+    'rss': FeedSource,
+    'git': GitSource,
+}
 
 def load_sources_hook(config, *args, **kwargs):
     """Hook to load all the known sources and stuff them in config.  Run once,
@@ -55,7 +47,7 @@ def load_sources_hook(config, *args, **kwargs):
     # Ask plugins to turn configuration into source objects
     sources = []
     for source, source_config in update_config.iteritems():
-        hook_name = 'frontpage_updates_' + source_config['__type__']
+        source_type = source_types[source_config['__type__']]
         del source_config['__type__']  # don't feed this to constructor!
 
         # Default to global limit and max age.  Source takes care of making
@@ -64,7 +56,7 @@ def load_sources_hook(config, *args, **kwargs):
         source_config.setdefault('max_age', global_max_age)
 
         # Hooks return a list of sources; combine with running list
-        sources += run_hooks(hook_name, config=config, **source_config)
+        sources += [source_type(config=config, **source_config)]
 
     # Save the list of sources, and done
     config['spline-frontpage.sources'] = sources
@@ -75,23 +67,3 @@ def source_cron_hook(*args, **kwargs):
     """
     for source in config['spline-frontpage.sources']:
         source.do_cron(*args, **kwargs)
-
-class FrontPagePlugin(PluginBase):
-    def controllers(self):
-        return dict(
-            frontpage = splinext.frontpage.controllers.frontpage.FrontPageController,
-        )
-
-    def template_dirs(self):
-        return [
-            (resource_filename(__name__, 'templates'), Priority.FIRST)
-        ]
-
-    def hooks(self):
-        return [
-            ('routes_mapping',          Priority.NORMAL,    add_routes_hook),
-            ('after_setup',             Priority.NORMAL,    load_sources_hook),
-            ('cron',                    Priority.NORMAL,    source_cron_hook),
-            ('frontpage_updates_rss',   Priority.NORMAL,    FeedSource),
-            ('frontpage_updates_git',   Priority.NORMAL,    GitSource),
-        ]

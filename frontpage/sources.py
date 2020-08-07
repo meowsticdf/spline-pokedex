@@ -12,9 +12,9 @@ from urllib2 import URLError
 import feedparser
 import lxml.html
 
-from pylons import cache
+# TODO(wiki): from pylons import cache
 
-from spline.lib import helpers
+from splinext.pokedex import splinehelpers as helpers
 
 def max_age_to_datetime(max_age):
     """``max_age`` is specified in config as a number of seconds old.  This
@@ -132,7 +132,8 @@ class CachedSource(Source):
     def poll(self, global_limit, global_max_age):
         """Fetches cached updates."""
         try:
-            return cache.get_cache('spline-frontpage')[self.cache_key()]
+            return self._poll(self.limit, self.max_age)
+            # TODO(wiki): return cache.get_cache('spline-frontpage')[self.cache_key()]
         except KeyError:
             # Haven't cached anything yet, apparently
             return []

@@ -10,6 +10,9 @@ import pyramid.settings
 import pyramid.static
 from pyramid import threadlocal
 
+from frontpage.controllers.frontpage import FrontPageController
+from frontpage import load_sources_hook as frontpage_config
+
 import beaker.cache
 import beaker.util
 
@@ -21,6 +24,8 @@ from . import splinehelpers
 from . import helpers
 
 def index_view(request):
+    FrontPageController(request).index()
+
     return render_to_response('/index.mako', {}, request=request)
 
 def content_view(request):
@@ -157,9 +162,10 @@ def main(global_config, **settings):
         'splinext.pokedex:templates',
         local_content_dir,
         'splinext.pokedex:content',
+        'frontpage:templates',
     ]
 
-    settings['spline.plugins'] = []
+    settings['spline.plugins'] = ['frontpage']
     settings['spline.plugins.controllers'] = {}
     settings['spline.plugins.hooks'] = {}
     settings['spline.plugins.widgets'] = {}
@@ -170,6 +176,8 @@ def main(global_config, **settings):
         'pokedex.mako',
         'sprites.mako',
     ]
+
+    frontpage_config(settings)
 
     widgets = [
             ('page_header', 'widgets/pokedex_lookup.mako'),
