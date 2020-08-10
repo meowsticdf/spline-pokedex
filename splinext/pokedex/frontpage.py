@@ -1,14 +1,14 @@
 from collections import defaultdict
 import re
 
-from .sources import FeedSource, GitSource
+from splinext.pokedex.sources import FeedSource, GitSource
 
 source_types = {
     'rss': FeedSource,
     'git': GitSource,
 }
 
-def load_sources_hook(config, *args, **kwargs):
+def config(config, *args, **kwargs):
     """Hook to load all the known sources and stuff them in config.  Run once,
     on server startup.
 

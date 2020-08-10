@@ -149,7 +149,7 @@ class FeedSource(CachedSource):
         URL for the feed.
     """
 
-    template = '/front_page/rss.mako'
+    template = '/frontpage/rss.mako'
 
     SUMMARY_LENGTH = 1000
 
@@ -279,7 +279,7 @@ class GitSource(CachedSource):
         Optional.  A shell glob pattern used to filter the tags.
     """
 
-    template = '/front_page/git.mako'
+    template = '/frontpage/git.mako'
 
     def __init__(self, repo_paths, repo_names, gitweb, bug_tracker=None,
         tag_pattern=None, **kwargs):
