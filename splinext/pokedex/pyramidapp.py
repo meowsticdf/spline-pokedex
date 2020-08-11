@@ -15,13 +15,11 @@ import beaker.util
 
 import pokedex.db.markdown
 
+from . import frontpage
 from . import db
 from . import lib
 from . import splinehelpers
 from . import helpers
-
-def index_view(request):
-    return render_to_response('/index.mako', {}, request=request)
 
 def content_view(request):
     return {}
@@ -159,7 +157,7 @@ def main(global_config, **settings):
         'splinext.pokedex:content',
     ]
 
-    settings['spline.plugins'] = []
+    settings['spline.plugins'] = ['frontpage']
     settings['spline.plugins.controllers'] = {}
     settings['spline.plugins.hooks'] = {}
     settings['spline.plugins.widgets'] = {}
@@ -169,7 +167,10 @@ def main(global_config, **settings):
         'layout.mako',
         'pokedex.mako',
         'sprites.mako',
+        'frontpage.mako',
     ]
+
+    frontpage.config(settings)
 
     widgets = [
             ('page_header', 'widgets/pokedex_lookup.mako'),
@@ -274,7 +275,7 @@ def main(global_config, **settings):
 
 
     # index & css
-    config.add_view(index_view, route_name="index")
+    config.add_view(route_name='index', view="splinext.pokedex.views.frontpage:index", renderer='index.mako')
     config.add_view(css_view, route_name="css")
 
     # lookup
