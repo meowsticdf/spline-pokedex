@@ -19,10 +19,10 @@
 % if 'frontpage' in config['spline.plugins']:
 <div class="dex-column-container">
 <div class="dex-column-2x">
-<%include file="/front_page/updates.mako" />
+<%include file="/frontpage/updates.mako" />
 </div>
 <div class="dex-column">
-<%include file="/front_page/extras.mako" />
+<%include file="/frontpage/extras.mako" />
 </div>
 </div>
 % endif
