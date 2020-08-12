@@ -71,12 +71,12 @@ spline-frontpage.sources.blog.link = https://eev.ee/blog/
 spline-frontpage.sources.blog.limit = 2
 
 spline-frontpage.sources.git = git
-spline-frontpage.sources.git.repo_paths = /home/hugopeixoto/work/veekun/spline-pokedex/.git
+spline-frontpage.sources.git.repo_paths = %(here)s/../.git
 spline-frontpage.sources.git.repo_names = spline-pokedex
-spline-frontpage.sources.git.gitweb = https://github.com/veekun/spline-pokedex
+spline-frontpage.sources.git.github = https://github.com/veekun
 spline-frontpage.sources.git.title = veekun changelog
 spline-frontpage.sources.git.icon = construction
-spline-frontpage.sources.git.link = https://github.com/veekun/spline-pokedex
+spline-frontpage.sources.git.link = https://github.com/veekun
 spline-frontpage.sources.git.limit = 5
 
 # Logging configuration
