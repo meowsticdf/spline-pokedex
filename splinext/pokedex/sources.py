@@ -385,6 +385,9 @@ class GitSource(CachedSource):
                         )
                     )
 
+            if not commits:
+                continue
+
             update = FrontPageGit(
                 source = self,
                 time = tagged_timestamp,
