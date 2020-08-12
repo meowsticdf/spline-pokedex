@@ -264,10 +264,14 @@ class GitSource(CachedSource):
 
     ``repo_names``
         A list of names for the repositories, in parallel with ``repo_paths``.
-        Used for constructing gitweb URLs and identifying the repositories.
+        Used for constructing gitweb or github URLs and identifying the repositories.
 
     ``gitweb``
         Base URL to a gitweb installation, so commit ids can be linked to the
+        commit proper.
+
+    ``github``
+        Base URL to a github installation, so commit ids can be linked to the
         commit proper.
 
     ``bug_tracker``
@@ -281,7 +285,7 @@ class GitSource(CachedSource):
 
     template = '/frontpage/git.mako'
 
-    def __init__(self, repo_paths, repo_names, gitweb, bug_tracker=None,
+    def __init__(self, repo_paths, repo_names, gitweb=None, github=None, bug_tracker=None,
         tag_pattern=None, **kwargs):
 
         kwargs.setdefault('title', None)
@@ -292,6 +296,7 @@ class GitSource(CachedSource):
         self.repo_names = repo_names.split()
 
         self.gitweb = gitweb
+        self.github = github
         self.bug_tracker = bug_tracker
         self.tag_pattern = tag_pattern
 
@@ -340,6 +345,15 @@ class GitSource(CachedSource):
             commits = []
 
             for repo_path, repo_name in zip(self.repo_paths, self.repo_names):
+                def _linkify_bug_number(match):
+                    """Regex replace function for changing bug numbers into links."""
+                    n = match.group(1)
+                    if self.bug_tracker:
+                        bug_url = self.bug_tracker.format(n)
+                    elif self.github:
+                        bug_url = "{0}/{1}/issues/{2}".format(self.github, repo_name, n)
+                    return helpers.literal(
+                        u"""<a href="{0}">{1}</a>""".format(bug_url, match.group(0)))
                 # Grab an easily-parsed history: fields delimited by nulls.
                 # Hash, author's name, commit timestamp, subject.
                 git_log_args = [
@@ -355,9 +369,9 @@ class GitSource(CachedSource):
                         = line.strip().decode('utf8').split('\x00')
 
                     # Convert bug numbers in subject to URLs
-                    if self.bug_tracker:
+                    if self.bug_tracker or self.github:
                         subject = helpers.literal(
-                            re.sub(u'#(\d+)', self._linkify_bug_number, subject)
+                            re.sub(u'#(\d+)', _linkify_bug_number, subject)
                         )
 
                     commits.append(
@@ -381,9 +395,3 @@ class GitSource(CachedSource):
 
         return updates
 
-    def _linkify_bug_number(self, match):
-        """Regex replace function for changing bug numbers into links."""
-        n = match.group(1)
-        bug_url = self.bug_tracker.format(match.group(1))
-        return helpers.literal(
-            u"""<a href="{0}">{1}</a>""".format(bug_url, match.group(0)))

@@ -19,7 +19,13 @@
             % endif
 
             <tr>
+                % if update.source.github:
+                <td class="hash"><a href="${update.source.github}/${commit.repo}/commit/${commit.hash}">${commit.hash}</a></td>
+                % elif update.source.gitweb:
                 <td class="hash"><a href="${update.source.gitweb}?p=${commit.repo}.git;a=commit;h=${commit.hash}">${commit.hash}</a></td>
+                % else:
+                <td class="hash">${commit.hash}</td>
+                % endif
                 <td class="author">
                     <%! import hashlib %>\
                     <img src="https://www.gravatar.com/avatar/${hashlib.md5(commit.email).hexdigest()}?s=16d=identicon" alt="">
