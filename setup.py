@@ -34,6 +34,9 @@ setup(
     test_suite='nose.collector',
 
     entry_points="""
+    [paste.app_factory]
+    main = splinext.pokedex.pyramidapp:main
+
     #[babel.extractors]
     #spline-python = spline.babelplugin:extract_python
     #spline-mako = spline.babelplugin:extract_mako
