@@ -47,6 +47,7 @@ def index(request):
     """
     response = request.response
     config = request.registry.settings
+    cache = request.environ.get('beaker.cache', None)
     c = request.tmpl_context
 
     updates = []
@@ -56,7 +57,7 @@ def index(request):
 
     c.sources = config['spline-frontpage.sources']
     for source in c.sources:
-        new_updates = source.poll(global_limit, global_max_age)
+        new_updates = source.poll(global_limit, global_max_age, cache)
         updates.extend(new_updates)
 
         # Little optimization: once there are global_limit items, anything

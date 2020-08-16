@@ -66,7 +66,7 @@ class Source(object):
     def do_cron(self, *args, **kwargs):
         return
 
-    def poll(self, global_limit, global_max_age):
+    def poll(self, global_limit, global_max_age, cache=None):
         """Public wrapper that takes care of reconciling global and source item
         limit and max age.
 
@@ -118,7 +118,7 @@ class CachedSource(Source):
     def _cache_key(self):
         raise NotImplementedError
 
-    def do_cron(self, tic, *args, **kwargs):
+    def do_cron(self, cache, tic, *args, **kwargs):
         if tic % self.poll_frequency != 0:
             # Too early!
             return
@@ -129,8 +129,9 @@ class CachedSource(Source):
 
         return
 
-    def poll(self, global_limit, global_max_age):
-        """Fetches cached updates."""
+    def poll(self, global_limit, global_max_age, cache):
+        """Fetches cached updates. The cache argument should be an instance
+        of beaker.cache.CacheManager."""
         try:
             return self._poll(self.limit, self.max_age)
             # TODO(wiki): return cache.get_cache('spline-frontpage')[self.cache_key()]
