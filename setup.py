@@ -17,7 +17,7 @@ setup(
         "markdown",
         "feedparser>=5.2.1,<6.0.0b1",
         "lxml",
-        "webhelpers>=1.2",
+        "webhelpers2>=2.0",
         "waitress>=1.2.1", # development server
         #"Babel>=0.9.5", # needed for translation work only, can do without
 

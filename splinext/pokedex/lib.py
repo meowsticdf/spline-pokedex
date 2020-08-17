@@ -1,7 +1,7 @@
 from collections import OrderedDict
 from datetime import datetime, timedelta
 
-from webhelpers.html import escape
+from webhelpers2.html import escape
 
 from .i18n import NullTranslator
 
