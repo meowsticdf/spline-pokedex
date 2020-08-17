@@ -12,7 +12,6 @@ from urllib2 import URLError
 import feedparser
 import lxml.html
 
-# TODO(wiki): from pylons import cache
 
 from splinext.pokedex import splinehelpers as helpers
 
@@ -97,7 +96,7 @@ class CachedSource(Source):
     and the results are cached.  ``poll`` then returns the contents of the
     cache.
 
-    ``_poll`` may return None, in which case the cache will be left unchanged.
+    ``_poll`` may return None, in which case the cache will be invalidated.
 
     You must define a ``_cache_key`` method that returns a key uniquely
     identifying this object.  Your key will be combined with the class name, so
@@ -132,12 +131,16 @@ class CachedSource(Source):
     def poll(self, global_limit, global_max_age, cache):
         """Fetches cached updates. The cache argument should be an instance
         of beaker.cache.CacheManager."""
-        try:
+        def fetch():
             return self._poll(self.limit, self.max_age)
-            # TODO(wiki): return cache.get_cache('spline-frontpage')[self.cache_key()]
-        except KeyError:
-            # Haven't cached anything yet, apparently
+        frontpage_cache = cache.get_cache('spline-frontpage', expire=self.poll_frequency*60)
+        key = self.cache_key()
+        value = frontpage_cache.get(key, createfunc=fetch)
+        if value is None:
+            # Don't cache None; it signifies that the poll function failed
+            frontpage_cache.remove_value(key)
             return []
+        return value
 
 
 FrontPageRSS = namedtuple('FrontPageRSS', ['source', 'time', 'entry', 'content'])
