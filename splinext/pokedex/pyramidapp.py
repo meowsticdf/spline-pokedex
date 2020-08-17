@@ -201,6 +201,8 @@ def main(global_config, **settings):
     config.add_tween('splinext.pokedex.pyramidapp.cache_tween_factory')
 
     ### routes
+    # NOTE: routes must be kept in sync with tests/base.py
+
     # index page
     config.add_route("index", "/")
 
@@ -276,7 +278,7 @@ def main(global_config, **settings):
 
     # index & css
     config.add_view(route_name='index', view="splinext.pokedex.views.frontpage:index", renderer='index.mako')
-    config.add_view(css_view, route_name="css")
+    config.add_view(css_view, route_name='css')
 
     # lookup
     config.add_view(route_name='dex/lookup', view='splinext.pokedex.views.lookup:lookup', renderer='pokedex/lookup_results.mako')

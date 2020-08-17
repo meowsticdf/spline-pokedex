@@ -118,6 +118,8 @@ def set_up_routes(config):
     config.add_route('dex_conquest/skills_list', '/dex/conquest/skills')
     config.add_route('dex_conquest/warriors_list', '/dex/conquest/warriors')
 
+    config.add_route('static', '/static/*subpath', static=True)
+
 class TemplateContext(object):
     pass
 

@@ -17,3 +17,9 @@ Assuming you have a virtualenv with [pokedex][] already installed.
 4. `mkdir data && pokedex reindex -e postgresql:///yourdb -i data/pokedex-index`
 5. `pserve --reload pyramid.ini`
 
+
+### Testing
+
+1. `cd splinext/pokedex`
+2. if necessary, edit `test.ini` with your database uri and lookup index path
+3. `nosetests tests/test_*.py`

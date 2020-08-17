@@ -21,6 +21,8 @@ class TestPagesController(base.PlainTestCase):
         action = urlargs.pop('action')
         request = base.request_factory(matchdict=matchdict, params=urlargs)
         request.tmpl_context.javascripts = []
+        en = db.get_by_identifier_query(db.t.Language, u'en').first()
+        request.tmpl_context.game_language = en
         if action == 'pokemon':
             response = splinext.pokedex.views.pokemon.pokemon_view(request)
         elif action == 'pokemon_flavor':
