@@ -60,10 +60,3 @@ def config(config, *args, **kwargs):
 
     # Save the list of sources, and done
     config['spline-frontpage.sources'] = sources
-
-def source_cron_hook(*args, **kwargs):
-    """Hook to pass on cron tics to all sources, should they need it for e.g.
-    caching.
-    """
-    for source in config['spline-frontpage.sources']:
-        source.do_cron(*args, **kwargs)

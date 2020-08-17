@@ -62,8 +62,8 @@ class Source(object):
         self.limit = int(limit)
         self.max_age = max_age_to_datetime(max_age)
 
-    def do_cron(self, *args, **kwargs):
-        return
+    # TODO(magical): now that updates are performed based on cache expiry
+    # rather than scheduled polling, the poll method is somewhat misnamed
 
     def poll(self, global_limit, global_max_age, cache=None):
         """Public wrapper that takes care of reconciling global and source item
@@ -91,10 +91,9 @@ class CachedSource(Source):
     """Supports caching a source's updates in memcache.
 
     On the surface, this functions just like any other ``Source``.  Calling
-    ``poll`` still returns a list of updates.  However, ``poll`` does not call
-    your ``_poll``; instead, your implementation is called by the spline cron,
-    and the results are cached.  ``poll`` then returns the contents of the
-    cache.
+    ``poll`` still returns a list of updates.  However, ``poll`` may return
+    cached results instead of calling ``_poll``. Your ``_poll`` will be called
+    to refresh the cache when it has expired (or has not yet been initialized.
 
     ``_poll`` may return None, in which case the cache will be invalidated.
 
@@ -102,11 +101,9 @@ class CachedSource(Source):
     identifying this object.  Your key will be combined with the class name, so
     it only needs to be unique for that source, not globally.
 
-    You may also override ``poll_frequency``, the number of minutes between
-    pollings.  By default, this is a rather conservative 60.
+    You may also override ``poll_frequency``, the number of minutes until the
+    cache expires.  By default, this is a rather conservative 60.
 
-    Note that it may take up to a minute after server startup for updates
-    from a cached source to appear.
     """
 
     poll_frequency = 60
@@ -116,17 +113,6 @@ class CachedSource(Source):
 
     def _cache_key(self):
         raise NotImplementedError
-
-    def do_cron(self, cache, tic, *args, **kwargs):
-        if tic % self.poll_frequency != 0:
-            # Too early!
-            return
-
-        updates = self._poll(self.limit, self.max_age)
-        if updates is not None:
-            cache.get_cache('spline-frontpage')[self.cache_key()] = updates
-
-        return
 
     def poll(self, global_limit, global_max_age, cache):
         """Fetches cached updates. The cache argument should be an instance
