@@ -265,7 +265,7 @@ def main(global_config, **settings):
 
     # static resources
     #config.add_static_view('static/spline', 'spline:public')
-    config.add_static_view('static/spline', '../../../spline/spline/public') # XXX
+    config.add_static_view('static/spline', 'splinext.pokedex:spline-public')
     config.add_static_view('static/pokedex', 'splinext.pokedex:public')
     config.add_static_view('static/local', os.path.join(config_root, './public')) # XXX
 
