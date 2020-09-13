@@ -3,7 +3,6 @@ from __future__ import absolute_import, division
 
 from collections import defaultdict
 import colorsys
-from itertools import izip
 from random import randint
 
 import pyramid.httpexceptions as exc
@@ -596,7 +595,7 @@ def warrior_view(request):
             )
             .all())
 
-    c.max_links = izip(*max_links)
+    c.max_links = zip(*max_links)
 
     return {}
 

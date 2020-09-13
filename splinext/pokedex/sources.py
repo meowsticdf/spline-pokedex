@@ -7,7 +7,7 @@ import datetime
 import re
 import subprocess
 from subprocess import PIPE
-from urllib2 import URLError
+from urllib.error import URLError
 
 import feedparser
 import lxml.html
