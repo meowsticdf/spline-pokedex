@@ -166,9 +166,9 @@ def location_view(request):
             [ tuple(encounter.condition_values) ]
 
         # Combine "level 3-4, 50%" and "level 3-4, 20%" into "level 3-4, 70%".
-        existing_encounter = filter(lambda enc: enc['min_level'] == encounter.min_level
-                                            and enc['max_level'] == encounter.max_level,
-                                    encounter_bits)
+        existing_encounter = list(filter(lambda enc: enc['min_level'] == encounter.min_level
+                                                 and enc['max_level'] == encounter.max_level,
+                                         encounter_bits))
         if existing_encounter:
             existing_encounter[0]['rarity'] += encounter.slot.rarity
         else:

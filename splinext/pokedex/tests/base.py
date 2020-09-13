@@ -112,7 +112,7 @@ def request_factory(matchdict={}, params={}):
     request.tmpl_context = TemplateContext()
     request.matchdict = MultiDict(matchdict)
     request.params = MultiDict()
-    for k, vs in params.iteritems():
+    for k, vs in params.items():
         if type(vs) is list:
             for v in vs:
                 request.params.add(k, v)

@@ -53,7 +53,7 @@ ${h.end_form()}
     % endif
     <br>
 % endwhile
-##% for pokemon, methods in c.results.iteritems():
+##% for pokemon, methods in c.results.items():
 ##${pokemon.full_name} | ${[_.name for _ in methods]}<br>
 ##% endfor
 

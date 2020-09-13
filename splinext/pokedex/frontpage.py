@@ -19,7 +19,7 @@ def config(config, *args, **kwargs):
     update_config = defaultdict(dict)
     key_rx = re.compile(
         '(?x) ^ spline-frontpage [.] sources [.] (\w+) (?: [.] (\w+) )? $')
-    for key, val in config.iteritems():
+    for key, val in config.items():
         # Match against spline-frontpage.source.(source).(key)
         match = key_rx.match(key)
         if not match:
@@ -46,7 +46,7 @@ def config(config, *args, **kwargs):
 
     # Ask plugins to turn configuration into source objects
     sources = []
-    for source, source_config in update_config.iteritems():
+    for source, source_config in update_config.items():
         source_type = source_types[source_config['__type__']]
         del source_config['__type__']  # don't feed this to constructor!
 

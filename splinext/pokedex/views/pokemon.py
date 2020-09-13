@@ -589,10 +589,9 @@ def _do_pokemon(request, cache_key):
                 in area_condition_encounters.items():
 
                 # Sort these by rarity
-                condition_encounter_items = condition_encounters.items()
-                condition_encounter_items.sort(
-                    key=lambda (conditions, combined_encounter):
-                        combined_encounter.rarity
+                condition_encounter_items = sorted(
+                    condition_encounters.items(),
+                    key=lambda item: item[1].rarity,
                 )
 
                 # Use the last one, which is most common
@@ -795,14 +794,13 @@ def _do_pokemon(request, cache_key):
         method_list.insert(lower_bound or 0, new_row)
 
     # Convert dictionary to our desired list of tuples
-    c.moves = move_methods.items()
-    c.moves.sort(key=_pokemon_move_method_sort_key)
+    c.moves = sorted(move_methods.items(), key=_pokemon_move_method_sort_key)
 
     # Sort non-level moves by name
     for method, method_list in c.moves:
         if method.identifier in (u'level-up', u'machine'):
             continue
-        method_list.sort(key=lambda (move, version_group_data): move.name)
+        method_list.sort(key=lambda item: item[0].name)
 
     # Finally, collapse identical columns within the same generation
     c.move_columns \
@@ -972,9 +970,9 @@ def _do_pokemon_locations(request, cache_key):
             [ tuple(encounter.condition_values) ]
 
         # Combine "level 3-4, 50%" and "level 3-4, 20%" into "level 3-4, 70%".
-        existing_encounter = filter(lambda enc: enc['min_level'] == encounter.min_level
-                                            and enc['max_level'] == encounter.max_level,
-                                    encounter_bits)
+        existing_encounter = list(filter(lambda enc: enc['min_level'] == encounter.min_level
+                                                 and enc['max_level'] == encounter.max_level,
+                                         encounter_bits))
         if existing_encounter:
             existing_encounter[0]['rarity'] += encounter.slot.rarity
         else:

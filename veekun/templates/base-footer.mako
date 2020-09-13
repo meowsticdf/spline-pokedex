@@ -69,7 +69,7 @@
 % if config.get('spline.sql_debugging', False):
 <table id="footer-query-log">
 <%! import datetime %>\
-% for query, data in c.timer.sql_query_log.iteritems():
+% for query, data in c.timer.sql_query_log.items():
 <tbody>
     <tr>
         <td>×${len(data)}</td>

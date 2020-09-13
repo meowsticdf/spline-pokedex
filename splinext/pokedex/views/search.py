@@ -142,7 +142,7 @@ class BaseSearchForm(Form):
                     if field.data == field.default:
                         self.cleansed_data.pop(field.name, None)
 
-            for name, field in self._fields.iteritems():
+            for name, field in self._fields.items():
                 # Shorten: nuke anything that's a default
                 if field.data == field.default and name in self.cleansed_data:
                     del self.cleansed_data[name]
@@ -161,7 +161,7 @@ class BaseSearchForm(Form):
             # Note that this will cheerfully fill in a multi-select field where
             # nothing was selected; it's assumed that a multi-select field with
             # a default makes no sense with nothing selected
-            for name, field in self._fields.iteritems():
+            for name, field in self._fields.items():
                 if field.default and name not in formdata:
                     field.data = field.default
 
@@ -170,7 +170,7 @@ class BaseSearchForm(Form):
         # whatever it's called) lazily checks or errors when field.data is
         # accessed, but that's not likely to happen before validating!  Ping
         # all the field data
-        for name, field in self._fields.iteritems():
+        for name, field in self._fields.items():
             field.data
 
         self.is_valid = super(BaseSearchForm, self).validate()

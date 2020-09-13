@@ -230,15 +230,17 @@ def _do_move(request, cache_key):
                 c.better_damage_classes[pokemon] = \
                     pokemon.better_damage_class
 
-        pokemon_methods[method] = pokemon_methods[method].items()
+        # Sort each method's rows by their Pokémon
+        pokemon_methods[method] = sorted(
+            pokemon_methods[method].items(),
+            key=lambda row: row[0].order,
+        )
 
     # Convert the entire dictionary to a list of tuples and sort it
-    c.pokemon = pokemon_methods.items()
-    c.pokemon.sort(key=_pokemon_move_method_sort_key)
-
-    for method, method_list in c.pokemon:
-        # Sort each method's rows by their Pokémon
-        method_list.sort(key=lambda row: row[0].order)
+    c.pokemon = sorted(
+        pokemon_methods.items(),
+        key=_pokemon_move_method_sort_key,
+    )
 
     # Finally, collapse identical columns within the same generation
     c.pokemon_columns \
