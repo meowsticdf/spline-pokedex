@@ -15,7 +15,7 @@ setup(
         "nose>=0.11",
         "WTForms>=1.0",
         "markdown",
-        "feedparser>=5.2.1,<6.0.0b1",
+        "feedparser>=6.0.0",
         "lxml",
         "webhelpers2>=2.0",
         "waitress>=1.2.1", # development server
