@@ -1084,7 +1084,7 @@ def stat_calculator(request):
                 else:
                     parts.append(u"{0}–{1}".format(left_endpoint, last_n))
 
-            if left_endpoint is None or last_n + 1 < n:
+            if left_endpoint is None or n is None or last_n + 1 < n:
                 # Starting a new subrange; remember the new left end
                 left_endpoint = n
 

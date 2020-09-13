@@ -774,11 +774,11 @@ def _do_pokemon(request, cache_key):
                 # we find.  If we're outside it, we want the last possible
                 # row to avoid shuffling the table too much.  So only break
                 # if this row is inside lb/ub
-                if i >= lower_bound:
+                if not lower_bound or i >= lower_bound:
                     break
 
         if valid_row:
-            if method_list.index(valid_row) < lower_bound:
+            if lower_bound and method_list.index(valid_row) < lower_bound:
                 # Move the row up if necessary
                 method_list.remove(valid_row)
                 method_list.insert(lower_bound, valid_row)
