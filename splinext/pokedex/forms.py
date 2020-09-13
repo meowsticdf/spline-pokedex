@@ -355,9 +355,9 @@ class RangeTextField(fields.StringField):
             # For signed ranges, - in front of a digit is interpreted as part
             # of that digit
             if self.signed:
-                endpoints = re.split(ur'([.]{2}|[–+~±]|[<>]=?|-(?!\d))', phrase, 1)
+                endpoints = re.split(r'([.]{2}|[–+~±]|[<>]=?|-(?!\d))', phrase, 1)
             else:
-                endpoints = re.split(ur'([.]{2}|[-–+~±]|[<>]=?)', phrase, 1)
+                endpoints = re.split(r'([.]{2}|[-–+~±]|[<>]=?)', phrase, 1)
 
             if len(endpoints) > 3:
                 # Can't handle this yet.  TODO: try it each way

@@ -185,7 +185,7 @@ def parse_size(size, height_or_weight):
     # beginning of the number
     size = size.strip()
     rough_parts = re.split(
-        ur'(?x) ( (?: (?: [0-9]+ | (?<=[\s.]) ) [,.] )? [0-9]+ )',
+        r'(?x) ( (?: (?: [0-9]+ | (?<=[\s.]) ) [,.] )? [0-9]+ )',
         size
     )
 

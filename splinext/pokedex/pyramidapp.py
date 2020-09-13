@@ -78,7 +78,7 @@ def add_renderer_globals(event):
         return request.current_route_path(**path)
 
     def fake_translate(message, plural=None, n=None, context=None, comment=None):
-        return unicode(message)
+        return message
 
     renderer_globals = event
     request = event.get("request") #or threadlocal.get_current_request()

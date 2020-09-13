@@ -49,7 +49,7 @@ class OptionalLevelField(fields.IntegerField):
         if self.raw_data:
             return self.raw_data[0]
         else:
-            return unicode(self.data or u'')
+            return str(self.data or '')
 
 class CaptureRateForm(Form):
     pokemon = PokedexLookupField(u'Wild Pokémon', [wtforms.validators.Required()], valid_type='pokemon')

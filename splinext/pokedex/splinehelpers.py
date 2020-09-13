@@ -36,7 +36,7 @@ def static_uri(plugin_name, path, **url_kwargs):
 def sanitize_id(text):
     # See: http://www.w3.org/TR/html4/types.html#type-id
     # Do unicode decomposition to separate diacritics
-    decomp = unicodedata.normalize('NFD', unicode(text.lower()))
+    decomp = unicodedata.normalize('NFD', text.lower())
     # Remove diacritics (category M*)
     id = ''.join(c for c in decomp if unicodedata.category(c)[0] != 'M')
     # Convert all non-ID characters to hyphen-minuses

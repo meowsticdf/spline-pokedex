@@ -156,7 +156,7 @@ class PokedexPlugin(PluginBase):
         ]
 
     def links(self):
-        _ = unicode  # _ is a no-op here, only used for marking the texts for translation
+        _ = str  # _ is a no-op here, only used for marking the texts for translation
         # Wrap PluginLink do that the correct translator is given
         # (Unfortunately it's too early in the bootstrapping process to actually translate now)
         def TranslatablePluginLink(*args, **kwargs):

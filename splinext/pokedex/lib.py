@@ -105,8 +105,6 @@ class Message(object):
     def __str__(self):
         return self.message
 
-    __unicode__ = __str__
-
     def __html__(self):
         return escape(self.message)
 

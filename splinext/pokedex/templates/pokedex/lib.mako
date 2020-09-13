@@ -29,7 +29,7 @@
     comma = h.pokedex.joiner(', ')
     for version in versions:
         # Convert version to string if necessary
-        if isinstance(version, basestring):
+        if isinstance(version, str):
             identifier = h.pokedex.filename_from_name(version)
             name = version
         else:
@@ -270,8 +270,8 @@
     <tr>
         % for version_group in generation.version_groups:
         <td>
-            ${version_group_controls[ unicode(version_group.id) ]()}
-            ${version_group_controls[ unicode(version_group.id) ].label()}
+            ${version_group_controls[ str(version_group.id) ]()}
+            ${version_group_controls[ str(version_group.id) ].label()}
         </td>
         % endfor
     </tr>

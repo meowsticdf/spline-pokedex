@@ -94,7 +94,7 @@ def ilike(column, string):
         '%': u'^%',     '_': u'^_',     '^': u'^^',
         '*': u'%',      '?': u'_',
     }
-    string = re.sub(ur'([%_*?^])',
+    string = re.sub(r'([%_*?^])',
                     lambda match: translations[match.group(0)],
                     string)
 
@@ -645,7 +645,7 @@ def pokemon_search(request):
     stat_aliases = {}
     def join_to_stat(stat):
         # stat can be an id, object, or identifier
-        if isinstance(stat, basestring):
+        if isinstance(stat, str):
             stat = db.pokedex_session.query(t.Stat) \
                 .filter_by(identifier=stat).one()
         elif isinstance(stat, int):
@@ -1088,7 +1088,7 @@ def pokemon_search(request):
         # format and allows user HTML, and using h.escape() here likewise
         # escapes even legitimate $icon's.  Solution is to use h.escape,
         # then cast back to a string to remove infectious magic
-        c.display_template = Template( unicode(h.escape(list_format)) )
+        c.display_template = Template( str(h.escape(list_format)) )
 
     else:
         # icons and sprites don't need any special behavior
@@ -1548,7 +1548,7 @@ def move_search(request):
         # See super-duper long comment for Pokémon search.  Doesn't matter
         # so much for moves, which have no literal() template things, but
         # avoids bugs in the future.
-        c.display_template = Template( unicode(h.escape(list_format)) )
+        c.display_template = Template( str(h.escape(list_format)) )
 
     # "Name" is the field that actually links to the page.  If it's
     # missing, add a little link column

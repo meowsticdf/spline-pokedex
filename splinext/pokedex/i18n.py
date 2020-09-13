@@ -28,8 +28,8 @@ Additionally, we migh want to create a new word (e.g. a posessive adjective),
 and then conjugate that.
 
 The conversion specification (the part after "!") specifies what the word
-is, if it's given as a str/unicode. It has the same format as the format
-specification, below.
+is, if it's given as a str. It has the same format as the format specification,
+below.
 
 The format specification (the part after the first ':' in the template) is
 composed of parts separated by ':'. The source may be left out along
@@ -133,7 +133,7 @@ class Formatter(string.Formatter):
                 result.update(self.shortcuts[val])
         return result
 
-class BaseWord(unicode):
+class BaseWord(str):
     interesting_categories = {}
     dictionary = {}
 
@@ -212,7 +212,7 @@ formatter = Formatter('en', Word)
 
 ###
 
-class Template(unicode):
+class Template(str):
     def format(self, *args, **kwargs):
         return formatter.format(self, *args, **kwargs)
 

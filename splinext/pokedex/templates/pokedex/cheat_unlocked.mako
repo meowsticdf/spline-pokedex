@@ -1,6 +1,6 @@
 <%inherit file="/base.mako"/>
 <%!
-    _ = unicode
+    _ = str
     import random
     random_title = random.choice([
         _('idspispopd'),

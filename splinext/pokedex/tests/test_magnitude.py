@@ -22,7 +22,7 @@ class TestSizeParsing(TestCase):
         """
         a_value = parse_size(a, self.height_or_weight)
 
-        if isinstance(b, basestring):
+        if isinstance(b, str):
             b_value = parse_size(b, self.height_or_weight)
         else:
             b_value = float(b)

@@ -3,22 +3,6 @@
 This module provides the base testing objects.
 """
 
-# Shiv to make Unicode test docstrings print correctly; forces stderr to be
-# utf8 (or whatever LANG says)
-import locale, unittest
-enc = locale.getpreferredencoding()
-def new_writeln(self, arg=None):
-    if arg:
-        if isinstance(arg, unicode):
-            self.write(arg.encode(enc))
-        else:
-            self.write(arg)
-    self.write('\n')
-try:
-    unittest._WritelnDecorator.writeln = new_writeln
-except AttributeError:
-    unittest.runner._WritelnDecorator.writeln = new_writeln
-
 import unittest
 
 import pyramid.paster
