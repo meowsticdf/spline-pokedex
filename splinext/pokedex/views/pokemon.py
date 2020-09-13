@@ -27,13 +27,14 @@ def bar_color(hue, pastelness):
     lightness/saturation equal to the given "pastelness".
     """
     r, g, b = colorsys.hls_to_rgb(hue, pastelness, pastelness)
-    return "#%02x%02x%02x" % (r * 256, g * 256, b * 256)
+    return "#%02x%02x%02x" % (round(r * 256), round(g * 256), round(b * 256))
 
-def _pokemon_move_method_sort_key((method, _)):
+def _pokemon_move_method_sort_key(method_):
     """Sorts methods by id, except that tutors and machines are bumped to the
     bottom, as they tend to be much longer than everything else.
     """
     # XXX see FakeMoveMethod for explanation of this abomination
+    method = method_[0]
     try:
         p = -method.pokemon.order
     except AttributeError:
@@ -350,7 +351,7 @@ def _do_pokemon(request, cache_key):
         # Group by item, rarity, sorted by version...
         inverted_held_items = defaultdict(tuple)
         for version_tuple, item_rarity_list in \
-            sorted(gen_held_items.items(), key=lambda (k, v): k[0].id):
+            sorted(gen_held_items.items(), key=lambda i: i[0][0].id):
 
             inverted_held_items[tuple(item_rarity_list)] += version_tuple
 
