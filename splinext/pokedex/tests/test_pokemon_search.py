@@ -53,7 +53,7 @@ class TestPokemonSearchController(base.TestCase):
 
         # The leftovers now contain no names in common
         if leftover_expected:
-            print leftover_expected
+            print(leftover_expected)
         self.assertEquals(
             leftover_expected, [],
             u"all expected Pokémon found: {0}".format(message)
@@ -61,7 +61,7 @@ class TestPokemonSearchController(base.TestCase):
 
         if exact:
             if leftover_results:
-                print leftover_results
+                print(leftover_results)
             self.assertEquals(
                 leftover_results, [],
                 u"no extra Pokémon found: {0}".format(message)
@@ -711,7 +711,7 @@ class TestPokemonSearchController(base.TestCase):
                                            column=columns)
         self.assert_(
             response.tmpl_context.results,
-            """Custom table columns don't crash""".format(value)
+            """Custom table columns don't crash""",
         )
 
 

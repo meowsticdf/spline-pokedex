@@ -400,5 +400,5 @@ class TestMoveSearchController(base.TestCase):
                                            column=columns)
         self.assert_(
             response.tmpl_context.results,
-            """Custom table columns don't crash""".format(value)
+            """Custom table columns don't crash""",
         )
