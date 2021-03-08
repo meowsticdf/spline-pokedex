@@ -155,6 +155,7 @@ def main(global_config, **settings):
         'splinext.pokedex:templates',
         local_content_dir,
         'splinext.pokedex:content',
+        'veekun:templates',
     ]
 
     settings['spline.plugins'] = ['frontpage']

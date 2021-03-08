@@ -126,7 +126,7 @@ def group_by_generation(things):
     """A wrapper around itertools.groupby which groups by generation."""
     things = iter(things)
     try:
-        a_thing = things.next()
+        a_thing = next(things)
     except StopIteration:
         return ()
     key = get_generation_key(a_thing)
@@ -152,7 +152,7 @@ def collapse_versions(things, key):
     """
     things = iter(things)
     # let the StopIteration bubble up
-    a_thing = things.next()
+    a_thing = next(things)
 
     if hasattr(a_thing, 'version'):
         def get_versions(things):

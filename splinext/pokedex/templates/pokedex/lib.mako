@@ -38,7 +38,7 @@
 
         version_icons += h.HTML.img(
                 src=h.static_uri('pokedex', 'images/versions/%s.png' % identifier),
-                alt=comma.next() + name,
+                alt=next(comma) + name,
                 title=name)
 
     return version_icons
@@ -187,7 +187,7 @@
 
 
 <%def name="type_icon(type)"><%
-    if isinstance(type, basestring):
+    if isinstance(type, str):
         if type == '???':
             identifier = 'unknown'
         else:

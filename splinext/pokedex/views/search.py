@@ -73,7 +73,7 @@ def version_icons(versions):
     for version in versions:
         version_icons += h.HTML.img(
                 src=h.static_uri('pokedex', 'images/versions/%s.png' % version.identifier),
-                alt=comma.next() + version.name,
+                alt=next(comma) + version.name,
                 title=version.name)
 
     return version_icons
