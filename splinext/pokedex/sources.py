@@ -305,7 +305,7 @@ class GitSource(CachedSource):
             args.append(self.tag_pattern)
 
         git_output, _ = subprocess.Popen(args, stdout=PIPE).communicate()
-        tags = git_output.strip().split('\n')
+        tags = git_output.decode().strip().split('\n')
 
         # Tags come out in alphabetical order, which means earliest first.  Reverse
         # it to make the slicing easier
