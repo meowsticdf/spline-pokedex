@@ -129,7 +129,7 @@ ${h.form(url.current(), method=u'GET')}
         <td class="-possible-genes">
             ## Pretty graphs!
             <div class="dex-stat-graph">
-            % for gene in xrange(32):
+            % for gene in range(32):
                 % if gene in c.valid_genes[stat]:
                 <div class="point" style="background: ${c.stat_graph_chunk_color(gene)};"></div>
                 % else:

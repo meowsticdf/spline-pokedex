@@ -28,7 +28,7 @@
                 % endif
                 <td class="author">
                     <%! import hashlib %>\
-                    <img src="https://www.gravatar.com/avatar/${hashlib.md5(commit.email).hexdigest()}?s=16d=identicon" alt="">
+                    <img src="https://www.gravatar.com/avatar/${hashlib.md5(commit.email.encode()).hexdigest()}?s=16d=identicon" alt="">
                     ${commit.author}
                 </td>
                 <td class="subject">${commit.subject}</td>
